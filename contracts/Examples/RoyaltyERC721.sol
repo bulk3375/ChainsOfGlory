@@ -5,9 +5,9 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../@rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
-import "../@rarible/royalties/contracts/LibPart.sol";
-import "../@rarible/royalties/contracts/LibRoyaltiesV2.sol";
+import "../rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
+import "../rarible/royalties/contracts/LibPart.sol";
+import "../rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
 contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
     using Counters for Counters.Counter;
