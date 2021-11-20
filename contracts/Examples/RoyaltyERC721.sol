@@ -9,7 +9,7 @@ import "../@rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
 import "../@rarible/royalties/contracts/LibPart.sol";
 import "../@rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
-contract RoyaltyNFT is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
+contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdTracker;
     
