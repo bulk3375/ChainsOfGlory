@@ -66,19 +66,19 @@ contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2I
             values[_tokenIdTracker.current()].statnn = randMod(100);
             _tokenIdTracker.increment();
 
-            //Updates the _tokensByOwner mapping
-            _tokensByOwner[to][tokenId]+=1;
+            //Updates the _tokensByOwner mapping            
+            _tokensByOwner[to].push(tokenId);
         } else if(to==address(0)) {
             //Burning
 
             //Updates the _tokensByOwner mapping
-             _tokensByOwner[from][tokenId]-=1;
+            deleteTokenId(from, tokenId);
         } else {
             //Normal transfer
 
             //Updates the _tokensByOwner mapping
-            _tokensByOwner[from][tokenId]-=1;
-            _tokensByOwner[to][tokenId]+=1;
+            _tokensByOwner[to].push(tokenId);
+            deleteTokenId(from, tokenId);
         }
     }
 
@@ -112,4 +112,25 @@ contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2I
 
         return super.supportsInterface(interfaceId);
     }
+
+    //************************************************************
+    // ARRAY functions 
+    //************************************************************
+    function positionOf(address owner, uint256 tokenId) public view returns (uint) {
+        for(uint i=0; i<_tokensByOwner[owner].length; i++) {
+            if(_tokensByOwner[owner][i]==tokenId)
+                return i;
+        }
+        return _tokensByOwner[owner].length+100;
+    }
+
+    function deleteTokenId(address owner, uint256 tokenId) internal {
+        //Updates the _tokensByOwner mapping
+        uint pos=positionOf(owner, tokenId);
+        if(pos<_tokensByOwner[owner].length) {
+            _tokensByOwner[owner][pos]= _tokensByOwner[owner][ _tokensByOwner[owner].length-1];
+            _tokensByOwner[owner].pop();
+        }
+    }
+
 }
