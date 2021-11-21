@@ -31,7 +31,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"royalties\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"value\",\"type\":\"uint96\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/@rarible/royalties/contracts/impl/AbstractRoyalties.sol\":\"AbstractRoyalties\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/@rarible/royalties/contracts/LibPart.sol\":{\"keccak256\":\"0xec2b90b78674357091dc40536806118af22fb29d64c5ca0a15172990a274d2b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://865a5fd92412dfb0b84bfaccaa452d36a18d0b046aca2b30e7c2c4a643ca83e1\",\"dweb:/ipfs/QmUqxWeFeXhY1FvhhXX8UstkW7tZKnKcEhYGCzmKMA6sVQ\"]},\"project:/contracts/@rarible/royalties/contracts/impl/AbstractRoyalties.sol\":{\"keccak256\":\"0xbf777992f760ee06946b6f13090abe77294ec7f7051b738dea9b7c054c71b305\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c711fa501351c4cb9b7bc103a4c3cbed734bf2d19474496c58fea494d403bd53\",\"dweb:/ipfs/Qmd6dohuAPgmikyQQ3jwZxTngiNx2XNGQQ7A4ZLEPNHNmJ\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"royalties\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"value\",\"type\":\"uint96\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/rarible/royalties/contracts/impl/AbstractRoyalties.sol\":\"AbstractRoyalties\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/rarible/royalties/contracts/LibPart.sol\":{\"keccak256\":\"0xec2b90b78674357091dc40536806118af22fb29d64c5ca0a15172990a274d2b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://865a5fd92412dfb0b84bfaccaa452d36a18d0b046aca2b30e7c2c4a643ca83e1\",\"dweb:/ipfs/QmUqxWeFeXhY1FvhhXX8UstkW7tZKnKcEhYGCzmKMA6sVQ\"]},\"project:/contracts/rarible/royalties/contracts/impl/AbstractRoyalties.sol\":{\"keccak256\":\"0xbf777992f760ee06946b6f13090abe77294ec7f7051b738dea9b7c054c71b305\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c711fa501351c4cb9b7bc103a4c3cbed734bf2d19474496c58fea494d403bd53\",\"dweb:/ipfs/Qmd6dohuAPgmikyQQ3jwZxTngiNx2XNGQQ7A4ZLEPNHNmJ\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -40,23 +40,23 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\nimport \"../LibPart.sol\";\nabstract contract AbstractRoyalties {\n    mapping (uint256 => LibPart.Part[]) public royalties;\n    function _saveRoyalties(uint256 _id, LibPart.Part[] memory _royalties) internal {\n        for (uint i = 0; i < _royalties.length; i++) {\n            require(_royalties[i].account != address(0x0), \"Recipient should be present\");\n            require(_royalties[i].value != 0, \"Royalty value should be positive\");\n            royalties[_id].push(_royalties[i]);\n        }\n        _onRoyaltiesSet(_id, _royalties);\n    }\n    function _updateAccount(uint256 _id, address _from, address _to) internal {\n        uint length = royalties[_id].length;\n        for(uint i = 0; i < length; i++) {\n            if (royalties[_id][i].account == _from) {\n                royalties[_id][i].account = payable(address(uint160(_to)));\n            }\n        }\n    }\n    function _onRoyaltiesSet(uint256 _id, LibPart.Part[] memory _royalties) virtual internal;\n}",
-  "sourcePath": "/home/javi/ChainsOfGlory/contracts/@rarible/royalties/contracts/impl/AbstractRoyalties.sol",
+  "sourcePath": "/Users/n65598/Development/Blockchain/ChainsOfGlory/contracts/rarible/royalties/contracts/impl/AbstractRoyalties.sol",
   "ast": {
-    "absolutePath": "project:/contracts/@rarible/royalties/contracts/impl/AbstractRoyalties.sol",
+    "absolutePath": "project:/contracts/rarible/royalties/contracts/impl/AbstractRoyalties.sol",
     "exportedSymbols": {
       "AbstractRoyalties": [
-        1923
+        5000
       ],
       "LibPart": [
-        1760
+        4837
       ]
     },
-    "id": 1924,
+    "id": 5001,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1789,
+        "id": 4866,
         "literals": [
           "solidity",
           "^",
@@ -64,17 +64,17 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:23:15"
+        "src": "32:23:29"
       },
       {
-        "absolutePath": "project:/contracts/@rarible/royalties/contracts/LibPart.sol",
+        "absolutePath": "project:/contracts/rarible/royalties/contracts/LibPart.sol",
         "file": "../LibPart.sol",
-        "id": 1790,
+        "id": 4867,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 1924,
-        "sourceUnit": 1761,
-        "src": "56:24:15",
+        "scope": 5001,
+        "sourceUnit": 4838,
+        "src": "56:24:29",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -84,71 +84,71 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": false,
-        "id": 1923,
+        "id": 5000,
         "linearizedBaseContracts": [
-          1923
+          5000
         ],
         "name": "AbstractRoyalties",
-        "nameLocation": "99:17:15",
+        "nameLocation": "99:17:29",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
             "functionSelector": "8924af74",
-            "id": 1796,
+            "id": 4873,
             "mutability": "mutable",
             "name": "royalties",
-            "nameLocation": "166:9:15",
+            "nameLocation": "166:9:29",
             "nodeType": "VariableDeclaration",
-            "scope": 1923,
-            "src": "123:52:15",
+            "scope": 5000,
+            "src": "123:52:29",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
               "typeString": "mapping(uint256 => struct LibPart.Part[])"
             },
             "typeName": {
-              "id": 1795,
+              "id": 4872,
               "keyType": {
-                "id": 1791,
+                "id": 4868,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "132:7:15",
+                "src": "132:7:29",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "123:35:15",
+              "src": "123:35:29",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                 "typeString": "mapping(uint256 => struct LibPart.Part[])"
               },
               "valueType": {
                 "baseType": {
-                  "id": 1793,
+                  "id": 4870,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
-                    "id": 1792,
+                    "id": 4869,
                     "name": "LibPart.Part",
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 1739,
-                    "src": "143:12:15"
+                    "referencedDeclaration": 4816,
+                    "src": "143:12:29"
                   },
-                  "referencedDeclaration": 1739,
-                  "src": "143:12:15",
+                  "referencedDeclaration": 4816,
+                  "src": "143:12:29",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Part_$1739_storage_ptr",
+                    "typeIdentifier": "t_struct$_Part_$4816_storage_ptr",
                     "typeString": "struct LibPart.Part"
                   }
                 },
-                "id": 1794,
+                "id": 4871,
                 "nodeType": "ArrayTypeName",
-                "src": "143:14:15",
+                "src": "143:14:29",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr",
+                  "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr",
                   "typeString": "struct LibPart.Part[]"
                 }
               }
@@ -157,15 +157,15 @@
           },
           {
             "body": {
-              "id": 1855,
+              "id": 4932,
               "nodeType": "Block",
-              "src": "261:336:15",
+              "src": "261:336:29",
               "statements": [
                 {
                   "body": {
-                    "id": 1848,
+                    "id": 4925,
                     "nodeType": "Block",
-                    "src": "316:233:15",
+                    "src": "316:233:29",
                     "statements": [
                       {
                         "expression": {
@@ -175,7 +175,7 @@
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
                               },
-                              "id": 1825,
+                              "id": 4902,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -183,25 +183,25 @@
                               "leftExpression": {
                                 "expression": {
                                   "baseExpression": {
-                                    "id": 1817,
+                                    "id": 4894,
                                     "name": "_royalties",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1802,
-                                    "src": "338:10:15",
+                                    "referencedDeclaration": 4879,
+                                    "src": "338:10:29",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                                       "typeString": "struct LibPart.Part memory[] memory"
                                     }
                                   },
-                                  "id": 1819,
+                                  "id": 4896,
                                   "indexExpression": {
-                                    "id": 1818,
+                                    "id": 4895,
                                     "name": "i",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1806,
-                                    "src": "349:1:15",
+                                    "referencedDeclaration": 4883,
+                                    "src": "349:1:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_uint256",
                                       "typeString": "uint256"
@@ -212,21 +212,21 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "nodeType": "IndexAccess",
-                                  "src": "338:13:15",
+                                  "src": "338:13:29",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                    "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                     "typeString": "struct LibPart.Part memory"
                                   }
                                 },
-                                "id": 1820,
+                                "id": 4897,
                                 "isConstant": false,
                                 "isLValue": true,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "account",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1736,
-                                "src": "338:21:15",
+                                "referencedDeclaration": 4813,
+                                "src": "338:21:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address_payable",
                                   "typeString": "address payable"
@@ -238,14 +238,14 @@
                                 "arguments": [
                                   {
                                     "hexValue": "307830",
-                                    "id": 1823,
+                                    "id": 4900,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": true,
                                     "kind": "number",
                                     "lValueRequested": false,
                                     "nodeType": "Literal",
-                                    "src": "371:3:15",
+                                    "src": "371:3:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_rational_0_by_1",
                                       "typeString": "int_const 0"
@@ -260,26 +260,26 @@
                                       "typeString": "int_const 0"
                                     }
                                   ],
-                                  "id": 1822,
+                                  "id": 4899,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "lValueRequested": false,
                                   "nodeType": "ElementaryTypeNameExpression",
-                                  "src": "363:7:15",
+                                  "src": "363:7:29",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_type$_t_address_$",
                                     "typeString": "type(address)"
                                   },
                                   "typeName": {
-                                    "id": 1821,
+                                    "id": 4898,
                                     "name": "address",
                                     "nodeType": "ElementaryTypeName",
-                                    "src": "363:7:15",
+                                    "src": "363:7:29",
                                     "typeDescriptions": {}
                                   }
                                 },
-                                "id": 1824,
+                                "id": 4901,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
@@ -287,14 +287,14 @@
                                 "lValueRequested": false,
                                 "names": [],
                                 "nodeType": "FunctionCall",
-                                "src": "363:12:15",
+                                "src": "363:12:29",
                                 "tryCall": false,
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
                                 }
                               },
-                              "src": "338:37:15",
+                              "src": "338:37:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
@@ -302,14 +302,14 @@
                             },
                             {
                               "hexValue": "526563697069656e742073686f756c642062652070726573656e74",
-                              "id": 1826,
+                              "id": 4903,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
                               "kind": "string",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "377:29:15",
+                              "src": "377:29:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_ee50f6df2181dd19e502443265ec469bb75e8a65bb811a800aad148381cf8508",
                                 "typeString": "literal_string \"Recipient should be present\""
@@ -328,7 +328,7 @@
                                 "typeString": "literal_string \"Recipient should be present\""
                               }
                             ],
-                            "id": 1816,
+                            "id": 4893,
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
@@ -336,13 +336,13 @@
                               4294967278
                             ],
                             "referencedDeclaration": 4294967278,
-                            "src": "330:7:15",
+                            "src": "330:7:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                               "typeString": "function (bool,string memory) pure"
                             }
                           },
-                          "id": 1827,
+                          "id": 4904,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -350,16 +350,16 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "330:77:15",
+                          "src": "330:77:29",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1828,
+                        "id": 4905,
                         "nodeType": "ExpressionStatement",
-                        "src": "330:77:15"
+                        "src": "330:77:29"
                       },
                       {
                         "expression": {
@@ -369,7 +369,7 @@
                                 "typeIdentifier": "t_uint96",
                                 "typeString": "uint96"
                               },
-                              "id": 1835,
+                              "id": 4912,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -377,25 +377,25 @@
                               "leftExpression": {
                                 "expression": {
                                   "baseExpression": {
-                                    "id": 1830,
+                                    "id": 4907,
                                     "name": "_royalties",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1802,
-                                    "src": "429:10:15",
+                                    "referencedDeclaration": 4879,
+                                    "src": "429:10:29",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                                       "typeString": "struct LibPart.Part memory[] memory"
                                     }
                                   },
-                                  "id": 1832,
+                                  "id": 4909,
                                   "indexExpression": {
-                                    "id": 1831,
+                                    "id": 4908,
                                     "name": "i",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1806,
-                                    "src": "440:1:15",
+                                    "referencedDeclaration": 4883,
+                                    "src": "440:1:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_uint256",
                                       "typeString": "uint256"
@@ -406,21 +406,21 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "nodeType": "IndexAccess",
-                                  "src": "429:13:15",
+                                  "src": "429:13:29",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                    "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                     "typeString": "struct LibPart.Part memory"
                                   }
                                 },
-                                "id": 1833,
+                                "id": 4910,
                                 "isConstant": false,
                                 "isLValue": true,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "value",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1738,
-                                "src": "429:19:15",
+                                "referencedDeclaration": 4815,
+                                "src": "429:19:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint96",
                                   "typeString": "uint96"
@@ -430,21 +430,21 @@
                               "operator": "!=",
                               "rightExpression": {
                                 "hexValue": "30",
-                                "id": 1834,
+                                "id": 4911,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
                                 "kind": "number",
                                 "lValueRequested": false,
                                 "nodeType": "Literal",
-                                "src": "452:1:15",
+                                "src": "452:1:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_rational_0_by_1",
                                   "typeString": "int_const 0"
                                 },
                                 "value": "0"
                               },
-                              "src": "429:24:15",
+                              "src": "429:24:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
@@ -452,14 +452,14 @@
                             },
                             {
                               "hexValue": "526f79616c74792076616c75652073686f756c6420626520706f736974697665",
-                              "id": 1836,
+                              "id": 4913,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
                               "kind": "string",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "455:34:15",
+                              "src": "455:34:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_593311831d740e3a682cd1941decbdb819cd1a530afb770ecfcfb0c7a8b3d52a",
                                 "typeString": "literal_string \"Royalty value should be positive\""
@@ -478,7 +478,7 @@
                                 "typeString": "literal_string \"Royalty value should be positive\""
                               }
                             ],
-                            "id": 1829,
+                            "id": 4906,
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
@@ -486,13 +486,13 @@
                               4294967278
                             ],
                             "referencedDeclaration": 4294967278,
-                            "src": "421:7:15",
+                            "src": "421:7:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                               "typeString": "function (bool,string memory) pure"
                             }
                           },
-                          "id": 1837,
+                          "id": 4914,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -500,41 +500,41 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "421:69:15",
+                          "src": "421:69:29",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1838,
+                        "id": 4915,
                         "nodeType": "ExpressionStatement",
-                        "src": "421:69:15"
+                        "src": "421:69:29"
                       },
                       {
                         "expression": {
                           "arguments": [
                             {
                               "baseExpression": {
-                                "id": 1843,
+                                "id": 4920,
                                 "name": "_royalties",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1802,
-                                "src": "524:10:15",
+                                "referencedDeclaration": 4879,
+                                "src": "524:10:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                                  "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                                   "typeString": "struct LibPart.Part memory[] memory"
                                 }
                               },
-                              "id": 1845,
+                              "id": 4922,
                               "indexExpression": {
-                                "id": 1844,
+                                "id": 4921,
                                 "name": "i",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1806,
-                                "src": "535:1:15",
+                                "referencedDeclaration": 4883,
+                                "src": "535:1:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -545,9 +545,9 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "nodeType": "IndexAccess",
-                              "src": "524:13:15",
+                              "src": "524:13:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             }
@@ -555,31 +555,31 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             ],
                             "expression": {
                               "baseExpression": {
-                                "id": 1839,
+                                "id": 4916,
                                 "name": "royalties",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1796,
-                                "src": "504:9:15",
+                                "referencedDeclaration": 4873,
+                                "src": "504:9:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                                   "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                                 }
                               },
-                              "id": 1841,
+                              "id": 4918,
                               "indexExpression": {
-                                "id": 1840,
+                                "id": 4917,
                                 "name": "_id",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1798,
-                                "src": "514:3:15",
+                                "referencedDeclaration": 4875,
+                                "src": "514:3:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -590,26 +590,26 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "nodeType": "IndexAccess",
-                              "src": "504:14:15",
+                              "src": "504:14:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                                "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                                 "typeString": "struct LibPart.Part storage ref[] storage ref"
                               }
                             },
-                            "id": 1842,
+                            "id": 4919,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "push",
                             "nodeType": "MemberAccess",
-                            "src": "504:19:15",
+                            "src": "504:19:29",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr_$_t_struct$_Part_$1739_storage_$returns$__$bound_to$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr_$",
+                              "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr_$_t_struct$_Part_$4816_storage_$returns$__$bound_to$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr_$",
                               "typeString": "function (struct LibPart.Part storage ref[] storage pointer,struct LibPart.Part storage ref)"
                             }
                           },
-                          "id": 1846,
+                          "id": 4923,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -617,16 +617,16 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "504:34:15",
+                          "src": "504:34:29",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1847,
+                        "id": 4924,
                         "nodeType": "ExpressionStatement",
-                        "src": "504:34:15"
+                        "src": "504:34:29"
                       }
                     ]
                   },
@@ -635,18 +635,18 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1812,
+                    "id": 4889,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
-                      "id": 1809,
+                      "id": 4886,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1806,
-                      "src": "288:1:15",
+                      "referencedDeclaration": 4883,
+                      "src": "288:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -656,51 +656,51 @@
                     "operator": "<",
                     "rightExpression": {
                       "expression": {
-                        "id": 1810,
+                        "id": 4887,
                         "name": "_royalties",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1802,
-                        "src": "292:10:15",
+                        "referencedDeclaration": 4879,
+                        "src": "292:10:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct LibPart.Part memory[] memory"
                         }
                       },
-                      "id": 1811,
+                      "id": 4888,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "length",
                       "nodeType": "MemberAccess",
-                      "src": "292:17:15",
+                      "src": "292:17:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "288:21:15",
+                    "src": "288:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 1849,
+                  "id": 4926,
                   "initializationExpression": {
                     "assignments": [
-                      1806
+                      4883
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 1806,
+                        "id": 4883,
                         "mutability": "mutable",
                         "name": "i",
-                        "nameLocation": "281:1:15",
+                        "nameLocation": "281:1:29",
                         "nodeType": "VariableDeclaration",
-                        "scope": 1849,
-                        "src": "276:6:15",
+                        "scope": 4926,
+                        "src": "276:6:29",
                         "stateVariable": false,
                         "storageLocation": "default",
                         "typeDescriptions": {
@@ -708,10 +708,10 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 1805,
+                          "id": 4882,
                           "name": "uint",
                           "nodeType": "ElementaryTypeName",
-                          "src": "276:4:15",
+                          "src": "276:4:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -720,17 +720,17 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 1808,
+                    "id": 4885,
                     "initialValue": {
                       "hexValue": "30",
-                      "id": 1807,
+                      "id": 4884,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "285:1:15",
+                      "src": "285:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
                         "typeString": "int_const 0"
@@ -738,11 +738,11 @@
                       "value": "0"
                     },
                     "nodeType": "VariableDeclarationStatement",
-                    "src": "276:10:15"
+                    "src": "276:10:29"
                   },
                   "loopExpression": {
                     "expression": {
-                      "id": 1814,
+                      "id": 4891,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -750,14 +750,14 @@
                       "nodeType": "UnaryOperation",
                       "operator": "++",
                       "prefix": false,
-                      "src": "311:3:15",
+                      "src": "311:3:29",
                       "subExpression": {
-                        "id": 1813,
+                        "id": 4890,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1806,
-                        "src": "311:1:15",
+                        "referencedDeclaration": 4883,
+                        "src": "311:1:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -768,37 +768,37 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 1815,
+                    "id": 4892,
                     "nodeType": "ExpressionStatement",
-                    "src": "311:3:15"
+                    "src": "311:3:29"
                   },
                   "nodeType": "ForStatement",
-                  "src": "271:278:15"
+                  "src": "271:278:29"
                 },
                 {
                   "expression": {
                     "arguments": [
                       {
-                        "id": 1851,
+                        "id": 4928,
                         "name": "_id",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1798,
-                        "src": "574:3:15",
+                        "referencedDeclaration": 4875,
+                        "src": "574:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
                       {
-                        "id": 1852,
+                        "id": 4929,
                         "name": "_royalties",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1802,
-                        "src": "579:10:15",
+                        "referencedDeclaration": 4879,
+                        "src": "579:10:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct LibPart.Part memory[] memory"
                         }
                       }
@@ -810,22 +810,22 @@
                           "typeString": "uint256"
                         },
                         {
-                          "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct LibPart.Part memory[] memory"
                         }
                       ],
-                      "id": 1850,
+                      "id": 4927,
                       "name": "_onRoyaltiesSet",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1922,
-                      "src": "558:15:15",
+                      "referencedDeclaration": 4999,
+                      "src": "558:15:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr_$returns$__$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr_$returns$__$",
                         "typeString": "function (uint256,struct LibPart.Part memory[] memory)"
                       }
                     },
-                    "id": 1853,
+                    "id": 4930,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -833,39 +833,39 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "558:32:15",
+                    "src": "558:32:29",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1854,
+                  "id": 4931,
                   "nodeType": "ExpressionStatement",
-                  "src": "558:32:15"
+                  "src": "558:32:29"
                 }
               ]
             },
-            "id": 1856,
+            "id": 4933,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "_saveRoyalties",
-            "nameLocation": "190:14:15",
+            "nameLocation": "190:14:29",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1803,
+              "id": 4880,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1798,
+                  "id": 4875,
                   "mutability": "mutable",
                   "name": "_id",
-                  "nameLocation": "213:3:15",
+                  "nameLocation": "213:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1856,
-                  "src": "205:11:15",
+                  "scope": 4933,
+                  "src": "205:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -873,10 +873,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1797,
+                    "id": 4874,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "205:7:15",
+                    "src": "205:7:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -886,82 +886,82 @@
                 },
                 {
                   "constant": false,
-                  "id": 1802,
+                  "id": 4879,
                   "mutability": "mutable",
                   "name": "_royalties",
-                  "nameLocation": "240:10:15",
+                  "nameLocation": "240:10:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1856,
-                  "src": "218:32:15",
+                  "scope": 4933,
+                  "src": "218:32:29",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct LibPart.Part[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 1800,
+                      "id": 4877,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 1799,
+                        "id": 4876,
                         "name": "LibPart.Part",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 1739,
-                        "src": "218:12:15"
+                        "referencedDeclaration": 4816,
+                        "src": "218:12:29"
                       },
-                      "referencedDeclaration": 1739,
-                      "src": "218:12:15",
+                      "referencedDeclaration": 4816,
+                      "src": "218:12:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Part_$1739_storage_ptr",
+                        "typeIdentifier": "t_struct$_Part_$4816_storage_ptr",
                         "typeString": "struct LibPart.Part"
                       }
                     },
-                    "id": 1801,
+                    "id": 4878,
                     "nodeType": "ArrayTypeName",
-                    "src": "218:14:15",
+                    "src": "218:14:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr",
                       "typeString": "struct LibPart.Part[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "204:47:15"
+              "src": "204:47:29"
             },
             "returnParameters": {
-              "id": 1804,
+              "id": 4881,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "261:0:15"
+              "src": "261:0:29"
             },
-            "scope": 1923,
-            "src": "181:416:15",
+            "scope": 5000,
+            "src": "181:416:29",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 1912,
+              "id": 4989,
               "nodeType": "Block",
-              "src": "676:249:15",
+              "src": "676:249:29",
               "statements": [
                 {
                   "assignments": [
-                    1866
+                    4943
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1866,
+                      "id": 4943,
                       "mutability": "mutable",
                       "name": "length",
-                      "nameLocation": "691:6:15",
+                      "nameLocation": "691:6:29",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1912,
-                      "src": "686:11:15",
+                      "scope": 4989,
+                      "src": "686:11:29",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -969,10 +969,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1865,
+                        "id": 4942,
                         "name": "uint",
                         "nodeType": "ElementaryTypeName",
-                        "src": "686:4:15",
+                        "src": "686:4:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -981,29 +981,29 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1871,
+                  "id": 4948,
                   "initialValue": {
                     "expression": {
                       "baseExpression": {
-                        "id": 1867,
+                        "id": 4944,
                         "name": "royalties",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1796,
-                        "src": "700:9:15",
+                        "referencedDeclaration": 4873,
+                        "src": "700:9:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                           "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                         }
                       },
-                      "id": 1869,
+                      "id": 4946,
                       "indexExpression": {
-                        "id": 1868,
+                        "id": 4945,
                         "name": "_id",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1858,
-                        "src": "710:3:15",
+                        "referencedDeclaration": 4935,
+                        "src": "710:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1014,33 +1014,33 @@
                       "isPure": false,
                       "lValueRequested": false,
                       "nodeType": "IndexAccess",
-                      "src": "700:14:15",
+                      "src": "700:14:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                        "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                         "typeString": "struct LibPart.Part storage ref[] storage ref"
                       }
                     },
-                    "id": 1870,
+                    "id": 4947,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "memberName": "length",
                     "nodeType": "MemberAccess",
-                    "src": "700:21:15",
+                    "src": "700:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "686:35:15"
+                  "src": "686:35:29"
                 },
                 {
                   "body": {
-                    "id": 1910,
+                    "id": 4987,
                     "nodeType": "Block",
-                    "src": "764:155:15",
+                    "src": "764:155:29",
                     "statements": [
                       {
                         "condition": {
@@ -1048,7 +1048,7 @@
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           },
-                          "id": 1889,
+                          "id": 4966,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -1057,25 +1057,25 @@
                             "expression": {
                               "baseExpression": {
                                 "baseExpression": {
-                                  "id": 1882,
+                                  "id": 4959,
                                   "name": "royalties",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1796,
-                                  "src": "782:9:15",
+                                  "referencedDeclaration": 4873,
+                                  "src": "782:9:29",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                                     "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                                   }
                                 },
-                                "id": 1884,
+                                "id": 4961,
                                 "indexExpression": {
-                                  "id": 1883,
+                                  "id": 4960,
                                   "name": "_id",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1858,
-                                  "src": "792:3:15",
+                                  "referencedDeclaration": 4935,
+                                  "src": "792:3:29",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_uint256",
                                     "typeString": "uint256"
@@ -1086,20 +1086,20 @@
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "nodeType": "IndexAccess",
-                                "src": "782:14:15",
+                                "src": "782:14:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                                  "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                                   "typeString": "struct LibPart.Part storage ref[] storage ref"
                                 }
                               },
-                              "id": 1886,
+                              "id": 4963,
                               "indexExpression": {
-                                "id": 1885,
+                                "id": 4962,
                                 "name": "i",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1873,
-                                "src": "797:1:15",
+                                "referencedDeclaration": 4950,
+                                "src": "797:1:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -1110,21 +1110,21 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "nodeType": "IndexAccess",
-                              "src": "782:17:15",
+                              "src": "782:17:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$1739_storage",
+                                "typeIdentifier": "t_struct$_Part_$4816_storage",
                                 "typeString": "struct LibPart.Part storage ref"
                               }
                             },
-                            "id": 1887,
+                            "id": 4964,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "account",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1736,
-                            "src": "782:25:15",
+                            "referencedDeclaration": 4813,
+                            "src": "782:25:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -1133,34 +1133,34 @@
                           "nodeType": "BinaryOperation",
                           "operator": "==",
                           "rightExpression": {
-                            "id": 1888,
+                            "id": 4965,
                             "name": "_from",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1860,
-                            "src": "811:5:15",
+                            "referencedDeclaration": 4937,
+                            "src": "811:5:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
                             }
                           },
-                          "src": "782:34:15",
+                          "src": "782:34:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_bool",
                             "typeString": "bool"
                           }
                         },
-                        "id": 1909,
+                        "id": 4986,
                         "nodeType": "IfStatement",
-                        "src": "778:131:15",
+                        "src": "778:131:29",
                         "trueBody": {
-                          "id": 1908,
+                          "id": 4985,
                           "nodeType": "Block",
-                          "src": "818:91:15",
+                          "src": "818:91:29",
                           "statements": [
                             {
                               "expression": {
-                                "id": 1906,
+                                "id": 4983,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
@@ -1169,25 +1169,25 @@
                                   "expression": {
                                     "baseExpression": {
                                       "baseExpression": {
-                                        "id": 1890,
+                                        "id": 4967,
                                         "name": "royalties",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 1796,
-                                        "src": "836:9:15",
+                                        "referencedDeclaration": 4873,
+                                        "src": "836:9:29",
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                                           "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                                         }
                                       },
-                                      "id": 1893,
+                                      "id": 4970,
                                       "indexExpression": {
-                                        "id": 1891,
+                                        "id": 4968,
                                         "name": "_id",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 1858,
-                                        "src": "846:3:15",
+                                        "referencedDeclaration": 4935,
+                                        "src": "846:3:29",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_uint256",
                                           "typeString": "uint256"
@@ -1198,20 +1198,20 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "nodeType": "IndexAccess",
-                                      "src": "836:14:15",
+                                      "src": "836:14:29",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                                        "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                                         "typeString": "struct LibPart.Part storage ref[] storage ref"
                                       }
                                     },
-                                    "id": 1894,
+                                    "id": 4971,
                                     "indexExpression": {
-                                      "id": 1892,
+                                      "id": 4969,
                                       "name": "i",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 1873,
-                                      "src": "851:1:15",
+                                      "referencedDeclaration": 4950,
+                                      "src": "851:1:29",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_uint256",
                                         "typeString": "uint256"
@@ -1222,21 +1222,21 @@
                                     "isPure": false,
                                     "lValueRequested": false,
                                     "nodeType": "IndexAccess",
-                                    "src": "836:17:15",
+                                    "src": "836:17:29",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Part_$1739_storage",
+                                      "typeIdentifier": "t_struct$_Part_$4816_storage",
                                       "typeString": "struct LibPart.Part storage ref"
                                     }
                                   },
-                                  "id": 1895,
+                                  "id": 4972,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": true,
                                   "memberName": "account",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 1736,
-                                  "src": "836:25:15",
+                                  "referencedDeclaration": 4813,
+                                  "src": "836:25:29",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_address_payable",
                                     "typeString": "address payable"
@@ -1251,12 +1251,12 @@
                                         {
                                           "arguments": [
                                             {
-                                              "id": 1902,
+                                              "id": 4979,
                                               "name": "_to",
                                               "nodeType": "Identifier",
                                               "overloadedDeclarations": [],
-                                              "referencedDeclaration": 1862,
-                                              "src": "888:3:15",
+                                              "referencedDeclaration": 4939,
+                                              "src": "888:3:29",
                                               "typeDescriptions": {
                                                 "typeIdentifier": "t_address",
                                                 "typeString": "address"
@@ -1270,26 +1270,26 @@
                                                 "typeString": "address"
                                               }
                                             ],
-                                            "id": 1901,
+                                            "id": 4978,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
                                             "lValueRequested": false,
                                             "nodeType": "ElementaryTypeNameExpression",
-                                            "src": "880:7:15",
+                                            "src": "880:7:29",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_type$_t_uint160_$",
                                               "typeString": "type(uint160)"
                                             },
                                             "typeName": {
-                                              "id": 1900,
+                                              "id": 4977,
                                               "name": "uint160",
                                               "nodeType": "ElementaryTypeName",
-                                              "src": "880:7:15",
+                                              "src": "880:7:29",
                                               "typeDescriptions": {}
                                             }
                                           },
-                                          "id": 1903,
+                                          "id": 4980,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
@@ -1297,7 +1297,7 @@
                                           "lValueRequested": false,
                                           "names": [],
                                           "nodeType": "FunctionCall",
-                                          "src": "880:12:15",
+                                          "src": "880:12:29",
                                           "tryCall": false,
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_uint160",
@@ -1312,26 +1312,26 @@
                                             "typeString": "uint160"
                                           }
                                         ],
-                                        "id": 1899,
+                                        "id": 4976,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
                                         "lValueRequested": false,
                                         "nodeType": "ElementaryTypeNameExpression",
-                                        "src": "872:7:15",
+                                        "src": "872:7:29",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_type$_t_address_$",
                                           "typeString": "type(address)"
                                         },
                                         "typeName": {
-                                          "id": 1898,
+                                          "id": 4975,
                                           "name": "address",
                                           "nodeType": "ElementaryTypeName",
-                                          "src": "872:7:15",
+                                          "src": "872:7:29",
                                           "typeDescriptions": {}
                                         }
                                       },
-                                      "id": 1904,
+                                      "id": 4981,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
@@ -1339,7 +1339,7 @@
                                       "lValueRequested": false,
                                       "names": [],
                                       "nodeType": "FunctionCall",
-                                      "src": "872:21:15",
+                                      "src": "872:21:29",
                                       "tryCall": false,
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_address",
@@ -1354,27 +1354,27 @@
                                         "typeString": "address"
                                       }
                                     ],
-                                    "id": 1897,
+                                    "id": 4974,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": true,
                                     "lValueRequested": false,
                                     "nodeType": "ElementaryTypeNameExpression",
-                                    "src": "864:8:15",
+                                    "src": "864:8:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_type$_t_address_payable_$",
                                       "typeString": "type(address payable)"
                                     },
                                     "typeName": {
-                                      "id": 1896,
+                                      "id": 4973,
                                       "name": "address",
                                       "nodeType": "ElementaryTypeName",
-                                      "src": "864:8:15",
+                                      "src": "864:8:29",
                                       "stateMutability": "payable",
                                       "typeDescriptions": {}
                                     }
                                   },
-                                  "id": 1905,
+                                  "id": 4982,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -1382,22 +1382,22 @@
                                   "lValueRequested": false,
                                   "names": [],
                                   "nodeType": "FunctionCall",
-                                  "src": "864:30:15",
+                                  "src": "864:30:29",
                                   "tryCall": false,
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_address_payable",
                                     "typeString": "address payable"
                                   }
                                 },
-                                "src": "836:58:15",
+                                "src": "836:58:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address_payable",
                                   "typeString": "address payable"
                                 }
                               },
-                              "id": 1907,
+                              "id": 4984,
                               "nodeType": "ExpressionStatement",
-                              "src": "836:58:15"
+                              "src": "836:58:29"
                             }
                           ]
                         }
@@ -1409,18 +1409,18 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1878,
+                    "id": 4955,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
-                      "id": 1876,
+                      "id": 4953,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1873,
-                      "src": "747:1:15",
+                      "referencedDeclaration": 4950,
+                      "src": "747:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -1429,38 +1429,38 @@
                     "nodeType": "BinaryOperation",
                     "operator": "<",
                     "rightExpression": {
-                      "id": 1877,
+                      "id": 4954,
                       "name": "length",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1866,
-                      "src": "751:6:15",
+                      "referencedDeclaration": 4943,
+                      "src": "751:6:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "747:10:15",
+                    "src": "747:10:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 1911,
+                  "id": 4988,
                   "initializationExpression": {
                     "assignments": [
-                      1873
+                      4950
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 1873,
+                        "id": 4950,
                         "mutability": "mutable",
                         "name": "i",
-                        "nameLocation": "740:1:15",
+                        "nameLocation": "740:1:29",
                         "nodeType": "VariableDeclaration",
-                        "scope": 1911,
-                        "src": "735:6:15",
+                        "scope": 4988,
+                        "src": "735:6:29",
                         "stateVariable": false,
                         "storageLocation": "default",
                         "typeDescriptions": {
@@ -1468,10 +1468,10 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 1872,
+                          "id": 4949,
                           "name": "uint",
                           "nodeType": "ElementaryTypeName",
-                          "src": "735:4:15",
+                          "src": "735:4:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -1480,17 +1480,17 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 1875,
+                    "id": 4952,
                     "initialValue": {
                       "hexValue": "30",
-                      "id": 1874,
+                      "id": 4951,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "744:1:15",
+                      "src": "744:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
                         "typeString": "int_const 0"
@@ -1498,11 +1498,11 @@
                       "value": "0"
                     },
                     "nodeType": "VariableDeclarationStatement",
-                    "src": "735:10:15"
+                    "src": "735:10:29"
                   },
                   "loopExpression": {
                     "expression": {
-                      "id": 1880,
+                      "id": 4957,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -1510,14 +1510,14 @@
                       "nodeType": "UnaryOperation",
                       "operator": "++",
                       "prefix": false,
-                      "src": "759:3:15",
+                      "src": "759:3:29",
                       "subExpression": {
-                        "id": 1879,
+                        "id": 4956,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1873,
-                        "src": "759:1:15",
+                        "referencedDeclaration": 4950,
+                        "src": "759:1:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -1528,35 +1528,35 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 1881,
+                    "id": 4958,
                     "nodeType": "ExpressionStatement",
-                    "src": "759:3:15"
+                    "src": "759:3:29"
                   },
                   "nodeType": "ForStatement",
-                  "src": "731:188:15"
+                  "src": "731:188:29"
                 }
               ]
             },
-            "id": 1913,
+            "id": 4990,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "_updateAccount",
-            "nameLocation": "611:14:15",
+            "nameLocation": "611:14:29",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1863,
+              "id": 4940,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1858,
+                  "id": 4935,
                   "mutability": "mutable",
                   "name": "_id",
-                  "nameLocation": "634:3:15",
+                  "nameLocation": "634:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1913,
-                  "src": "626:11:15",
+                  "scope": 4990,
+                  "src": "626:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1564,10 +1564,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1857,
+                    "id": 4934,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "626:7:15",
+                    "src": "626:7:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1577,13 +1577,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1860,
+                  "id": 4937,
                   "mutability": "mutable",
                   "name": "_from",
-                  "nameLocation": "647:5:15",
+                  "nameLocation": "647:5:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1913,
-                  "src": "639:13:15",
+                  "scope": 4990,
+                  "src": "639:13:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1591,10 +1591,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1859,
+                    "id": 4936,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "639:7:15",
+                    "src": "639:7:29",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1605,13 +1605,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1862,
+                  "id": 4939,
                   "mutability": "mutable",
                   "name": "_to",
-                  "nameLocation": "662:3:15",
+                  "nameLocation": "662:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1913,
-                  "src": "654:11:15",
+                  "scope": 4990,
+                  "src": "654:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1619,10 +1619,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1861,
+                    "id": 4938,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "654:7:15",
+                    "src": "654:7:29",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1632,41 +1632,41 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "625:41:15"
+              "src": "625:41:29"
             },
             "returnParameters": {
-              "id": 1864,
+              "id": 4941,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "676:0:15"
+              "src": "676:0:29"
             },
-            "scope": 1923,
-            "src": "602:323:15",
+            "scope": 5000,
+            "src": "602:323:29",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
-            "id": 1922,
+            "id": 4999,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "_onRoyaltiesSet",
-            "nameLocation": "939:15:15",
+            "nameLocation": "939:15:29",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1920,
+              "id": 4997,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1915,
+                  "id": 4992,
                   "mutability": "mutable",
                   "name": "_id",
-                  "nameLocation": "963:3:15",
+                  "nameLocation": "963:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1922,
-                  "src": "955:11:15",
+                  "scope": 4999,
+                  "src": "955:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1674,10 +1674,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1914,
+                    "id": 4991,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "955:7:15",
+                    "src": "955:7:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1687,86 +1687,86 @@
                 },
                 {
                   "constant": false,
-                  "id": 1919,
+                  "id": 4996,
                   "mutability": "mutable",
                   "name": "_royalties",
-                  "nameLocation": "990:10:15",
+                  "nameLocation": "990:10:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1922,
-                  "src": "968:32:15",
+                  "scope": 4999,
+                  "src": "968:32:29",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct LibPart.Part[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 1917,
+                      "id": 4994,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 1916,
+                        "id": 4993,
                         "name": "LibPart.Part",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 1739,
-                        "src": "968:12:15"
+                        "referencedDeclaration": 4816,
+                        "src": "968:12:29"
                       },
-                      "referencedDeclaration": 1739,
-                      "src": "968:12:15",
+                      "referencedDeclaration": 4816,
+                      "src": "968:12:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Part_$1739_storage_ptr",
+                        "typeIdentifier": "t_struct$_Part_$4816_storage_ptr",
                         "typeString": "struct LibPart.Part"
                       }
                     },
-                    "id": 1918,
+                    "id": 4995,
                     "nodeType": "ArrayTypeName",
-                    "src": "968:14:15",
+                    "src": "968:14:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr",
                       "typeString": "struct LibPart.Part[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "954:47:15"
+              "src": "954:47:29"
             },
             "returnParameters": {
-              "id": 1921,
+              "id": 4998,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1018:0:15"
+              "src": "1018:0:29"
             },
-            "scope": 1923,
-            "src": "930:89:15",
+            "scope": 5000,
+            "src": "930:89:29",
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "internal"
           }
         ],
-        "scope": 1924,
-        "src": "81:940:15",
+        "scope": 5001,
+        "src": "81:940:29",
         "usedErrors": []
       }
     ],
-    "src": "32:989:15"
+    "src": "32:989:29"
   },
   "legacyAST": {
-    "absolutePath": "project:/contracts/@rarible/royalties/contracts/impl/AbstractRoyalties.sol",
+    "absolutePath": "project:/contracts/rarible/royalties/contracts/impl/AbstractRoyalties.sol",
     "exportedSymbols": {
       "AbstractRoyalties": [
-        1923
+        5000
       ],
       "LibPart": [
-        1760
+        4837
       ]
     },
-    "id": 1924,
+    "id": 5001,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1789,
+        "id": 4866,
         "literals": [
           "solidity",
           "^",
@@ -1774,17 +1774,17 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:23:15"
+        "src": "32:23:29"
       },
       {
-        "absolutePath": "project:/contracts/@rarible/royalties/contracts/LibPart.sol",
+        "absolutePath": "project:/contracts/rarible/royalties/contracts/LibPart.sol",
         "file": "../LibPart.sol",
-        "id": 1790,
+        "id": 4867,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 1924,
-        "sourceUnit": 1761,
-        "src": "56:24:15",
+        "scope": 5001,
+        "sourceUnit": 4838,
+        "src": "56:24:29",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1794,71 +1794,71 @@
         "contractDependencies": [],
         "contractKind": "contract",
         "fullyImplemented": false,
-        "id": 1923,
+        "id": 5000,
         "linearizedBaseContracts": [
-          1923
+          5000
         ],
         "name": "AbstractRoyalties",
-        "nameLocation": "99:17:15",
+        "nameLocation": "99:17:29",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
             "functionSelector": "8924af74",
-            "id": 1796,
+            "id": 4873,
             "mutability": "mutable",
             "name": "royalties",
-            "nameLocation": "166:9:15",
+            "nameLocation": "166:9:29",
             "nodeType": "VariableDeclaration",
-            "scope": 1923,
-            "src": "123:52:15",
+            "scope": 5000,
+            "src": "123:52:29",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
               "typeString": "mapping(uint256 => struct LibPart.Part[])"
             },
             "typeName": {
-              "id": 1795,
+              "id": 4872,
               "keyType": {
-                "id": 1791,
+                "id": 4868,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
-                "src": "132:7:15",
+                "src": "132:7:29",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
                 }
               },
               "nodeType": "Mapping",
-              "src": "123:35:15",
+              "src": "123:35:29",
               "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                 "typeString": "mapping(uint256 => struct LibPart.Part[])"
               },
               "valueType": {
                 "baseType": {
-                  "id": 1793,
+                  "id": 4870,
                   "nodeType": "UserDefinedTypeName",
                   "pathNode": {
-                    "id": 1792,
+                    "id": 4869,
                     "name": "LibPart.Part",
                     "nodeType": "IdentifierPath",
-                    "referencedDeclaration": 1739,
-                    "src": "143:12:15"
+                    "referencedDeclaration": 4816,
+                    "src": "143:12:29"
                   },
-                  "referencedDeclaration": 1739,
-                  "src": "143:12:15",
+                  "referencedDeclaration": 4816,
+                  "src": "143:12:29",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Part_$1739_storage_ptr",
+                    "typeIdentifier": "t_struct$_Part_$4816_storage_ptr",
                     "typeString": "struct LibPart.Part"
                   }
                 },
-                "id": 1794,
+                "id": 4871,
                 "nodeType": "ArrayTypeName",
-                "src": "143:14:15",
+                "src": "143:14:29",
                 "typeDescriptions": {
-                  "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr",
+                  "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr",
                   "typeString": "struct LibPart.Part[]"
                 }
               }
@@ -1867,15 +1867,15 @@
           },
           {
             "body": {
-              "id": 1855,
+              "id": 4932,
               "nodeType": "Block",
-              "src": "261:336:15",
+              "src": "261:336:29",
               "statements": [
                 {
                   "body": {
-                    "id": 1848,
+                    "id": 4925,
                     "nodeType": "Block",
-                    "src": "316:233:15",
+                    "src": "316:233:29",
                     "statements": [
                       {
                         "expression": {
@@ -1885,7 +1885,7 @@
                                 "typeIdentifier": "t_address",
                                 "typeString": "address"
                               },
-                              "id": 1825,
+                              "id": 4902,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -1893,25 +1893,25 @@
                               "leftExpression": {
                                 "expression": {
                                   "baseExpression": {
-                                    "id": 1817,
+                                    "id": 4894,
                                     "name": "_royalties",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1802,
-                                    "src": "338:10:15",
+                                    "referencedDeclaration": 4879,
+                                    "src": "338:10:29",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                                       "typeString": "struct LibPart.Part memory[] memory"
                                     }
                                   },
-                                  "id": 1819,
+                                  "id": 4896,
                                   "indexExpression": {
-                                    "id": 1818,
+                                    "id": 4895,
                                     "name": "i",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1806,
-                                    "src": "349:1:15",
+                                    "referencedDeclaration": 4883,
+                                    "src": "349:1:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_uint256",
                                       "typeString": "uint256"
@@ -1922,21 +1922,21 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "nodeType": "IndexAccess",
-                                  "src": "338:13:15",
+                                  "src": "338:13:29",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                    "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                     "typeString": "struct LibPart.Part memory"
                                   }
                                 },
-                                "id": 1820,
+                                "id": 4897,
                                 "isConstant": false,
                                 "isLValue": true,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "account",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1736,
-                                "src": "338:21:15",
+                                "referencedDeclaration": 4813,
+                                "src": "338:21:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address_payable",
                                   "typeString": "address payable"
@@ -1948,14 +1948,14 @@
                                 "arguments": [
                                   {
                                     "hexValue": "307830",
-                                    "id": 1823,
+                                    "id": 4900,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": true,
                                     "kind": "number",
                                     "lValueRequested": false,
                                     "nodeType": "Literal",
-                                    "src": "371:3:15",
+                                    "src": "371:3:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_rational_0_by_1",
                                       "typeString": "int_const 0"
@@ -1970,26 +1970,26 @@
                                       "typeString": "int_const 0"
                                     }
                                   ],
-                                  "id": 1822,
+                                  "id": 4899,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": true,
                                   "lValueRequested": false,
                                   "nodeType": "ElementaryTypeNameExpression",
-                                  "src": "363:7:15",
+                                  "src": "363:7:29",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_type$_t_address_$",
                                     "typeString": "type(address)"
                                   },
                                   "typeName": {
-                                    "id": 1821,
+                                    "id": 4898,
                                     "name": "address",
                                     "nodeType": "ElementaryTypeName",
-                                    "src": "363:7:15",
+                                    "src": "363:7:29",
                                     "typeDescriptions": {}
                                   }
                                 },
-                                "id": 1824,
+                                "id": 4901,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
@@ -1997,14 +1997,14 @@
                                 "lValueRequested": false,
                                 "names": [],
                                 "nodeType": "FunctionCall",
-                                "src": "363:12:15",
+                                "src": "363:12:29",
                                 "tryCall": false,
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address",
                                   "typeString": "address"
                                 }
                               },
-                              "src": "338:37:15",
+                              "src": "338:37:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
@@ -2012,14 +2012,14 @@
                             },
                             {
                               "hexValue": "526563697069656e742073686f756c642062652070726573656e74",
-                              "id": 1826,
+                              "id": 4903,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
                               "kind": "string",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "377:29:15",
+                              "src": "377:29:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_ee50f6df2181dd19e502443265ec469bb75e8a65bb811a800aad148381cf8508",
                                 "typeString": "literal_string \"Recipient should be present\""
@@ -2038,7 +2038,7 @@
                                 "typeString": "literal_string \"Recipient should be present\""
                               }
                             ],
-                            "id": 1816,
+                            "id": 4893,
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
@@ -2046,13 +2046,13 @@
                               4294967278
                             ],
                             "referencedDeclaration": 4294967278,
-                            "src": "330:7:15",
+                            "src": "330:7:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                               "typeString": "function (bool,string memory) pure"
                             }
                           },
-                          "id": 1827,
+                          "id": 4904,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2060,16 +2060,16 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "330:77:15",
+                          "src": "330:77:29",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1828,
+                        "id": 4905,
                         "nodeType": "ExpressionStatement",
-                        "src": "330:77:15"
+                        "src": "330:77:29"
                       },
                       {
                         "expression": {
@@ -2079,7 +2079,7 @@
                                 "typeIdentifier": "t_uint96",
                                 "typeString": "uint96"
                               },
-                              "id": 1835,
+                              "id": 4912,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
@@ -2087,25 +2087,25 @@
                               "leftExpression": {
                                 "expression": {
                                   "baseExpression": {
-                                    "id": 1830,
+                                    "id": 4907,
                                     "name": "_royalties",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1802,
-                                    "src": "429:10:15",
+                                    "referencedDeclaration": 4879,
+                                    "src": "429:10:29",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                                       "typeString": "struct LibPart.Part memory[] memory"
                                     }
                                   },
-                                  "id": 1832,
+                                  "id": 4909,
                                   "indexExpression": {
-                                    "id": 1831,
+                                    "id": 4908,
                                     "name": "i",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 1806,
-                                    "src": "440:1:15",
+                                    "referencedDeclaration": 4883,
+                                    "src": "440:1:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_uint256",
                                       "typeString": "uint256"
@@ -2116,21 +2116,21 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "nodeType": "IndexAccess",
-                                  "src": "429:13:15",
+                                  "src": "429:13:29",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                    "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                     "typeString": "struct LibPart.Part memory"
                                   }
                                 },
-                                "id": 1833,
+                                "id": 4910,
                                 "isConstant": false,
                                 "isLValue": true,
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "memberName": "value",
                                 "nodeType": "MemberAccess",
-                                "referencedDeclaration": 1738,
-                                "src": "429:19:15",
+                                "referencedDeclaration": 4815,
+                                "src": "429:19:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint96",
                                   "typeString": "uint96"
@@ -2140,21 +2140,21 @@
                               "operator": "!=",
                               "rightExpression": {
                                 "hexValue": "30",
-                                "id": 1834,
+                                "id": 4911,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": true,
                                 "kind": "number",
                                 "lValueRequested": false,
                                 "nodeType": "Literal",
-                                "src": "452:1:15",
+                                "src": "452:1:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_rational_0_by_1",
                                   "typeString": "int_const 0"
                                 },
                                 "value": "0"
                               },
-                              "src": "429:24:15",
+                              "src": "429:24:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_bool",
                                 "typeString": "bool"
@@ -2162,14 +2162,14 @@
                             },
                             {
                               "hexValue": "526f79616c74792076616c75652073686f756c6420626520706f736974697665",
-                              "id": 1836,
+                              "id": 4913,
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": true,
                               "kind": "string",
                               "lValueRequested": false,
                               "nodeType": "Literal",
-                              "src": "455:34:15",
+                              "src": "455:34:29",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_stringliteral_593311831d740e3a682cd1941decbdb819cd1a530afb770ecfcfb0c7a8b3d52a",
                                 "typeString": "literal_string \"Royalty value should be positive\""
@@ -2188,7 +2188,7 @@
                                 "typeString": "literal_string \"Royalty value should be positive\""
                               }
                             ],
-                            "id": 1829,
+                            "id": 4906,
                             "name": "require",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [
@@ -2196,13 +2196,13 @@
                               4294967278
                             ],
                             "referencedDeclaration": 4294967278,
-                            "src": "421:7:15",
+                            "src": "421:7:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
                               "typeString": "function (bool,string memory) pure"
                             }
                           },
-                          "id": 1837,
+                          "id": 4914,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2210,41 +2210,41 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "421:69:15",
+                          "src": "421:69:29",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1838,
+                        "id": 4915,
                         "nodeType": "ExpressionStatement",
-                        "src": "421:69:15"
+                        "src": "421:69:29"
                       },
                       {
                         "expression": {
                           "arguments": [
                             {
                               "baseExpression": {
-                                "id": 1843,
+                                "id": 4920,
                                 "name": "_royalties",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1802,
-                                "src": "524:10:15",
+                                "referencedDeclaration": 4879,
+                                "src": "524:10:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                                  "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                                   "typeString": "struct LibPart.Part memory[] memory"
                                 }
                               },
-                              "id": 1845,
+                              "id": 4922,
                               "indexExpression": {
-                                "id": 1844,
+                                "id": 4921,
                                 "name": "i",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1806,
-                                "src": "535:1:15",
+                                "referencedDeclaration": 4883,
+                                "src": "535:1:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -2255,9 +2255,9 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "nodeType": "IndexAccess",
-                              "src": "524:13:15",
+                              "src": "524:13:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             }
@@ -2265,31 +2265,31 @@
                           "expression": {
                             "argumentTypes": [
                               {
-                                "typeIdentifier": "t_struct$_Part_$1739_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$4816_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             ],
                             "expression": {
                               "baseExpression": {
-                                "id": 1839,
+                                "id": 4916,
                                 "name": "royalties",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1796,
-                                "src": "504:9:15",
+                                "referencedDeclaration": 4873,
+                                "src": "504:9:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                                  "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                                   "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                                 }
                               },
-                              "id": 1841,
+                              "id": 4918,
                               "indexExpression": {
-                                "id": 1840,
+                                "id": 4917,
                                 "name": "_id",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1798,
-                                "src": "514:3:15",
+                                "referencedDeclaration": 4875,
+                                "src": "514:3:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -2300,26 +2300,26 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "nodeType": "IndexAccess",
-                              "src": "504:14:15",
+                              "src": "504:14:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                                "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                                 "typeString": "struct LibPart.Part storage ref[] storage ref"
                               }
                             },
-                            "id": 1842,
+                            "id": 4919,
                             "isConstant": false,
                             "isLValue": false,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "push",
                             "nodeType": "MemberAccess",
-                            "src": "504:19:15",
+                            "src": "504:19:29",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr_$_t_struct$_Part_$1739_storage_$returns$__$bound_to$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr_$",
+                              "typeIdentifier": "t_function_arraypush_nonpayable$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr_$_t_struct$_Part_$4816_storage_$returns$__$bound_to$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr_$",
                               "typeString": "function (struct LibPart.Part storage ref[] storage pointer,struct LibPart.Part storage ref)"
                             }
                           },
-                          "id": 1846,
+                          "id": 4923,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2327,16 +2327,16 @@
                           "lValueRequested": false,
                           "names": [],
                           "nodeType": "FunctionCall",
-                          "src": "504:34:15",
+                          "src": "504:34:29",
                           "tryCall": false,
                           "typeDescriptions": {
                             "typeIdentifier": "t_tuple$__$",
                             "typeString": "tuple()"
                           }
                         },
-                        "id": 1847,
+                        "id": 4924,
                         "nodeType": "ExpressionStatement",
-                        "src": "504:34:15"
+                        "src": "504:34:29"
                       }
                     ]
                   },
@@ -2345,18 +2345,18 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1812,
+                    "id": 4889,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
-                      "id": 1809,
+                      "id": 4886,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1806,
-                      "src": "288:1:15",
+                      "referencedDeclaration": 4883,
+                      "src": "288:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -2366,51 +2366,51 @@
                     "operator": "<",
                     "rightExpression": {
                       "expression": {
-                        "id": 1810,
+                        "id": 4887,
                         "name": "_royalties",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1802,
-                        "src": "292:10:15",
+                        "referencedDeclaration": 4879,
+                        "src": "292:10:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct LibPart.Part memory[] memory"
                         }
                       },
-                      "id": 1811,
+                      "id": 4888,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "length",
                       "nodeType": "MemberAccess",
-                      "src": "292:17:15",
+                      "src": "292:17:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "288:21:15",
+                    "src": "288:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 1849,
+                  "id": 4926,
                   "initializationExpression": {
                     "assignments": [
-                      1806
+                      4883
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 1806,
+                        "id": 4883,
                         "mutability": "mutable",
                         "name": "i",
-                        "nameLocation": "281:1:15",
+                        "nameLocation": "281:1:29",
                         "nodeType": "VariableDeclaration",
-                        "scope": 1849,
-                        "src": "276:6:15",
+                        "scope": 4926,
+                        "src": "276:6:29",
                         "stateVariable": false,
                         "storageLocation": "default",
                         "typeDescriptions": {
@@ -2418,10 +2418,10 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 1805,
+                          "id": 4882,
                           "name": "uint",
                           "nodeType": "ElementaryTypeName",
-                          "src": "276:4:15",
+                          "src": "276:4:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -2430,17 +2430,17 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 1808,
+                    "id": 4885,
                     "initialValue": {
                       "hexValue": "30",
-                      "id": 1807,
+                      "id": 4884,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "285:1:15",
+                      "src": "285:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
                         "typeString": "int_const 0"
@@ -2448,11 +2448,11 @@
                       "value": "0"
                     },
                     "nodeType": "VariableDeclarationStatement",
-                    "src": "276:10:15"
+                    "src": "276:10:29"
                   },
                   "loopExpression": {
                     "expression": {
-                      "id": 1814,
+                      "id": 4891,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2460,14 +2460,14 @@
                       "nodeType": "UnaryOperation",
                       "operator": "++",
                       "prefix": false,
-                      "src": "311:3:15",
+                      "src": "311:3:29",
                       "subExpression": {
-                        "id": 1813,
+                        "id": 4890,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1806,
-                        "src": "311:1:15",
+                        "referencedDeclaration": 4883,
+                        "src": "311:1:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2478,37 +2478,37 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 1815,
+                    "id": 4892,
                     "nodeType": "ExpressionStatement",
-                    "src": "311:3:15"
+                    "src": "311:3:29"
                   },
                   "nodeType": "ForStatement",
-                  "src": "271:278:15"
+                  "src": "271:278:29"
                 },
                 {
                   "expression": {
                     "arguments": [
                       {
-                        "id": 1851,
+                        "id": 4928,
                         "name": "_id",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1798,
-                        "src": "574:3:15",
+                        "referencedDeclaration": 4875,
+                        "src": "574:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
                         }
                       },
                       {
-                        "id": 1852,
+                        "id": 4929,
                         "name": "_royalties",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1802,
-                        "src": "579:10:15",
+                        "referencedDeclaration": 4879,
+                        "src": "579:10:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct LibPart.Part memory[] memory"
                         }
                       }
@@ -2520,22 +2520,22 @@
                           "typeString": "uint256"
                         },
                         {
-                          "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                          "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                           "typeString": "struct LibPart.Part memory[] memory"
                         }
                       ],
-                      "id": 1850,
+                      "id": 4927,
                       "name": "_onRoyaltiesSet",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1922,
-                      "src": "558:15:15",
+                      "referencedDeclaration": 4999,
+                      "src": "558:15:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr_$returns$__$",
+                        "typeIdentifier": "t_function_internal_nonpayable$_t_uint256_$_t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr_$returns$__$",
                         "typeString": "function (uint256,struct LibPart.Part memory[] memory)"
                       }
                     },
-                    "id": 1853,
+                    "id": 4930,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2543,39 +2543,39 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "558:32:15",
+                    "src": "558:32:29",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 1854,
+                  "id": 4931,
                   "nodeType": "ExpressionStatement",
-                  "src": "558:32:15"
+                  "src": "558:32:29"
                 }
               ]
             },
-            "id": 1856,
+            "id": 4933,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "_saveRoyalties",
-            "nameLocation": "190:14:15",
+            "nameLocation": "190:14:29",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1803,
+              "id": 4880,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1798,
+                  "id": 4875,
                   "mutability": "mutable",
                   "name": "_id",
-                  "nameLocation": "213:3:15",
+                  "nameLocation": "213:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1856,
-                  "src": "205:11:15",
+                  "scope": 4933,
+                  "src": "205:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2583,10 +2583,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1797,
+                    "id": 4874,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "205:7:15",
+                    "src": "205:7:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -2596,82 +2596,82 @@
                 },
                 {
                   "constant": false,
-                  "id": 1802,
+                  "id": 4879,
                   "mutability": "mutable",
                   "name": "_royalties",
-                  "nameLocation": "240:10:15",
+                  "nameLocation": "240:10:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1856,
-                  "src": "218:32:15",
+                  "scope": 4933,
+                  "src": "218:32:29",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct LibPart.Part[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 1800,
+                      "id": 4877,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 1799,
+                        "id": 4876,
                         "name": "LibPart.Part",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 1739,
-                        "src": "218:12:15"
+                        "referencedDeclaration": 4816,
+                        "src": "218:12:29"
                       },
-                      "referencedDeclaration": 1739,
-                      "src": "218:12:15",
+                      "referencedDeclaration": 4816,
+                      "src": "218:12:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Part_$1739_storage_ptr",
+                        "typeIdentifier": "t_struct$_Part_$4816_storage_ptr",
                         "typeString": "struct LibPart.Part"
                       }
                     },
-                    "id": 1801,
+                    "id": 4878,
                     "nodeType": "ArrayTypeName",
-                    "src": "218:14:15",
+                    "src": "218:14:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr",
                       "typeString": "struct LibPart.Part[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "204:47:15"
+              "src": "204:47:29"
             },
             "returnParameters": {
-              "id": 1804,
+              "id": 4881,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "261:0:15"
+              "src": "261:0:29"
             },
-            "scope": 1923,
-            "src": "181:416:15",
+            "scope": 5000,
+            "src": "181:416:29",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
             "body": {
-              "id": 1912,
+              "id": 4989,
               "nodeType": "Block",
-              "src": "676:249:15",
+              "src": "676:249:29",
               "statements": [
                 {
                   "assignments": [
-                    1866
+                    4943
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 1866,
+                      "id": 4943,
                       "mutability": "mutable",
                       "name": "length",
-                      "nameLocation": "691:6:15",
+                      "nameLocation": "691:6:29",
                       "nodeType": "VariableDeclaration",
-                      "scope": 1912,
-                      "src": "686:11:15",
+                      "scope": 4989,
+                      "src": "686:11:29",
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
@@ -2679,10 +2679,10 @@
                         "typeString": "uint256"
                       },
                       "typeName": {
-                        "id": 1865,
+                        "id": 4942,
                         "name": "uint",
                         "nodeType": "ElementaryTypeName",
-                        "src": "686:4:15",
+                        "src": "686:4:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2691,29 +2691,29 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 1871,
+                  "id": 4948,
                   "initialValue": {
                     "expression": {
                       "baseExpression": {
-                        "id": 1867,
+                        "id": 4944,
                         "name": "royalties",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1796,
-                        "src": "700:9:15",
+                        "referencedDeclaration": 4873,
+                        "src": "700:9:29",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                           "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                         }
                       },
-                      "id": 1869,
+                      "id": 4946,
                       "indexExpression": {
-                        "id": 1868,
+                        "id": 4945,
                         "name": "_id",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1858,
-                        "src": "710:3:15",
+                        "referencedDeclaration": 4935,
+                        "src": "710:3:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -2724,33 +2724,33 @@
                       "isPure": false,
                       "lValueRequested": false,
                       "nodeType": "IndexAccess",
-                      "src": "700:14:15",
+                      "src": "700:14:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                        "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                         "typeString": "struct LibPart.Part storage ref[] storage ref"
                       }
                     },
-                    "id": 1870,
+                    "id": 4947,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "memberName": "length",
                     "nodeType": "MemberAccess",
-                    "src": "700:21:15",
+                    "src": "700:21:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     }
                   },
                   "nodeType": "VariableDeclarationStatement",
-                  "src": "686:35:15"
+                  "src": "686:35:29"
                 },
                 {
                   "body": {
-                    "id": 1910,
+                    "id": 4987,
                     "nodeType": "Block",
-                    "src": "764:155:15",
+                    "src": "764:155:29",
                     "statements": [
                       {
                         "condition": {
@@ -2758,7 +2758,7 @@
                             "typeIdentifier": "t_address",
                             "typeString": "address"
                           },
-                          "id": 1889,
+                          "id": 4966,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -2767,25 +2767,25 @@
                             "expression": {
                               "baseExpression": {
                                 "baseExpression": {
-                                  "id": 1882,
+                                  "id": 4959,
                                   "name": "royalties",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1796,
-                                  "src": "782:9:15",
+                                  "referencedDeclaration": 4873,
+                                  "src": "782:9:29",
                                   "typeDescriptions": {
-                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                                    "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                                     "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                                   }
                                 },
-                                "id": 1884,
+                                "id": 4961,
                                 "indexExpression": {
-                                  "id": 1883,
+                                  "id": 4960,
                                   "name": "_id",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 1858,
-                                  "src": "792:3:15",
+                                  "referencedDeclaration": 4935,
+                                  "src": "792:3:29",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_uint256",
                                     "typeString": "uint256"
@@ -2796,20 +2796,20 @@
                                 "isPure": false,
                                 "lValueRequested": false,
                                 "nodeType": "IndexAccess",
-                                "src": "782:14:15",
+                                "src": "782:14:29",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                                  "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                                   "typeString": "struct LibPart.Part storage ref[] storage ref"
                                 }
                               },
-                              "id": 1886,
+                              "id": 4963,
                               "indexExpression": {
-                                "id": 1885,
+                                "id": 4962,
                                 "name": "i",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 1873,
-                                "src": "797:1:15",
+                                "referencedDeclaration": 4950,
+                                "src": "797:1:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_uint256",
                                   "typeString": "uint256"
@@ -2820,21 +2820,21 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "nodeType": "IndexAccess",
-                              "src": "782:17:15",
+                              "src": "782:17:29",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$1739_storage",
+                                "typeIdentifier": "t_struct$_Part_$4816_storage",
                                 "typeString": "struct LibPart.Part storage ref"
                               }
                             },
-                            "id": 1887,
+                            "id": 4964,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "account",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1736,
-                            "src": "782:25:15",
+                            "referencedDeclaration": 4813,
+                            "src": "782:25:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -2843,34 +2843,34 @@
                           "nodeType": "BinaryOperation",
                           "operator": "==",
                           "rightExpression": {
-                            "id": 1888,
+                            "id": 4965,
                             "name": "_from",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 1860,
-                            "src": "811:5:15",
+                            "referencedDeclaration": 4937,
+                            "src": "811:5:29",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address",
                               "typeString": "address"
                             }
                           },
-                          "src": "782:34:15",
+                          "src": "782:34:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_bool",
                             "typeString": "bool"
                           }
                         },
-                        "id": 1909,
+                        "id": 4986,
                         "nodeType": "IfStatement",
-                        "src": "778:131:15",
+                        "src": "778:131:29",
                         "trueBody": {
-                          "id": 1908,
+                          "id": 4985,
                           "nodeType": "Block",
-                          "src": "818:91:15",
+                          "src": "818:91:29",
                           "statements": [
                             {
                               "expression": {
-                                "id": 1906,
+                                "id": 4983,
                                 "isConstant": false,
                                 "isLValue": false,
                                 "isPure": false,
@@ -2879,25 +2879,25 @@
                                   "expression": {
                                     "baseExpression": {
                                       "baseExpression": {
-                                        "id": 1890,
+                                        "id": 4967,
                                         "name": "royalties",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 1796,
-                                        "src": "836:9:15",
+                                        "referencedDeclaration": 4873,
+                                        "src": "836:9:29",
                                         "typeDescriptions": {
-                                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$1739_storage_$dyn_storage_$",
+                                          "typeIdentifier": "t_mapping$_t_uint256_$_t_array$_t_struct$_Part_$4816_storage_$dyn_storage_$",
                                           "typeString": "mapping(uint256 => struct LibPart.Part storage ref[] storage ref)"
                                         }
                                       },
-                                      "id": 1893,
+                                      "id": 4970,
                                       "indexExpression": {
-                                        "id": 1891,
+                                        "id": 4968,
                                         "name": "_id",
                                         "nodeType": "Identifier",
                                         "overloadedDeclarations": [],
-                                        "referencedDeclaration": 1858,
-                                        "src": "846:3:15",
+                                        "referencedDeclaration": 4935,
+                                        "src": "846:3:29",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_uint256",
                                           "typeString": "uint256"
@@ -2908,20 +2908,20 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "nodeType": "IndexAccess",
-                                      "src": "836:14:15",
+                                      "src": "836:14:29",
                                       "typeDescriptions": {
-                                        "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage",
+                                        "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage",
                                         "typeString": "struct LibPart.Part storage ref[] storage ref"
                                       }
                                     },
-                                    "id": 1894,
+                                    "id": 4971,
                                     "indexExpression": {
-                                      "id": 1892,
+                                      "id": 4969,
                                       "name": "i",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 1873,
-                                      "src": "851:1:15",
+                                      "referencedDeclaration": 4950,
+                                      "src": "851:1:29",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_uint256",
                                         "typeString": "uint256"
@@ -2932,21 +2932,21 @@
                                     "isPure": false,
                                     "lValueRequested": false,
                                     "nodeType": "IndexAccess",
-                                    "src": "836:17:15",
+                                    "src": "836:17:29",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_struct$_Part_$1739_storage",
+                                      "typeIdentifier": "t_struct$_Part_$4816_storage",
                                       "typeString": "struct LibPart.Part storage ref"
                                     }
                                   },
-                                  "id": 1895,
+                                  "id": 4972,
                                   "isConstant": false,
                                   "isLValue": true,
                                   "isPure": false,
                                   "lValueRequested": true,
                                   "memberName": "account",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 1736,
-                                  "src": "836:25:15",
+                                  "referencedDeclaration": 4813,
+                                  "src": "836:25:29",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_address_payable",
                                     "typeString": "address payable"
@@ -2961,12 +2961,12 @@
                                         {
                                           "arguments": [
                                             {
-                                              "id": 1902,
+                                              "id": 4979,
                                               "name": "_to",
                                               "nodeType": "Identifier",
                                               "overloadedDeclarations": [],
-                                              "referencedDeclaration": 1862,
-                                              "src": "888:3:15",
+                                              "referencedDeclaration": 4939,
+                                              "src": "888:3:29",
                                               "typeDescriptions": {
                                                 "typeIdentifier": "t_address",
                                                 "typeString": "address"
@@ -2980,26 +2980,26 @@
                                                 "typeString": "address"
                                               }
                                             ],
-                                            "id": 1901,
+                                            "id": 4978,
                                             "isConstant": false,
                                             "isLValue": false,
                                             "isPure": true,
                                             "lValueRequested": false,
                                             "nodeType": "ElementaryTypeNameExpression",
-                                            "src": "880:7:15",
+                                            "src": "880:7:29",
                                             "typeDescriptions": {
                                               "typeIdentifier": "t_type$_t_uint160_$",
                                               "typeString": "type(uint160)"
                                             },
                                             "typeName": {
-                                              "id": 1900,
+                                              "id": 4977,
                                               "name": "uint160",
                                               "nodeType": "ElementaryTypeName",
-                                              "src": "880:7:15",
+                                              "src": "880:7:29",
                                               "typeDescriptions": {}
                                             }
                                           },
-                                          "id": 1903,
+                                          "id": 4980,
                                           "isConstant": false,
                                           "isLValue": false,
                                           "isPure": false,
@@ -3007,7 +3007,7 @@
                                           "lValueRequested": false,
                                           "names": [],
                                           "nodeType": "FunctionCall",
-                                          "src": "880:12:15",
+                                          "src": "880:12:29",
                                           "tryCall": false,
                                           "typeDescriptions": {
                                             "typeIdentifier": "t_uint160",
@@ -3022,26 +3022,26 @@
                                             "typeString": "uint160"
                                           }
                                         ],
-                                        "id": 1899,
+                                        "id": 4976,
                                         "isConstant": false,
                                         "isLValue": false,
                                         "isPure": true,
                                         "lValueRequested": false,
                                         "nodeType": "ElementaryTypeNameExpression",
-                                        "src": "872:7:15",
+                                        "src": "872:7:29",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_type$_t_address_$",
                                           "typeString": "type(address)"
                                         },
                                         "typeName": {
-                                          "id": 1898,
+                                          "id": 4975,
                                           "name": "address",
                                           "nodeType": "ElementaryTypeName",
-                                          "src": "872:7:15",
+                                          "src": "872:7:29",
                                           "typeDescriptions": {}
                                         }
                                       },
-                                      "id": 1904,
+                                      "id": 4981,
                                       "isConstant": false,
                                       "isLValue": false,
                                       "isPure": false,
@@ -3049,7 +3049,7 @@
                                       "lValueRequested": false,
                                       "names": [],
                                       "nodeType": "FunctionCall",
-                                      "src": "872:21:15",
+                                      "src": "872:21:29",
                                       "tryCall": false,
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_address",
@@ -3064,27 +3064,27 @@
                                         "typeString": "address"
                                       }
                                     ],
-                                    "id": 1897,
+                                    "id": 4974,
                                     "isConstant": false,
                                     "isLValue": false,
                                     "isPure": true,
                                     "lValueRequested": false,
                                     "nodeType": "ElementaryTypeNameExpression",
-                                    "src": "864:8:15",
+                                    "src": "864:8:29",
                                     "typeDescriptions": {
                                       "typeIdentifier": "t_type$_t_address_payable_$",
                                       "typeString": "type(address payable)"
                                     },
                                     "typeName": {
-                                      "id": 1896,
+                                      "id": 4973,
                                       "name": "address",
                                       "nodeType": "ElementaryTypeName",
-                                      "src": "864:8:15",
+                                      "src": "864:8:29",
                                       "stateMutability": "payable",
                                       "typeDescriptions": {}
                                     }
                                   },
-                                  "id": 1905,
+                                  "id": 4982,
                                   "isConstant": false,
                                   "isLValue": false,
                                   "isPure": false,
@@ -3092,22 +3092,22 @@
                                   "lValueRequested": false,
                                   "names": [],
                                   "nodeType": "FunctionCall",
-                                  "src": "864:30:15",
+                                  "src": "864:30:29",
                                   "tryCall": false,
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_address_payable",
                                     "typeString": "address payable"
                                   }
                                 },
-                                "src": "836:58:15",
+                                "src": "836:58:29",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_address_payable",
                                   "typeString": "address payable"
                                 }
                               },
-                              "id": 1907,
+                              "id": 4984,
                               "nodeType": "ExpressionStatement",
-                              "src": "836:58:15"
+                              "src": "836:58:29"
                             }
                           ]
                         }
@@ -3119,18 +3119,18 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 1878,
+                    "id": 4955,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
-                      "id": 1876,
+                      "id": 4953,
                       "name": "i",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1873,
-                      "src": "747:1:15",
+                      "referencedDeclaration": 4950,
+                      "src": "747:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -3139,38 +3139,38 @@
                     "nodeType": "BinaryOperation",
                     "operator": "<",
                     "rightExpression": {
-                      "id": 1877,
+                      "id": 4954,
                       "name": "length",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1866,
-                      "src": "751:6:15",
+                      "referencedDeclaration": 4943,
+                      "src": "751:6:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
                       }
                     },
-                    "src": "747:10:15",
+                    "src": "747:10:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
                     }
                   },
-                  "id": 1911,
+                  "id": 4988,
                   "initializationExpression": {
                     "assignments": [
-                      1873
+                      4950
                     ],
                     "declarations": [
                       {
                         "constant": false,
-                        "id": 1873,
+                        "id": 4950,
                         "mutability": "mutable",
                         "name": "i",
-                        "nameLocation": "740:1:15",
+                        "nameLocation": "740:1:29",
                         "nodeType": "VariableDeclaration",
-                        "scope": 1911,
-                        "src": "735:6:15",
+                        "scope": 4988,
+                        "src": "735:6:29",
                         "stateVariable": false,
                         "storageLocation": "default",
                         "typeDescriptions": {
@@ -3178,10 +3178,10 @@
                           "typeString": "uint256"
                         },
                         "typeName": {
-                          "id": 1872,
+                          "id": 4949,
                           "name": "uint",
                           "nodeType": "ElementaryTypeName",
-                          "src": "735:4:15",
+                          "src": "735:4:29",
                           "typeDescriptions": {
                             "typeIdentifier": "t_uint256",
                             "typeString": "uint256"
@@ -3190,17 +3190,17 @@
                         "visibility": "internal"
                       }
                     ],
-                    "id": 1875,
+                    "id": 4952,
                     "initialValue": {
                       "hexValue": "30",
-                      "id": 1874,
+                      "id": 4951,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "744:1:15",
+                      "src": "744:1:29",
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_0_by_1",
                         "typeString": "int_const 0"
@@ -3208,11 +3208,11 @@
                       "value": "0"
                     },
                     "nodeType": "VariableDeclarationStatement",
-                    "src": "735:10:15"
+                    "src": "735:10:29"
                   },
                   "loopExpression": {
                     "expression": {
-                      "id": 1880,
+                      "id": 4957,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -3220,14 +3220,14 @@
                       "nodeType": "UnaryOperation",
                       "operator": "++",
                       "prefix": false,
-                      "src": "759:3:15",
+                      "src": "759:3:29",
                       "subExpression": {
-                        "id": 1879,
+                        "id": 4956,
                         "name": "i",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1873,
-                        "src": "759:1:15",
+                        "referencedDeclaration": 4950,
+                        "src": "759:1:29",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
                           "typeString": "uint256"
@@ -3238,35 +3238,35 @@
                         "typeString": "uint256"
                       }
                     },
-                    "id": 1881,
+                    "id": 4958,
                     "nodeType": "ExpressionStatement",
-                    "src": "759:3:15"
+                    "src": "759:3:29"
                   },
                   "nodeType": "ForStatement",
-                  "src": "731:188:15"
+                  "src": "731:188:29"
                 }
               ]
             },
-            "id": 1913,
+            "id": 4990,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "_updateAccount",
-            "nameLocation": "611:14:15",
+            "nameLocation": "611:14:29",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1863,
+              "id": 4940,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1858,
+                  "id": 4935,
                   "mutability": "mutable",
                   "name": "_id",
-                  "nameLocation": "634:3:15",
+                  "nameLocation": "634:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1913,
-                  "src": "626:11:15",
+                  "scope": 4990,
+                  "src": "626:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3274,10 +3274,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1857,
+                    "id": 4934,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "626:7:15",
+                    "src": "626:7:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3287,13 +3287,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1860,
+                  "id": 4937,
                   "mutability": "mutable",
                   "name": "_from",
-                  "nameLocation": "647:5:15",
+                  "nameLocation": "647:5:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1913,
-                  "src": "639:13:15",
+                  "scope": 4990,
+                  "src": "639:13:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3301,10 +3301,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1859,
+                    "id": 4936,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "639:7:15",
+                    "src": "639:7:29",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3315,13 +3315,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1862,
+                  "id": 4939,
                   "mutability": "mutable",
                   "name": "_to",
-                  "nameLocation": "662:3:15",
+                  "nameLocation": "662:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1913,
-                  "src": "654:11:15",
+                  "scope": 4990,
+                  "src": "654:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3329,10 +3329,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1861,
+                    "id": 4938,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "654:7:15",
+                    "src": "654:7:29",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -3342,41 +3342,41 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "625:41:15"
+              "src": "625:41:29"
             },
             "returnParameters": {
-              "id": 1864,
+              "id": 4941,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "676:0:15"
+              "src": "676:0:29"
             },
-            "scope": 1923,
-            "src": "602:323:15",
+            "scope": 5000,
+            "src": "602:323:29",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
           },
           {
-            "id": 1922,
+            "id": 4999,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "_onRoyaltiesSet",
-            "nameLocation": "939:15:15",
+            "nameLocation": "939:15:29",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1920,
+              "id": 4997,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1915,
+                  "id": 4992,
                   "mutability": "mutable",
                   "name": "_id",
-                  "nameLocation": "963:3:15",
+                  "nameLocation": "963:3:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1922,
-                  "src": "955:11:15",
+                  "scope": 4999,
+                  "src": "955:11:29",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -3384,10 +3384,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 1914,
+                    "id": 4991,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "955:7:15",
+                    "src": "955:7:29",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -3397,69 +3397,69 @@
                 },
                 {
                   "constant": false,
-                  "id": 1919,
+                  "id": 4996,
                   "mutability": "mutable",
                   "name": "_royalties",
-                  "nameLocation": "990:10:15",
+                  "nameLocation": "990:10:29",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1922,
-                  "src": "968:32:15",
+                  "scope": 4999,
+                  "src": "968:32:29",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Part_$1739_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_Part_$4816_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct LibPart.Part[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 1917,
+                      "id": 4994,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 1916,
+                        "id": 4993,
                         "name": "LibPart.Part",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 1739,
-                        "src": "968:12:15"
+                        "referencedDeclaration": 4816,
+                        "src": "968:12:29"
                       },
-                      "referencedDeclaration": 1739,
-                      "src": "968:12:15",
+                      "referencedDeclaration": 4816,
+                      "src": "968:12:29",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Part_$1739_storage_ptr",
+                        "typeIdentifier": "t_struct$_Part_$4816_storage_ptr",
                         "typeString": "struct LibPart.Part"
                       }
                     },
-                    "id": 1918,
+                    "id": 4995,
                     "nodeType": "ArrayTypeName",
-                    "src": "968:14:15",
+                    "src": "968:14:29",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Part_$1739_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_Part_$4816_storage_$dyn_storage_ptr",
                       "typeString": "struct LibPart.Part[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "954:47:15"
+              "src": "954:47:29"
             },
             "returnParameters": {
-              "id": 1921,
+              "id": 4998,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1018:0:15"
+              "src": "1018:0:29"
             },
-            "scope": 1923,
-            "src": "930:89:15",
+            "scope": 5000,
+            "src": "930:89:29",
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "internal"
           }
         ],
-        "scope": 1924,
-        "src": "81:940:15",
+        "scope": 5001,
+        "src": "81:940:29",
         "usedErrors": []
       }
     ],
-    "src": "32:989:15"
+    "src": "32:989:29"
   },
   "compiler": {
     "name": "solc",
@@ -3467,7 +3467,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-20T17:15:37.415Z",
+  "updatedAt": "2021-11-20T21:07:03.996Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

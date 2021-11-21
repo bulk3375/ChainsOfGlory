@@ -5,11 +5,11 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
-import "../rarible/royalties/contracts/LibPart.sol";
-import "../rarible/royalties/contracts/LibRoyaltiesV2.sol";
+import "./rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
+import "./rarible/royalties/contracts/LibPart.sol";
+import "./rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
-contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
+contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdTracker;
     
@@ -20,21 +20,32 @@ contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2I
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    //Used by _beforeTokenTransfer to catch the after minting
-    uint private classToMint;
-
-    //Example of struct to attach to any NFT created
-    struct NFT_Stats {
-        uint class;
-        uint stat01;
-        uint statnn;
+    //Stats of players and enemies
+    struct Gear_Stats {
+        uint class;	        //Index on the NFT for client use
+        uint slot;		    //Slot where the equipment match
+        uint level;     	//By default is 0. Evolvable NFTs may upgrade this level
+        uint stat01;    	//Health
+        uint stat02;    	//Vitality
+        uint stat03;    	//Attack
+        uint stat04;    	//Defense
+        uint stat05;    	//Mastery
+        uint stat06;    	//Speed
+        uint stat07;    	//Luck
+        uint stat08;    	//Faith
+        bool equiped;       //Used internally to know if it is already equiped
     }
 
+
+    //Used by _beforeTokenTransfer to catch the after minting
+    Gear_Stats private statsToMint;
+
+
     //Mapping from NFT to struct
-    mapping(uint256 => NFT_Stats) private values;
+    mapping(uint256 => Gear_Stats) private values;
 
     // Mapping from owner address to token ID. It is used to quickly get all NFTs on an address
-    mapping(address => uint256[]) private _tokensByOwner;
+    mapping(address => mapping(uint256 => int)) private _tokensByOwner;
 
     //Generic random counter, used to add a bit more of entropy
     uint randomNonce=0;
@@ -45,25 +56,30 @@ contract RoyaltyERC721 is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2I
         return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce))) % _modulus;
     }
 
-    constructor() ERC721("GENERUC NFT", "GNF")  {
+    constructor() ERC721("Chains of Glory Equipment", "CGE")  {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(BURNER_ROLE, _msgSender());
     }
 
-    function mint(address _to, uint class) public {
+    function mint(address _to, Gear_Stats memory stats) public {
         require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
-        classToMint=class;
+        
+        //Stores the struct to assign when mint os ok
+        statsToMint=stats;
         super._mint(_to, _tokenIdTracker.current()); 
+    }
+
+    //Returns the single stats of the PJ (without applying any equipement)
+    function singleStats(uint256 idPJ) public view returns(Gear_Stats memory) {
+        return values[idPJ];
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
         if(from==address(0)) {
-            //Minting, creates struct of stats
-            values[_tokenIdTracker.current()].class = classToMint;
-            values[_tokenIdTracker.current()].stat01 = randMod(100);
-            values[_tokenIdTracker.current()].statnn = randMod(100);
+            //Minting ok, creates struct of stats
+            values[_tokenIdTracker.current()] = statsToMint;
             _tokenIdTracker.increment();
 
             //Updates the _tokensByOwner mapping
