@@ -21,81 +21,70 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
     //Stats of players and enemies
-    struct Gear_Stats {
-        uint class;	        //Index on the NFT for client use
-        uint slot;		    //Slot where the equipment match
-        uint level;     	//By default is 0. Evolvable NFTs may upgrade this level
-        uint stat01;    	//Health
-        uint stat02;    	//Vitality
-        uint stat03;    	//Attack
-        uint stat04;    	//Defense
-        uint stat05;    	//Mastery
-        uint stat06;    	//Speed
-        uint stat07;    	//Luck
-        uint stat08;    	//Faith
-        bool equiped;       //Used internally to know if it is already equiped
+    struct gearStats {
+        uint class;	            //Index on the NFT for client use
+        uint slot;		        //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
+                                //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount
+        uint level;     	    //By default is 0. Evolvable NFTs may upgrade this level
+        uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
+                                //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved
     }
 
 
     //Used by _beforeTokenTransfer to catch the after minting
-    Gear_Stats private statsToMint;
+    gearStats private gearToMint;
 
 
     //Mapping from NFT to struct
-    mapping(uint256 => Gear_Stats) private values;
+    mapping(uint256 => gearStats) private values;
 
     // Mapping from owner address to token ID. It is used to quickly get all NFTs on an address
-    mapping(address => mapping(uint256 => int)) private _tokensByOwner;
+    mapping(address => uint256[]) private _tokensByOwner;
 
     //Generic random counter, used to add a bit more of entropy
     uint randomNonce=0;
 
-    //Pseudo random. I think is enough for the game
-    function randMod(uint _modulus) internal returns(uint) {
-        randomNonce++; 
-        return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce))) % _modulus;
-    }
-
-    constructor() ERC721("Chains of Glory Equipment", "CGE")  {
+    constructor() ERC721("Chains of Glory Characters", "CGC")  {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(BURNER_ROLE, _msgSender());
     }
 
-    function mint(address _to, Gear_Stats memory stats) public {
+    function mint(address _to, gearStats memory data) public {
         require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
         
         //Stores the struct to assign when mint os ok
-        statsToMint=stats;
+        gearToMint=data;
         super._mint(_to, _tokenIdTracker.current()); 
     }
 
-    //Returns the single stats of the PJ (without applying any equipement)
-    function singleStats(uint256 idPJ) public view returns(Gear_Stats memory) {
-        return values[idPJ];
-    }
-
+    
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
         if(from==address(0)) {
             //Minting ok, creates struct of stats
-            values[_tokenIdTracker.current()] = statsToMint;
+            values[_tokenIdTracker.current()] = gearToMint;
             _tokenIdTracker.increment();
 
-            //Updates the _tokensByOwner mapping
-            _tokensByOwner[to][tokenId]+=1;
+            //Updates the _tokensByOwner mapping            
+            _tokensByOwner[to].push(tokenId);
         } else if(to==address(0)) {
             //Burning
 
             //Updates the _tokensByOwner mapping
-             _tokensByOwner[from][tokenId]-=1;
+            deleteTokenId(from, tokenId);
         } else {
             //Normal transfer
 
             //Updates the _tokensByOwner mapping
-            _tokensByOwner[from][tokenId]-=1;
-            _tokensByOwner[to][tokenId]+=1;
+            _tokensByOwner[to].push(tokenId);
+            deleteTokenId(from, tokenId);
         }
+    }
+
+    //Returns the gearStats of the NFT 
+    function singleStats(uint256 idGear) public view returns(gearStats memory) {
+        return values[idGear];
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
@@ -127,5 +116,31 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         }
 
         return super.supportsInterface(interfaceId);
+    }
+
+    //Pseudo random. I think is enough for the game
+    function randMod(uint _modulus) internal returns(uint) {
+        randomNonce++; 
+        return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce))) % _modulus;
+    }
+
+    //************************************************************
+    // ARRAY functions 
+    //************************************************************
+    function positionOf(address owner, uint256 tokenId) public view returns (uint) {
+        for(uint i=0; i<_tokensByOwner[owner].length; i++) {
+            if(_tokensByOwner[owner][i]==tokenId)
+                return i;
+        }
+        return _tokensByOwner[owner].length+100;
+    }
+
+    function deleteTokenId(address owner, uint256 tokenId) internal {
+        //Updates the _tokensByOwner mapping
+        uint pos=positionOf(owner, tokenId);
+        if(pos<_tokensByOwner[owner].length) {
+            _tokensByOwner[owner][pos]= _tokensByOwner[owner][ _tokensByOwner[owner].length-1];
+            _tokensByOwner[owner].pop();
+        }
     }
 }

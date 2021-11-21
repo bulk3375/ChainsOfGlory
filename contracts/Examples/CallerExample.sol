@@ -110,6 +110,7 @@ contract ChainsOfGlory is AccessControlEnumerable, Ownable {
 
     //Standard feed call
     function getLatestPrice() public view returns (int) {        
+        /*
         (
             uint80 roundID, 
             int price,
@@ -118,5 +119,7 @@ contract ChainsOfGlory is AccessControlEnumerable, Ownable {
             uint80 answeredInRound
         ) = priceFeed.latestRoundData();
         return price;
+        */
+        return 0;
     }
 }
