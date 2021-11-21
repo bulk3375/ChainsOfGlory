@@ -108,8 +108,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -122,8 +121,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"GetArray\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"GetStats\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"class\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"level\",\"type\":\"uint256\"},{\"internalType\":\"uint256[10]\",\"name\":\"stats\",\"type\":\"uint256[10]\"},{\"internalType\":\"uint256[10]\",\"name\":\"gear\",\"type\":\"uint256[10]\"}],\"internalType\":\"struct Characters.Char_Stats\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"addToArray\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"changeArray\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"class\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"level\",\"type\":\"uint256\"},{\"internalType\":\"uint256[10]\",\"name\":\"stats\",\"type\":\"uint256[10]\"},{\"internalType\":\"uint256[10]\",\"name\":\"gear\",\"type\":\"uint256[10]\"}],\"internalType\":\"struct Characters.Char_Stats\",\"name\":\"stats\",\"type\":\"tuple\"}],\"name\":\"mint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"postMint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"pos\",\"type\":\"uint256\"}],\"name\":\"removeFromArray\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Examples/TestBench.sol\":\"Characters\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Examples/TestBench.sol\":{\"keccak256\":\"0xa7936228578edcc040c298f01ee4f6bb5ffeafab1627b8f34ea9863fa7e102d2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c345a39905a4eff714f085550ff00fbf65a4cd05a055686f03d899232d1b8cb6\",\"dweb:/ipfs/QmNMw72ntkDvLNbiuBJcRumjRiTEDaLcfZjqr9rXQugu8e\"]}},\"version\":1}",
@@ -7883,8 +7881,7 @@
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-21T17:45:46.104Z",
-  "networkType": "ethereum",
+  "updatedAt": "2021-11-21T18:32:42.805Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

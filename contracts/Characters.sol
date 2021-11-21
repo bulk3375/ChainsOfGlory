@@ -31,7 +31,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         uint256 level;      	//By default is 0. Evolvable NFTs may upgrade this level
         uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved
-        uint256[10] gear;       //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
+        uint256[11] gear;       //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
                                 //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount
     }
 
@@ -84,6 +84,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
             _tokensByOwner[to].push(tokenId);
             deleteTokenId(from, tokenId);
         }
+    }
+
+    //Returns the array of NFTs owned by an address
+    function getCharacters(address owner) public view returns (uint256[] memory) {
+        return _tokensByOwner[owner];
     }
 
     //Returns the single stats of the PJ (without applying any equipement)
