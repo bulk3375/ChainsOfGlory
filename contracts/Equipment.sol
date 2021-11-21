@@ -23,8 +23,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Stats of players and enemies
     struct gearStats {
         uint class;	            //Index on the NFT for client use
-        uint slot;		        //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
-                                //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount
+        uint slot;		        //0-Wildcard 1-Head 2-Neck 3-Chest 4-Belt 5-Legs 6-Feet 7-Arms 
+                                //8-RHand (weapon) 9-LHand(complement) 10-Finger 11-Mount
         uint level;     	    //By default is 0. Evolvable NFTs may upgrade this level
         uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved
@@ -44,11 +44,15 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Generic random counter, used to add a bit more of entropy
     uint randomNonce=0;
 
-    constructor() ERC721("Chains of Glory Characters", "CGC")  {
+    constructor() ERC721("Chains of Glory Equipment", "CGE")  {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(BURNER_ROLE, _msgSender());
+
+        gearStats memory gear;
+        //Creates the 0 NFT which is special. Means 'empty slot' for the characters
+        mint(_msgSender(), gear);
     }
 
     function mint(address _to, gearStats memory data) public {
@@ -116,6 +120,11 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         }
 
         return super.supportsInterface(interfaceId);
+    }
+
+    //Public wrapper of _exists
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
     }
 
     //Pseudo random. I think is enough for the game
