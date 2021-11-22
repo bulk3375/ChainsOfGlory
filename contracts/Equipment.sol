@@ -23,8 +23,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Stats of players and enemies
     struct gearStats {
         uint class;	            //Index on the NFT for client use
-        uint slot;		        //0-Wildcard 1-Head 2-Neck 3-Chest 4-Belt 5-Legs 6-Feet 7-Arms 
-                                //8-RHand (weapon) 9-LHand(complement) 10-Finger 11-Mount
+        uint slot;		        //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
+                                //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount 100-Wildcard
         uint level;     	    //By default is 0. Evolvable NFTs may upgrade this level
         uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved
@@ -89,6 +89,11 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Returns the gearStats of the NFT 
     function singleStats(uint256 idGear) public view returns(gearStats memory) {
         return values[idGear];
+    }
+
+    //Returns the array of NFTs owned by an address
+    function getEquipment(address owner) public view returns (uint256[] memory) {
+        return _tokensByOwner[owner];
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
