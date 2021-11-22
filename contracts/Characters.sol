@@ -231,7 +231,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return true;
     }
 
-    //Test that all gear passed in the data is already equiped    
+    //Test that all gear passed in the data is not already equiped    
     function alreadyEquiped(address owner, uint256[11] memory gear) internal view returns (bool) {
         //For all PJs in the owner
         for(uint i=0; i<_tokensByOwner[owner].length; i++) {
@@ -247,7 +247,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return false;
     }
 
-    //Test that all gear passed in the data is already equiped    
+    //Test that all gear passed in the data is not already equiped    
     function alreadyEquiped(address owner, uint256 player) internal view returns (bool) {
         
         charData memory data=values[player];
