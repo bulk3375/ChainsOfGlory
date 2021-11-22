@@ -83,6 +83,34 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         values[player].gear=gear;
     }
     
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual override {
+        require(!hasEquipment(tokenId), "Exception: cannot transfer a player wearing any equipment");
+
+        super.transferFrom(from, to, tokenId);
+    }
+
+    function unequipAndTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public {
+        //Vefiore unequip a player test that sender is owner
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        /*
+        charData memory data=values[tokenId];
+        for(uint j=0; j<data.gear.length; j++) {
+            data.gear[j]=0;
+        }
+        */
+        uint256[11] memory empty;
+        values[tokenId].gear=empty;
+        transferFrom(from, to, tokenId);
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
         if(from==address(0)) {
             //Minting ok, creates struct of stats
@@ -224,7 +252,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
             if(gear[i]!=0) { //gear=0 means empty
                 //Test that equipment is on the right slot (or is a wildcard)
                 Equipment.gearStats memory gearNFT= _gearNFT.singleStats(gear[i]);
-                if(gearNFT.slot!=0 && gearNFT.slot!=(i+1)) // (i+1) because slot 0 is for wildcards
+                if(gearNFT.slot!=100 && gearNFT.slot!=i) // slot 100 is for wildcards
                     return false;
             }
         }
@@ -267,5 +295,14 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         }
         return false;
     }
-    
+
+    //Test if the PJ has some gear equiped. Remember that cannot transfer a PJ with gear equiped
+    function hasEquipment(uint256 player) internal view returns (bool){
+        charData memory data=values[player];
+        for(uint j=0; j<data.gear.length; j++) {
+            if(data.gear[j]!=0)
+                return true;
+        }
+        return false;
+    }
 }

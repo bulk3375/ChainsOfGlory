@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Characters  {
+contract CharactersTest  {
     //Stats of players and enemies
     struct Char_Stats {
         uint256 class;	        //Internal class 0 for player, index of enemies
