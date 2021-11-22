@@ -11,6 +11,17 @@ import "./rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
 import "./Equipment.sol";
 
+/*
+Characters will contains both Players and Enemies
+Consicderations:
+May equip any player with gear you own, but only if this gear is not used in any other player you own
+Cannot equip any enemy. Only equiped at crestion time
+Players may be transfered only when naked (no wearing any gear)
+Enemies may be transferef always full equiped. This is an exception
+When equip a player, all current equipment is unequiped and substituted by new one
+Calls to funtion 'equip' allways send full equip structure
+*/
+
 contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
 
     using Counters for Counters.Counter;
@@ -25,7 +36,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
     Equipment internal _gearNFT;      //Address of equipement NFT SC
 
-    //Stats of players and enemies
+
     //Stats of players and enemies
     struct charData {
         uint256 class;	        //Internal class 0 for player, index of enemies
@@ -59,6 +70,14 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         _setupRole(BURNER_ROLE, _msgSender());
     }
 
+    //Creation of a player or enemy
+    //Only MINTER_ROLE may create a player or enemy
+    //May equip it only with owned gear (nor weared in another player)
+    //It is the only place where contracts owners may equip an enemy
+    //Can only equip existing gear
+    //Can only equip with owned gear
+    //Verifies that gear is in the apropriate slot
+    //Can only equip gear not used in another players
     function mint(address _to, charData memory data) public {
         require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
         require(gearExists(data.gear), "Exception: some gear used does not exists in mint");
@@ -71,18 +90,29 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         super._mint(_to, _tokenIdTracker.current()); 
     }
 
-    //Equip al gear pased
+    //Equip al gear pased in the arrat
+    //The previous gear is replaced by the new one
+    //Cannot equip enemies
+    //Can only equip a player owned
+    //Can only equip existing gear
+    //Can only equip with owned gear
+    //Verifies that gear is in the apropriate slot
+    //Can only equip gear not used in another players
     function equip(uint256 player, uint256[11] memory gear) public {
+        require(values[player].class == 0, "Exception: Cannot equip an enemy!");
         require(ownerOf(player) == _msgSender(), "Exception: must be owner of the player to equip");
         require(gearExists(gear), "Exception: some gear used does not exists in equip");
         require(ownAllGear(ownerOf(player), gear), "Exception: player does not own all gear in equip");
         require(gearSlotOk(gear), "Exception: some gear is not in the apropriate slot in equip");
-        require(!alreadyEquiped(ownerOf(player), gear), "Exception: some gear is already equiped in other player in equip");
+        require(!alreadyEquipedInOtherPlayer(player, gear), "Exception: some gear is already equiped in other player in equip");
         
         //Stores the struct to assign when mint os ok
         values[player].gear=gear;
     }
     
+    //Override of the transfer function
+    //Verify that player has no equipment before transfer it
+    //hasEquipment do not test the enemies, remember that enemies are only cellectibles for users
     function transferFrom(
         address from,
         address to,
@@ -93,13 +123,17 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         super.transferFrom(from, to, tokenId);
     }
 
+    //Unequip a player before transfer ir
+    //This function has been created to optimize the transfer process
+    //All gear remains at owner wallet
     function unequipAndTransferFrom(
         address from,
         address to,
         uint256 tokenId
     ) public {
-        //Vefiore unequip a player test that sender is owner
+        //Vefiory unequip a player test that sender is owner
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(values[tokenId].class == 0, "Exception: Cannot unequip an enemy!");
         /*
         charData memory data=values[tokenId];
         for(uint j=0; j<data.gear.length; j++) {
@@ -111,6 +145,8 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         transferFrom(from, to, tokenId);
     }
 
+    //Override of the function
+    //Test what actions has been performed and then asign stats and update the _tokensByOwner 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
         if(from==address(0)) {
             //Minting ok, creates struct of stats
@@ -260,11 +296,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     }
 
     //Test that all gear passed in the data is already equiped    
-    function alreadyEquiped(address owner, uint256[11] memory gear) internal view returns (bool) {
+    function alreadyEquiped(address powner, uint256[11] memory gear) internal view returns (bool) {
         //For all PJs in the owner
-        for(uint i=0; i<_tokensByOwner[owner].length; i++) {
+        for(uint i=0; i<_tokensByOwner[powner].length; i++) {
             //Get the PJ data struct
-            charData memory dataTest= values[_tokensByOwner[owner][i]];
+            charData memory dataTest= values[_tokensByOwner[powner][i]];
 
             //Check 1 by 1 the slots
             for(uint j=0; j<gear.length; j++) {
@@ -276,19 +312,17 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     }
 
     //Test that all gear passed in the data is already equiped    
-    function alreadyEquiped(address owner, uint256 player) internal view returns (bool) {
-        
-        charData memory data=values[player];
-
-        //For all PJs in the owner, except the passed in params
-        for(uint i=0; i<_tokensByOwner[owner].length; i++) {
-            if(_tokensByOwner[owner][i] != player) {
+    function alreadyEquipedInOtherPlayer(uint256 player, uint256[11] memory gear) internal view returns (bool) {
+        address powner=ownerOf(player);
+        //For all PJs in the owner (except the one to equip)
+        for(uint i=0; i<_tokensByOwner[powner].length; i++) {
+            if(_tokensByOwner[powner][i] != player) {
                 //Get the PJ data struct
-                charData memory dataTest= values[_tokensByOwner[owner][i]];
+                charData memory dataTest= values[_tokensByOwner[powner][i]];
 
                 //Check 1 by 1 the slots
-                for(uint j=0; j<data.gear.length; j++) {
-                    if(dataTest.gear[j]==data.gear[j] && data.gear[j]!=0)
+                for(uint j=0; j<gear.length; j++) {
+                    if(dataTest.gear[j]==gear[j] && gear[j]!=0)
                         return true;
                 }
             }
@@ -296,9 +330,16 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return false;
     }
 
+    
+
     //Test if the PJ has some gear equiped. Remember that cannot transfer a PJ with gear equiped
     function hasEquipment(uint256 player) internal view returns (bool){
         charData memory data=values[player];
+        
+        //If is an enemy, no problem in transfer it
+        if(data.class!=0)
+            return false;
+
         for(uint j=0; j<data.gear.length; j++) {
             if(data.gear[j]!=0)
                 return true;
