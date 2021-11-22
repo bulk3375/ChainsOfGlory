@@ -295,13 +295,8 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return true;
     }
 
-<<<<<<< HEAD
-    //Test that all gear passed in the data is not already equiped    
-    function alreadyEquiped(address owner, uint256[11] memory gear) internal view returns (bool) {
-=======
     //Test that all gear passed in the data is already equiped    
     function alreadyEquiped(address powner, uint256[11] memory gear) internal view returns (bool) {
->>>>>>> 3fbc46ab9b979e3373c445ea17b10cc9943bb38c
         //For all PJs in the owner
         for(uint i=0; i<_tokensByOwner[powner].length; i++) {
             //Get the PJ data struct
@@ -316,23 +311,12 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return false;
     }
 
-<<<<<<< HEAD
-    //Test that all gear passed in the data is not already equiped    
-    function alreadyEquiped(address owner, uint256 player) internal view returns (bool) {
-        
-        charData memory data=values[player];
-
-        //For all PJs in the owner, except the passed in params
-        for(uint i=0; i<_tokensByOwner[owner].length; i++) {
-            if(_tokensByOwner[owner][i] != player) {
-=======
     //Test that all gear passed in the data is already equiped    
     function alreadyEquipedInOtherPlayer(uint256 player, uint256[11] memory gear) internal view returns (bool) {
         address powner=ownerOf(player);
         //For all PJs in the owner (except the one to equip)
         for(uint i=0; i<_tokensByOwner[powner].length; i++) {
             if(_tokensByOwner[powner][i] != player) {
->>>>>>> 3fbc46ab9b979e3373c445ea17b10cc9943bb38c
                 //Get the PJ data struct
                 charData memory dataTest= values[_tokensByOwner[powner][i]];
 
