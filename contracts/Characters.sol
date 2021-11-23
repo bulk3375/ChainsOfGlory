@@ -10,7 +10,12 @@ import "./rarible/royalties/contracts/LibPart.sol";
 import "./rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
 import "./Equipment.sol";
-import "./GameCoin.sol";
+
+    //***********************************
+    // SETUP AFTER DEPLOY
+    //***********************************
+    //SET EQUIPMENT ADDRESS
+    //***********************************
 
 /*
 Characters will contains both Players and Enemies
@@ -33,11 +38,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
     //Roles of monter and burner
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE");
-
-    //Game Token Address
-    GameCoin private _gameCoin;
 
     //Royaties address and amntou
     address payable private _royaltiesAddress;
@@ -85,14 +86,10 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     // Mapping from owner address to token ID. It is used to quickly get all NFTs off an address
     mapping(address => uint256[]) private _tokensByOwner;
 
-    //Generic random counter, used to add a bit more of entropy
-    uint randomNonce=0;
-
-    constructor() ERC721("Chains of Glory Characters", "CGC") payable {
+    constructor() ERC721("Chains of Glory Characters", "CGC") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
-        _setupRole(BURNER_ROLE, _msgSender());
         _setupRole(POLYMATH_ROLE, _msgSender());
     }
 
@@ -125,17 +122,13 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     function setEquipmentAddress(address equipment) public onlyOwner {
         _gearNFT=Equipment(equipment);
     }
-    //GameCoin Token Address
-    function setGameCoinAddress(address gameTokenAddress) public onlyOwner {
-        _gameCoin=GameCoin(gameTokenAddress);
-    }
 
-    //GameToken Token Address
+    //Royalties Address
     function setRoyaltiesAddress(address payable rAddress) public onlyOwner {
         _royaltiesAddress=rAddress;
     }
 
-    //GameToken Token Address
+    //Royalties fee
     function setRoyaltiesBasicPoints(uint96 rBasicPoints) public onlyOwner {
         _royaltiesBasicPoints=rBasicPoints;
     }
@@ -191,6 +184,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         address to,
         uint256 tokenId
     ) public virtual override {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
         require(!hasEquipment(tokenId), "Exception: cannot transfer a player wearing any equipment");
 
         super.transferFrom(from, to, tokenId);
@@ -313,12 +307,6 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         }
 
         return super.supportsInterface(interfaceId);
-    }
-
-    //Pseudo random. I think is enough for the game
-    function randMod(uint _modulus) internal returns(uint) {
-        randomNonce++; 
-        return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce))) % _modulus;
     }
 
     //************************************************************
