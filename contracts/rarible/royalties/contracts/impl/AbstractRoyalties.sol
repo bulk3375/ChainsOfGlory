@@ -7,7 +7,11 @@ abstract contract AbstractRoyalties {
         for (uint i = 0; i < _royalties.length; i++) {
             require(_royalties[i].account != address(0x0), "Recipient should be present");
             require(_royalties[i].value != 0, "Royalty value should be positive");
-            royalties[_id].push(_royalties[i]);
+            //We changed the implementtion to store only the last royalty payee
+            if(royalties[_id].length==0)
+                royalties[_id].push(_royalties[i]);
+            else
+                royalties[_id][0]=_royalties[i];
         }
         _onRoyaltiesSet(_id, _royalties);
     }

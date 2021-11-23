@@ -9,6 +9,8 @@ import "./rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
 import "./rarible/royalties/contracts/LibPart.sol";
 import "./rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
+import "./GameCoin.sol";
+
 contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdTracker;
@@ -21,6 +23,13 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE");
 
+    //Game Token Address
+    GameCoin private _gameCoin;
+
+    //Royaties address and amntou
+    address payable private _royaltiesAddress;
+    uint96 _royaltiesBasicPoints;
+
     //Stats of players and enemies
     struct gearStats {
         uint class;	            //Index on the NFT for client use
@@ -28,7 +37,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
                                 //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount 100-Wildcard
         uint level;     	    //By default is 0. Evolvable NFTs may upgrade this level
         uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
-                                //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved
+                                //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved 
+                                //NOTE: We use last two for the store, PRICE IN TOKENS AT POS 9!!
         //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100
     }
 
@@ -45,6 +55,12 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Each level means the percentage of upgrade for the level regarding the basic stats    
     uint256[] upgradeMatrix;
 
+    //Gear offered in the stores
+    //Administrators may update, delete or modify the content
+    //The store should read this array and populate the store acording to it
+    gearStats[] public storeGear;
+
+
     //Used by _beforeTokenTransfer to catch the after minting
     gearStats private gearToMint;
 
@@ -58,12 +74,16 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Generic random counter, used to add a bit more of entropy
     uint randomNonce=0;
 
-    constructor() ERC721("Chains of Glory Equipment", "CGE")  {
+    constructor() ERC721("Chains of Glory Equipment", "CGE") payable {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(BURNER_ROLE, _msgSender());
         _setupRole(POLYMATH_ROLE, _msgSender());
+
+        //Royaties address and amntou
+        _royaltiesAddress=payable(address(this)); //Contract creator by default
+        _royaltiesBasicPoints=1500; //15% default
 
         gearStats memory gear;
         //Creates the 0 NFT which is special. Means 'empty slot' for the characters
@@ -76,6 +96,21 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         //Stores the struct to assign when mint os ok
         gearToMint=data;
         super._mint(_to, _tokenIdTracker.current()); 
+    }
+
+    //GameToken Token Address
+    function setGameCoinAddress(address gameTokenAddress) public onlyOwner {
+        _gameCoin=GameCoin(gameTokenAddress);
+    }
+
+    //GameToken Token Address
+    function setRoyaltiesAddress(address payable rAddress) public onlyOwner {
+        _royaltiesAddress=rAddress;
+    }
+
+    //GameToken Token Address
+    function setRoyaltiesBasicPoints(uint96 rBasicPoints) public onlyOwner {
+        _royaltiesBasicPoints=rBasicPoints;
     }
 
     //Update the level of the gear and recalculates all stats
@@ -107,6 +142,9 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
             values[_tokenIdTracker.current()] = gearToMint;
             _tokenIdTracker.increment();
 
+            //When mint a new NFT sets the royalties address
+            setRoyalties(tokenId, _royaltiesAddress, _royaltiesBasicPoints);
+
             //Updates the _tokensByOwner mapping            
             _tokensByOwner[to].push(tokenId);
         } else if(to==address(0)) {
@@ -134,7 +172,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         baseGear=values[idGear];
         if(baseGear.level!=0) {
             uint256 multiplier=upgradeMatrix[baseGear.level];        
-            for(uint i=0; i< baseGear.stats.length; i++) {
+            for(uint i=0; i< baseGear.stats.length; i++) { //Remkember that last 2 are reserved!!
                 baseGear.stats[i]+=(baseGear.stats[i]*multiplier)/100;
             }
         }
@@ -150,7 +188,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         return "https://exampledomain/metadata/";
     }
 
-    function setRoyalties(uint256 _tokenId, address payable _royaltiesReceipientAddress, uint96 _percentageBasisPoints) public onlyOwner {
+    function setRoyalties(uint256 _tokenId, address payable _royaltiesReceipientAddress, uint96 _percentageBasisPoints) public {
+        require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
         LibPart.Part[] memory _royalties = new LibPart.Part[](1);
         _royalties[0].value = _percentageBasisPoints;
         _royalties[0].account = _royaltiesReceipientAddress;
@@ -206,5 +245,57 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
             _tokensByOwner[powner][pos]= _tokensByOwner[powner][ _tokensByOwner[powner].length-1];
             _tokensByOwner[powner].pop();
         }
+    }
+
+
+    //STORE FUNCTIONALITY
+    //
+    //Store is where the user may pay in game tokens for equipment
+
+    //Add an element to the store array
+    function addGearToStore(gearStats memory gear) public {
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        require(!gearExistsInStore(gear), "Exception: Element already exists in the array");
+        storeGear.push(gear);
+    }
+
+
+    //Remove an element from the store array
+    function removeGearFromStore(uint256 index) public {
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        require(index < storeGear.length, "Exception: Index out of bounds");
+
+        storeGear[index]= storeGear[ storeGear.length-1];
+        storeGear.pop();
+    }
+
+    //Manages the purchase
+    function purchase(uint256 index) external {
+        require(index < storeGear.length, "Exception: Index out of bounds");
+        require(_gameCoin.transferFrom(msg.sender, address(this), storeGear[index].stats[9]));
+
+        //Mint the gear to the payer
+        mint(msg.sender, storeGear[index]);
+    }
+
+    function gearExistsInStore(gearStats memory gear) internal view returns (bool) {
+        for(uint i=0; i<storeGear.length; i++) {
+            if( gear.class==storeGear[i].class &&
+                gear.slot==storeGear[i].slot &&
+                gear.level==storeGear[i].level &&
+                gear.stats[0]==storeGear[i].stats[0] &&
+                gear.stats[1]==storeGear[i].stats[1] &&
+                gear.stats[2]==storeGear[i].stats[2] &&
+                gear.stats[3]==storeGear[i].stats[3] &&
+                gear.stats[4]==storeGear[i].stats[4] &&
+                gear.stats[5]==storeGear[i].stats[5] &&
+                gear.stats[6]==storeGear[i].stats[6] &&
+                gear.stats[7]==storeGear[i].stats[7] &&
+                gear.stats[8]==storeGear[i].stats[8] &&
+                gear.stats[9]==storeGear[i].stats[9]
+                )
+                    return true;
+        }
+        return false;
     }
 }

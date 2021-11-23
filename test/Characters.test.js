@@ -112,7 +112,7 @@ contract("Character test", accounts => {
 
     addr1 => PJ NFT(1)
     */
-    it("is possible to set royalties", async() => {
+    it("Test Rarible royalties", async() => {
         let token = await Characters.deployed();
         await token.setRoyalties(0, deployerAddress, 1000);
         let royalties = await token.getRaribleV2Royalties(0);
@@ -127,7 +127,7 @@ contract("Character test", accounts => {
 
     addr1 => PJ NFT(1)
     */
-    it("works with ERC2981 Royalties", async() => {
+    it("Test ERC2981 Royalties (OpenSea)", async() => {
         let token = await Characters.deployed();
         await token.setRoyalties(0, deployerAddress, 1000);
         let royalties = await token.royaltyInfo(0, 100000);
@@ -616,7 +616,7 @@ contract("Character test", accounts => {
         }
     });
 
-    it("Only polymath may upgrade gear", async () => {
+    it("Only polymath may upgrade player", async () => {
         let token = await Characters.deployed();
         try{
             await token.updateLevel(0, {from: accounts[1]});
@@ -666,4 +666,9 @@ contract("Character test", accounts => {
             assert.include(err.message, "player is already at max level", "Error is not what is expected");
         }
     });
+
+    //Test set token addr
+    //Test default royalties setup
+    //Test set royalties and royalties addr
+
 })

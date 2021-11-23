@@ -129,4 +129,11 @@ contract("Equipment test", accounts => {
         }
     });
 
+    //Test set token addr
+    //Test default royalties setup
+    //Test set royalties and royalties addr
+    //Test add gear to store
+    //Test remove gear from store
+    //Test purchase
+
 })

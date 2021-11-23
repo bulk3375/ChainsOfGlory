@@ -10,6 +10,7 @@ import "./rarible/royalties/contracts/LibPart.sol";
 import "./rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
 import "./Equipment.sol";
+import "./GameCoin.sol";
 
 /*
 Characters will contains both Players and Enemies
@@ -34,6 +35,13 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
     bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE");
+
+    //Game Token Address
+    GameCoin private _gameCoin;
+
+    //Royaties address and amntou
+    address payable private _royaltiesAddress;
+    uint96 _royaltiesBasicPoints;
 
     Equipment internal _gearNFT;      //Address of equipement NFT SC
 
@@ -80,7 +88,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Generic random counter, used to add a bit more of entropy
     uint randomNonce=0;
 
-    constructor() ERC721("Chains of Glory Characters", "CGC")  {
+    constructor() ERC721("Chains of Glory Characters", "CGC") payable {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());
@@ -103,9 +111,33 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         require(gearSlotOk(data.gear), "Exception: some gear is not in the apropriate slot in mint");
         require(!alreadyEquiped(_to, data.gear), "Exception: some gear is already equiped in other player in mint");
         
+        //Royaties address and amntou
+        _royaltiesAddress=payable(address(this)); //Contract creator by default
+        _royaltiesBasicPoints=1500; //15% default
+
         //Stores the struct to assign when mint os ok
         statsToMint=data;
         super._mint(_to, _tokenIdTracker.current()); 
+    }
+
+
+    //Equipment Token Address
+    function setEquipmentAddress(address equipment) public onlyOwner {
+        _gearNFT=Equipment(equipment);
+    }
+    //GameCoin Token Address
+    function setGameCoinAddress(address gameTokenAddress) public onlyOwner {
+        _gameCoin=GameCoin(gameTokenAddress);
+    }
+
+    //GameToken Token Address
+    function setRoyaltiesAddress(address payable rAddress) public onlyOwner {
+        _royaltiesAddress=rAddress;
+    }
+
+    //GameToken Token Address
+    function setRoyaltiesBasicPoints(uint96 rBasicPoints) public onlyOwner {
+        _royaltiesBasicPoints=rBasicPoints;
     }
 
     //Update the level of the player 
@@ -194,6 +226,9 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
             values[_tokenIdTracker.current()] = statsToMint;
             _tokenIdTracker.increment();
 
+            //When mint a new NFT sets the royalties address
+            setRoyalties(tokenId, _royaltiesAddress, _royaltiesBasicPoints);
+
             //Updates the _tokensByOwner mapping            
             _tokensByOwner[to].push(tokenId);
         } else if(to==address(0)) {
@@ -252,7 +287,8 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return "https://exampledomain/metadata/";
     }
 
-    function setRoyalties(uint256 _tokenId, address payable _royaltiesReceipientAddress, uint96 _percentageBasisPoints) public onlyOwner {
+    function setRoyalties(uint256 _tokenId, address payable _royaltiesReceipientAddress, uint96 _percentageBasisPoints) public {
+        require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
         LibPart.Part[] memory _royalties = new LibPart.Part[](1);
         _royalties[0].value = _percentageBasisPoints;
         _royalties[0].account = _royaltiesReceipientAddress;
@@ -303,11 +339,6 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
             _tokensByOwner[powner][pos]= _tokensByOwner[powner][ _tokensByOwner[powner].length-1];
             _tokensByOwner[powner].pop();
         }
-    }
-
-    //Equipment Token Address
-    function setEquipmentAddress(address equipment) public onlyOwner {
-        _gearNFT=Equipment(equipment);
     }
 
     //Test that all gear passed exists 
