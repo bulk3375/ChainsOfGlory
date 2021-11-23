@@ -33,6 +33,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Roles of monter and burner
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+    bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE");
 
     Equipment internal _gearNFT;      //Address of equipement NFT SC
 
@@ -41,8 +42,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     struct charData {
         uint256 class;	        //Internal class 0 for player, index of enemies
         uint256 level;      	//By default is 0. Evolvable NFTs may upgrade this level
+
         uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved
+                                //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100
+
         uint256[11] gear;       //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
                                 //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount
                                 //NOTE: slot #0 in the Equipment SC means wildcard
@@ -52,6 +56,19 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
     //Used by _beforeTokenTransfer to catch the after minting
     charData private statsToMint;
+
+    //maximum level a player can go. 
+    //This value may be updated based on the current tier
+    //For first tier we may limit to 10, the for second to 20, etc...
+    //The upgrade matrix MUST be also updated in order to go further with tiers
+    uint maxLevel;
+
+    //It MUST contains the coeficients to apply to each level upgrade
+    //There must be the same amount of element as maxLevel
+    //For example, in tier 1 maxLevel=10
+    //upgradeMatrix=[0, 5, 10, 14, 18, 21, 24, 26, 28, 30]
+    //Each level means the percentage of upgrade for the level regarding the basic stats    
+    uint256[] upgradeMatrix;
 
 
     //Mapping from NFT to struct
@@ -68,6 +85,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(BURNER_ROLE, _msgSender());
+        _setupRole(POLYMATH_ROLE, _msgSender());
     }
 
     //Creation of a player or enemy
@@ -88,6 +106,29 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         //Stores the struct to assign when mint os ok
         statsToMint=data;
         super._mint(_to, _tokenIdTracker.current()); 
+    }
+
+    //Update the level of the player 
+    //Only Polymath role can do it. 
+    //To recalculate stats function uses the upgrade matrix. See above...
+    function updateLevel(uint256 player) public {
+        require(hasRole(POLYMATH_ROLE, _msgSender()), "Exception: only the Polymath can call this function");
+        require((values[player].level + 1) < maxLevel, "Exception: player is already at max level");
+        
+        values[player].level++;
+    }
+
+    //Set the max level of the gears
+    function setMaxLevel(uint lvl, uint256[] memory matrixValues) public {
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        require(lvl == matrixValues.length, "Exception: must provide a matrix of values of the same lenght than level");
+
+        maxLevel=lvl;
+        upgradeMatrix=matrixValues;
+    }
+
+    function getMatrix() public view returns (uint256[] memory){
+        return upgradeMatrix;
     }
 
     //Equip al gear pased in the arrat
@@ -170,28 +211,41 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     }
 
     //Returns the array of NFTs owned by an address
-    function getCharacters(address owner) public view returns (uint256[] memory) {
-        return _tokensByOwner[owner];
+    function getCharacters(address powner) public view returns (uint256[] memory) {
+        return _tokensByOwner[powner];
     }
 
-    //Returns the single stats of the PJ (without applying any equipement)
-    function singleStats(uint256 idPJ) public view returns(uint256[10] memory) {
-        return values[idPJ].stats;
+
+    //Returns the base gearStats of the NFT (without applying any equipement or level)
+    function baseStats(uint256 idPJ) public view returns(charData memory) {
+        return values[idPJ];
     }
 
-    //Returns the actual stats of the player calculating all the equped gear
-    function calculatedStats(uint256 idPJ) public view returns(uint256[10] memory) {
-        uint256[10] memory single = values[idPJ].stats;
+    //Returns the gearStats of the NFT aplying the level modifier
+    function singleStats(uint256 idPJ) public view returns(charData memory) {
+        charData memory baseChar=values[idPJ];
+        if(baseChar.level!=0) {
+            uint256 multiplier=upgradeMatrix[baseChar.level];        
+            for(uint i=0; i< baseChar.stats.length; i++) {
+                baseChar.stats[i]+=(baseChar.stats[i]*multiplier)/100;
+            }
+        }
+        return baseChar;
+    }    
+
+    //Returns the actual stats of the player calculating all the equped gear and leveling
+    function calculatedStats(uint256 idPJ) public view returns(charData memory) {
+        charData memory baseChar=singleStats(idPJ);
         for(uint i=0; i<values[idPJ].gear.length; i++) {
             if(values[idPJ].gear[i]!=0) {
                 //Add stats from gear NFT
                 Equipment.gearStats memory gear = _gearNFT.singleStats(values[idPJ].gear[i]);
-                for(uint j=0; j<single.length; j++) {
-                    single[j]+=gear.stats[j];
+                for(uint j=0; j<baseChar.stats.length; j++) {
+                    baseChar.stats[j]+=gear.stats[j];
                 }
             }
         }
-        return single;
+        return baseChar;
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
@@ -234,20 +288,20 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //************************************************************
     // ARRAY functions 
     //************************************************************
-    function positionOf(address owner, uint256 tokenId) public view returns (bool, uint) {
-        for(uint i=0; i<_tokensByOwner[owner].length; i++) {
-            if(_tokensByOwner[owner][i]==tokenId)
+    function positionOf(address powner, uint256 tokenId) public view returns (bool, uint) {
+        for(uint i=0; i<_tokensByOwner[powner].length; i++) {
+            if(_tokensByOwner[powner][i]==tokenId)
                 return (true, i);
         }
         return (false, 0);
     }
 
-    function deleteTokenId(address owner, uint256 tokenId) internal {
+    function deleteTokenId(address powner, uint256 tokenId) internal {
         //Updates the _tokensByOwner mapping
-        (bool found, uint pos)=positionOf(owner, tokenId);
+        (bool found, uint pos)=positionOf(powner, tokenId);
         if(found) {
-            _tokensByOwner[owner][pos]= _tokensByOwner[owner][ _tokensByOwner[owner].length-1];
-            _tokensByOwner[owner].pop();
+            _tokensByOwner[powner][pos]= _tokensByOwner[powner][ _tokensByOwner[powner].length-1];
+            _tokensByOwner[powner].pop();
         }
     }
 
@@ -266,7 +320,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     }
 
     //Test that all gear passed in the data is owned by _to     
-    function ownAllGear(address owner, uint256[11] memory gear) internal view returns (bool) {
+    function ownAllGear(address powner, uint256[11] memory gear) internal view returns (bool) {
         for(uint i=0; i<gear.length; i++) {
             
             if(!_gearNFT.exists(gear[i]))
@@ -274,7 +328,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
             if(gear[i]!=0) { //gear=0 means empty
                 //Test that _to is the owner
-                if(_gearNFT.ownerOf(gear[i])!=owner) {
+                if(_gearNFT.ownerOf(gear[i])!=powner) {
                     return false;
                 }
             }

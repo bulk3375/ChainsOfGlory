@@ -134,20 +134,20 @@
   "sourceMap": "57:333:28:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "57:333:28:-:0;;;;;;;;;;;;;;;;;;;;;;;;80:83;;116:47;80:83;;;;;168:25:33;;;156:2;141:18;80:83:28;;;;;;",
   "source": "// SPDX-License-Identifier: MIT \npragma solidity ^0.8.0;\nlibrary LibPart { \n    bytes32 public constant TYPE_HASH = keccak256(\"Part(address account,uint96 value)\");\n    struct Part { address payable account;\n        uint96 value; \n    }\n    function hash(Part memory part) internal pure returns (bytes32){ \n        return keccak256(abi.encode(TYPE_HASH, part.account,  part.value));\n    }\n}",
-  "sourcePath": "/Users/n65598/Development/Blockchain/ChainsOfGlory/contracts/rarible/royalties/contracts/LibPart.sol",
+  "sourcePath": "/home/javi/ChainsOfGlory/contracts/rarible/royalties/contracts/LibPart.sol",
   "ast": {
     "absolutePath": "project:/contracts/rarible/royalties/contracts/LibPart.sol",
     "exportedSymbols": {
       "LibPart": [
-        6180
+        6467
       ]
     },
-    "id": 6181,
+    "id": 6468,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6149,
+        "id": 6436,
         "literals": [
           "solidity",
           "^",
@@ -163,9 +163,9 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 6180,
+        "id": 6467,
         "linearizedBaseContracts": [
-          6180
+          6467
         ],
         "name": "LibPart",
         "nameLocation": "65:7:28",
@@ -174,12 +174,12 @@
           {
             "constant": true,
             "functionSelector": "64d4c819",
-            "id": 6154,
+            "id": 6441,
             "mutability": "constant",
             "name": "TYPE_HASH",
             "nameLocation": "104:9:28",
             "nodeType": "VariableDeclaration",
-            "scope": 6180,
+            "scope": 6467,
             "src": "80:83:28",
             "stateVariable": true,
             "storageLocation": "default",
@@ -188,7 +188,7 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 6150,
+              "id": 6437,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
               "src": "80:7:28",
@@ -201,7 +201,7 @@
               "arguments": [
                 {
                   "hexValue": "506172742861646472657373206163636f756e742c75696e7439362076616c756529",
-                  "id": 6152,
+                  "id": 6439,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -223,7 +223,7 @@
                     "typeString": "literal_string \"Part(address account,uint96 value)\""
                   }
                 ],
-                "id": 6151,
+                "id": 6438,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -234,7 +234,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 6153,
+              "id": 6440,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -253,16 +253,16 @@
           },
           {
             "canonicalName": "LibPart.Part",
-            "id": 6159,
+            "id": 6446,
             "members": [
               {
                 "constant": false,
-                "id": 6156,
+                "id": 6443,
                 "mutability": "mutable",
                 "name": "account",
                 "nameLocation": "199:7:28",
                 "nodeType": "VariableDeclaration",
-                "scope": 6159,
+                "scope": 6446,
                 "src": "183:23:28",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -271,7 +271,7 @@
                   "typeString": "address payable"
                 },
                 "typeName": {
-                  "id": 6155,
+                  "id": 6442,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "183:15:28",
@@ -285,12 +285,12 @@
               },
               {
                 "constant": false,
-                "id": 6158,
+                "id": 6445,
                 "mutability": "mutable",
                 "name": "value",
                 "nameLocation": "223:5:28",
                 "nodeType": "VariableDeclaration",
-                "scope": 6159,
+                "scope": 6446,
                 "src": "216:12:28",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -299,7 +299,7 @@
                   "typeString": "uint96"
                 },
                 "typeName": {
-                  "id": 6157,
+                  "id": 6444,
                   "name": "uint96",
                   "nodeType": "ElementaryTypeName",
                   "src": "216:6:28",
@@ -314,13 +314,13 @@
             "name": "Part",
             "nameLocation": "176:4:28",
             "nodeType": "StructDefinition",
-            "scope": 6180,
+            "scope": 6467,
             "src": "169:67:28",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6178,
+              "id": 6465,
               "nodeType": "Block",
               "src": "304:84:28",
               "statements": [
@@ -330,11 +330,11 @@
                       {
                         "arguments": [
                           {
-                            "id": 6170,
+                            "id": 6457,
                             "name": "TYPE_HASH",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6154,
+                            "referencedDeclaration": 6441,
                             "src": "343:9:28",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
@@ -343,25 +343,25 @@
                           },
                           {
                             "expression": {
-                              "id": 6171,
+                              "id": 6458,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6162,
+                              "referencedDeclaration": 6449,
                               "src": "354:4:28",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6159_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6172,
+                            "id": 6459,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "account",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6156,
+                            "referencedDeclaration": 6443,
                             "src": "354:12:28",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
@@ -370,25 +370,25 @@
                           },
                           {
                             "expression": {
-                              "id": 6173,
+                              "id": 6460,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6162,
+                              "referencedDeclaration": 6449,
                               "src": "369:4:28",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6159_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6174,
+                            "id": 6461,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "value",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6158,
+                            "referencedDeclaration": 6445,
                             "src": "369:10:28",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint96",
@@ -412,7 +412,7 @@
                             }
                           ],
                           "expression": {
-                            "id": 6168,
+                            "id": 6455,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -423,7 +423,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 6169,
+                          "id": 6456,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -436,7 +436,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 6175,
+                        "id": 6462,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -459,7 +459,7 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 6167,
+                      "id": 6454,
                       "name": "keccak256",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -470,7 +470,7 @@
                         "typeString": "function (bytes memory) pure returns (bytes32)"
                       }
                     },
-                    "id": 6176,
+                    "id": 6463,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -485,14 +485,14 @@
                       "typeString": "bytes32"
                     }
                   },
-                  "functionReturnParameters": 6166,
-                  "id": 6177,
+                  "functionReturnParameters": 6453,
+                  "id": 6464,
                   "nodeType": "Return",
                   "src": "315:66:28"
                 }
               ]
             },
-            "id": 6179,
+            "id": 6466,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -500,38 +500,38 @@
             "nameLocation": "250:4:28",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6163,
+              "id": 6450,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6162,
+                  "id": 6449,
                   "mutability": "mutable",
                   "name": "part",
                   "nameLocation": "267:4:28",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6179,
+                  "scope": 6466,
                   "src": "255:16:28",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Part_$6159_memory_ptr",
+                    "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
                     "typeString": "struct LibPart.Part"
                   },
                   "typeName": {
-                    "id": 6161,
+                    "id": 6448,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 6160,
+                      "id": 6447,
                       "name": "Part",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 6159,
+                      "referencedDeclaration": 6446,
                       "src": "255:4:28"
                     },
-                    "referencedDeclaration": 6159,
+                    "referencedDeclaration": 6446,
                     "src": "255:4:28",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Part_$6159_storage_ptr",
+                      "typeIdentifier": "t_struct$_Part_$6446_storage_ptr",
                       "typeString": "struct LibPart.Part"
                     }
                   },
@@ -541,17 +541,17 @@
               "src": "254:18:28"
             },
             "returnParameters": {
-              "id": 6166,
+              "id": 6453,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6165,
+                  "id": 6452,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6179,
+                  "scope": 6466,
                   "src": "296:7:28",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -560,7 +560,7 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 6164,
+                    "id": 6451,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "296:7:28",
@@ -574,14 +574,14 @@
               ],
               "src": "295:9:28"
             },
-            "scope": 6180,
+            "scope": 6467,
             "src": "241:147:28",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "internal"
           }
         ],
-        "scope": 6181,
+        "scope": 6468,
         "src": "57:333:28",
         "usedErrors": []
       }
@@ -592,15 +592,15 @@
     "absolutePath": "project:/contracts/rarible/royalties/contracts/LibPart.sol",
     "exportedSymbols": {
       "LibPart": [
-        6180
+        6467
       ]
     },
-    "id": 6181,
+    "id": 6468,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6149,
+        "id": 6436,
         "literals": [
           "solidity",
           "^",
@@ -616,9 +616,9 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 6180,
+        "id": 6467,
         "linearizedBaseContracts": [
-          6180
+          6467
         ],
         "name": "LibPart",
         "nameLocation": "65:7:28",
@@ -627,12 +627,12 @@
           {
             "constant": true,
             "functionSelector": "64d4c819",
-            "id": 6154,
+            "id": 6441,
             "mutability": "constant",
             "name": "TYPE_HASH",
             "nameLocation": "104:9:28",
             "nodeType": "VariableDeclaration",
-            "scope": 6180,
+            "scope": 6467,
             "src": "80:83:28",
             "stateVariable": true,
             "storageLocation": "default",
@@ -641,7 +641,7 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 6150,
+              "id": 6437,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
               "src": "80:7:28",
@@ -654,7 +654,7 @@
               "arguments": [
                 {
                   "hexValue": "506172742861646472657373206163636f756e742c75696e7439362076616c756529",
-                  "id": 6152,
+                  "id": 6439,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
@@ -676,7 +676,7 @@
                     "typeString": "literal_string \"Part(address account,uint96 value)\""
                   }
                 ],
-                "id": 6151,
+                "id": 6438,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
@@ -687,7 +687,7 @@
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 6153,
+              "id": 6440,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -706,16 +706,16 @@
           },
           {
             "canonicalName": "LibPart.Part",
-            "id": 6159,
+            "id": 6446,
             "members": [
               {
                 "constant": false,
-                "id": 6156,
+                "id": 6443,
                 "mutability": "mutable",
                 "name": "account",
                 "nameLocation": "199:7:28",
                 "nodeType": "VariableDeclaration",
-                "scope": 6159,
+                "scope": 6446,
                 "src": "183:23:28",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -724,7 +724,7 @@
                   "typeString": "address payable"
                 },
                 "typeName": {
-                  "id": 6155,
+                  "id": 6442,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
                   "src": "183:15:28",
@@ -738,12 +738,12 @@
               },
               {
                 "constant": false,
-                "id": 6158,
+                "id": 6445,
                 "mutability": "mutable",
                 "name": "value",
                 "nameLocation": "223:5:28",
                 "nodeType": "VariableDeclaration",
-                "scope": 6159,
+                "scope": 6446,
                 "src": "216:12:28",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -752,7 +752,7 @@
                   "typeString": "uint96"
                 },
                 "typeName": {
-                  "id": 6157,
+                  "id": 6444,
                   "name": "uint96",
                   "nodeType": "ElementaryTypeName",
                   "src": "216:6:28",
@@ -767,13 +767,13 @@
             "name": "Part",
             "nameLocation": "176:4:28",
             "nodeType": "StructDefinition",
-            "scope": 6180,
+            "scope": 6467,
             "src": "169:67:28",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6178,
+              "id": 6465,
               "nodeType": "Block",
               "src": "304:84:28",
               "statements": [
@@ -783,11 +783,11 @@
                       {
                         "arguments": [
                           {
-                            "id": 6170,
+                            "id": 6457,
                             "name": "TYPE_HASH",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6154,
+                            "referencedDeclaration": 6441,
                             "src": "343:9:28",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
@@ -796,25 +796,25 @@
                           },
                           {
                             "expression": {
-                              "id": 6171,
+                              "id": 6458,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6162,
+                              "referencedDeclaration": 6449,
                               "src": "354:4:28",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6159_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6172,
+                            "id": 6459,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "account",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6156,
+                            "referencedDeclaration": 6443,
                             "src": "354:12:28",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
@@ -823,25 +823,25 @@
                           },
                           {
                             "expression": {
-                              "id": 6173,
+                              "id": 6460,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6162,
+                              "referencedDeclaration": 6449,
                               "src": "369:4:28",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6159_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6174,
+                            "id": 6461,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "value",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6158,
+                            "referencedDeclaration": 6445,
                             "src": "369:10:28",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint96",
@@ -865,7 +865,7 @@
                             }
                           ],
                           "expression": {
-                            "id": 6168,
+                            "id": 6455,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -876,7 +876,7 @@
                               "typeString": "abi"
                             }
                           },
-                          "id": 6169,
+                          "id": 6456,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
@@ -889,7 +889,7 @@
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 6175,
+                        "id": 6462,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -912,7 +912,7 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 6167,
+                      "id": 6454,
                       "name": "keccak256",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -923,7 +923,7 @@
                         "typeString": "function (bytes memory) pure returns (bytes32)"
                       }
                     },
-                    "id": 6176,
+                    "id": 6463,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -938,14 +938,14 @@
                       "typeString": "bytes32"
                     }
                   },
-                  "functionReturnParameters": 6166,
-                  "id": 6177,
+                  "functionReturnParameters": 6453,
+                  "id": 6464,
                   "nodeType": "Return",
                   "src": "315:66:28"
                 }
               ]
             },
-            "id": 6179,
+            "id": 6466,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
@@ -953,38 +953,38 @@
             "nameLocation": "250:4:28",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6163,
+              "id": 6450,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6162,
+                  "id": 6449,
                   "mutability": "mutable",
                   "name": "part",
                   "nameLocation": "267:4:28",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6179,
+                  "scope": 6466,
                   "src": "255:16:28",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Part_$6159_memory_ptr",
+                    "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
                     "typeString": "struct LibPart.Part"
                   },
                   "typeName": {
-                    "id": 6161,
+                    "id": 6448,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 6160,
+                      "id": 6447,
                       "name": "Part",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 6159,
+                      "referencedDeclaration": 6446,
                       "src": "255:4:28"
                     },
-                    "referencedDeclaration": 6159,
+                    "referencedDeclaration": 6446,
                     "src": "255:4:28",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Part_$6159_storage_ptr",
+                      "typeIdentifier": "t_struct$_Part_$6446_storage_ptr",
                       "typeString": "struct LibPart.Part"
                     }
                   },
@@ -994,17 +994,17 @@
               "src": "254:18:28"
             },
             "returnParameters": {
-              "id": 6166,
+              "id": 6453,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6165,
+                  "id": 6452,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6179,
+                  "scope": 6466,
                   "src": "296:7:28",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1013,7 +1013,7 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 6164,
+                    "id": 6451,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
                     "src": "296:7:28",
@@ -1027,14 +1027,14 @@
               ],
               "src": "295:9:28"
             },
-            "scope": 6180,
+            "scope": 6467,
             "src": "241:147:28",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "internal"
           }
         ],
-        "scope": 6181,
+        "scope": 6468,
         "src": "57:333:28",
         "usedErrors": []
       }
@@ -1047,7 +1047,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-22T09:57:32.823Z",
+  "updatedAt": "2021-11-22T19:49:38.267Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

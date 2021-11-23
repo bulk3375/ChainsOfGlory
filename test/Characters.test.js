@@ -3,7 +3,7 @@ const Equipment = artifacts.require("Equipment");   //SC equipment
 
 const BN = web3.utils.BN;
 
-contract("Equipment test", accounts => {
+contract("Character test", accounts => {
     const[deployerAddress, tokenAddr1, tokenAddr2] = accounts;
 
     /*
@@ -14,7 +14,7 @@ contract("Equipment test", accounts => {
         //Set the gear adress into Character SC    
         await token.setEquipmentAddress(Equipment.address);
 
-        await token.mint(tokenAddr1, [0,0,[0,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
+        await token.mint(tokenAddr1, [0,0,[0,1000,800,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
     });
 
     /*
@@ -46,7 +46,7 @@ contract("Equipment test", accounts => {
         //Assign gear to address1 NFT 1
         //Remember that equipment 0 is created on SC deployment and represetn no item at all!!
         let token = await Characters.deployed();
-        await token.mint(tokenAddr1, [0,1,[1,3,2,1,8,7,6,9,2,3],[1,0,0,0,0,0,0,0,0,0,0]]);
+        await token.mint(tokenAddr1, [0,0,[1,3,2,1,8,7,6,9,2,3],[1,0,0,0,0,0,0,0,0,0,0]]);
 
     });
 
@@ -165,7 +165,7 @@ contract("Equipment test", accounts => {
         const MINTER_ROLE = web3.utils.soliditySha3('MINTER_ROLE');
         let token = await Characters.deployed();
         await token.grantRole(MINTER_ROLE, accounts[1]);
-        await token.mint(tokenAddr1, [0,2,[2,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]], {from: accounts[1]});
+        await token.mint(tokenAddr1, [0,0,[2,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]], {from: accounts[1]});
     });
 
     /*
@@ -180,8 +180,8 @@ contract("Equipment test", accounts => {
     */
     it("Test that getCharacters works", async () => {
         let token = await Characters.deployed();
-        await token.mint(tokenAddr1, [0,3,[3,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
-        await token.mint(tokenAddr1, [0,4,[4,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
+        await token.mint(tokenAddr1, [0,0,[3,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
+        await token.mint(tokenAddr1, [0,0,[4,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
         let characters = await token.getCharacters(tokenAddr1);        
         //console.log(characters[0].toNumber());
         //console.log(characters[3].toNumber());
@@ -314,16 +314,16 @@ contract("Equipment test", accounts => {
     */
     it("Test that singleStats works", async () => {
         let token = await Characters.deployed();
-        
+ 
         //Get stats of NFT 0
-        let stats = await token.singleStats(0);                
-        assert.equal(stats[0].toNumber(), 0);
-        assert.equal(stats[1].toNumber(), 3);
-
+        let stats = await token.singleStats(0);
+        assert.equal(stats[2][0], 0);
+        assert.equal(stats[2][1], 1000);
+        
         //Get stats of NFT 1
         stats = await token.singleStats(1);
-        assert.equal(stats[0].toNumber(), 1);
-        assert.equal(stats[1].toNumber(), 3);
+        assert.equal(stats[2][0], 1);
+        assert.equal(stats[2][1], 3);
     });
 
     /*
@@ -341,16 +341,16 @@ contract("Equipment test", accounts => {
         
         //Get stats of NFT 1
         let stats = await token.singleStats(1);                
-        assert.equal(stats[0].toNumber(), 1);
-        assert.equal(stats[1].toNumber(), 3);
+        assert.equal(stats[2][0], 1);
+        assert.equal(stats[2][1], 3);
 
         //PJ Stats      [1,3,2,1,8,7,6,9,2,3]
         //Gear Stats    [1,2,3,4,5,6,7,8,9,10]
         //Get stats of NFT 1
         stats = await token.calculatedStats(1);
-        assert.equal(stats[0].toNumber(), 2); //1+1
-        assert.equal(stats[1].toNumber(), 5); //3+2
-        assert.equal(stats[9].toNumber(), 13); //3+10
+        assert.equal(stats[2][0], 2); //1+1
+        assert.equal(stats[2][1], 5); //3+2
+        assert.equal(stats[2][9], 13); //3+10
     });
 
     /*
@@ -408,7 +408,7 @@ contract("Equipment test", accounts => {
     it("Test that cannot equip gear that does not own", async () => {
         let token = await Characters.deployed();
         try{
-            await token.mint(tokenAddr2, [0,5,[5,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
+            await token.mint(tokenAddr2, [0,0,[5,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0]]);
             await token.equip(5, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[2]});
             assert.fail("The transaction should have thrown an error");
         }
@@ -503,16 +503,16 @@ contract("Equipment test", accounts => {
         
         //Get stats of NFT 1
         let stats = await token.singleStats(1);                
-        assert.equal(stats[0].toNumber(), 1);
-        assert.equal(stats[1].toNumber(), 3);
+        assert.equal(stats[2][0], 1);
+        assert.equal(stats[2][1], 3);
 
         //PJ Stats          [1,3,2,1,8,7,6,9,2,3]
         //Gear Stats *11    [1,2,3,4,5,6,7,8,9,10]
         //Get stats of NFT 1
         stats = await token.calculatedStats(1);
-        assert.equal(stats[0].toNumber(), 12); //1+(1*11)
-        assert.equal(stats[1].toNumber(), 25); //3+(2*11)
-        assert.equal(stats[9].toNumber(), 113); //3+(10*11)
+        assert.equal(stats[2][0], 12); //1+(1*11)
+        assert.equal(stats[2][1], 25); //3+(2*11)
+        assert.equal(stats[2][9], 113); //3+(10*11)
     });
 
     //Create wildcard gear and equip in different slots
@@ -541,17 +541,17 @@ contract("Equipment test", accounts => {
         
         //Get stats of NFT 1
         let stats = await token.singleStats(1);                
-        assert.equal(stats[0].toNumber(), 1);
-        assert.equal(stats[1].toNumber(), 3);
+        assert.equal(stats[2][0], 1);
+        assert.equal(stats[2][1], 3);
 
         //PJ Stats          [1,3,2,1,8,7,6,9,2,3]
         //wildcard 12       [10,10,10,10,10,0,0,0,0,0]
         //wildcard 13       [0,0,0,0,0,20,20,20,20,20]
         //Get stats of NFT 1
         stats = await token.calculatedStats(1);
-        assert.equal(stats[0].toNumber(), 11); //1+10
-        assert.equal(stats[1].toNumber(), 13); //3+10
-        assert.equal(stats[9].toNumber(), 23); //3+20
+        assert.equal(stats[2][0], 11); //1+10
+        assert.equal(stats[2][1], 13); //3+10
+        assert.equal(stats[2][9], 23); //3+20
 
         //Equip all gear in PJ 0 (except the wildcards). All gear should be free now
         await token.equip(0, [1,2,3,4,5,6,7,8,9,10,11], {from: accounts[1]});
@@ -571,7 +571,7 @@ contract("Equipment test", accounts => {
             await gear.mint(deployerAddress, [0,1,0,[1,2,3,4,5,6,7,8,9,10]]); //class=0 slot=2 level=0 id 15
 
             //enemies may be only equiped at mint time (minted to SC owner) PJ=6
-            await token.mint(deployerAddress, [1,6,[6,3,2,1,8,7,6,9,2,3],[14,15,0,0,0,0,0,0,0,0,0]]);
+            await token.mint(deployerAddress, [1,0,[6,3,2,1,8,7,6,9,2,3],[14,15,0,0,0,0,0,0,0,0,0]]);
 
             //Leave balances as it was and test again balances
             await token.transferFrom(deployerAddress, tokenAddr1, 6); 
@@ -587,4 +587,83 @@ contract("Equipment test", accounts => {
     });
     
 
+
+
+    it("Contract Owner may set level and progress matrix", async () => {
+        let token = await Characters.deployed();
+        await token.setMaxLevel(10, [0,5,10,14,18,21,24,26,28,30]);
+    });
+
+    it("Only contract Owner may set level and progress matrix", async () => {
+        let token = await Characters.deployed();
+        try{
+            await token.setMaxLevel(10, [0,5,10,14,18,21,24,26,28,30], {from: accounts[1]});
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "caller is not the owner", "Error is not what is expected");
+        }
+    });
+
+    it("Progress matrix must have same elements as maxLevel", async () => {
+        let token = await Characters.deployed();
+        try{
+            await token.setMaxLevel(15, [0,5,10,14,18,21,24,26,28,30]);
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "must provide a matrix of values of the same lenght than level", "Error is not what is expected");
+        }
+    });
+
+    it("Only polymath may upgrade gear", async () => {
+        let token = await Characters.deployed();
+        try{
+            await token.updateLevel(0, {from: accounts[1]});
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "only the Polymath can call this function", "Error is not what is expected");
+        }
+    });
+
+    // progress matrix  [0,5,10,14,18,21,24,26,28,30]
+    // player 0 stats   [0,1000,800,1,8,7,6,9,2,3]
+    it("Grant Polymath role to account and upgrade the level", async () => {
+        
+        let token = await Characters.deployed();
+
+        const POLYMATH_ROLE = web3.utils.soliditySha3('POLYMATH_ROLE');
+        await token.grantRole(POLYMATH_ROLE, accounts[1]);
+        
+        let stats1=await token.singleStats(0, {from: accounts[1]});
+        
+        assert.equal(stats1[2][1], 1000);
+        assert.equal(stats1[2][2], 800);
+        await token.updateLevel(0, {from: accounts[1]});
+        let stats2=await token.singleStats(0, {from: accounts[1]});
+        
+        assert.equal(stats2[2][1], 1050);
+        assert.equal(stats2[2][2], 840);
+    });
+
+    it("Cannot upgrade player beyond maxLevel", async () => {
+        let token = await Characters.deployed();
+        try{
+            //Current level 1 (upgraded in las test)
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 2
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 3
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 4
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 5
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 6
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 7
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 8
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 9
+            await token.updateLevel(0, {from: accounts[1]}); //Current level 10 > (maxLevel-1)
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "player is already at max level", "Error is not what is expected");
+        }
+    });
 })
