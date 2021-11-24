@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
+import "./Equipment.sol";
+
     //***********************************
     // SETUP AFTER DEPLOY
     //***********************************
