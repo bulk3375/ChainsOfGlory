@@ -87,6 +87,11 @@ contract GameCoin is Context, AccessControlEnumerable, Ownable, ERC20 {
     }
 
     //Returns especific item
+    function getEquipmentLength() public view returns(uint256) {
+        return storeGear.length;
+    }
+
+    //Returns especific item
     function getEquipmentData(uint256 index) public view returns(Equipment.gearStats memory) {
         return storeGear[index];
     }
