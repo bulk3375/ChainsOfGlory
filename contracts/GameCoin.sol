@@ -21,7 +21,7 @@ import "./Equipment.sol";
     //
     //***********************************
 
-contract GameCoin is Context, AccessControlEnumerable, Ownable, ERC20 {
+contract GameCoin is AccessControlEnumerable, Ownable, ERC20 {
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
@@ -34,7 +34,7 @@ contract GameCoin is Context, AccessControlEnumerable, Ownable, ERC20 {
     //The store should read this array and populate the store acording to it
     Equipment.gearStats[] public storeGear;
 
-    constructor(uint256 initialSupply) ERC20( "Chains of Gloty Token", "CGT") {
+    constructor(uint256 initialSupply) ERC20( "Chains of Glory Token", "CGT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
         _setupRole(MINTER_ROLE, _msgSender());

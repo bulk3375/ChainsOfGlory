@@ -24,32 +24,32 @@
     {
       "ast": {
         "nodeType": "YulBlock",
-        "src": "0:201:33",
+        "src": "0:201:35",
         "statements": [
           {
             "nodeType": "YulBlock",
-            "src": "6:3:33",
+            "src": "6:3:35",
             "statements": []
           },
           {
             "body": {
               "nodeType": "YulBlock",
-              "src": "123:76:33",
+              "src": "123:76:35",
               "statements": [
                 {
                   "nodeType": "YulAssignment",
-                  "src": "133:26:33",
+                  "src": "133:26:35",
                   "value": {
                     "arguments": [
                       {
                         "name": "headStart",
                         "nodeType": "YulIdentifier",
-                        "src": "145:9:33"
+                        "src": "145:9:35"
                       },
                       {
                         "kind": "number",
                         "nodeType": "YulLiteral",
-                        "src": "156:2:33",
+                        "src": "156:2:35",
                         "type": "",
                         "value": "32"
                       }
@@ -57,16 +57,16 @@
                     "functionName": {
                       "name": "add",
                       "nodeType": "YulIdentifier",
-                      "src": "141:3:33"
+                      "src": "141:3:35"
                     },
                     "nodeType": "YulFunctionCall",
-                    "src": "141:18:33"
+                    "src": "141:18:35"
                   },
                   "variableNames": [
                     {
                       "name": "tail",
                       "nodeType": "YulIdentifier",
-                      "src": "133:4:33"
+                      "src": "133:4:35"
                     }
                   ]
                 },
@@ -76,24 +76,24 @@
                       {
                         "name": "headStart",
                         "nodeType": "YulIdentifier",
-                        "src": "175:9:33"
+                        "src": "175:9:35"
                       },
                       {
                         "name": "value0",
                         "nodeType": "YulIdentifier",
-                        "src": "186:6:33"
+                        "src": "186:6:35"
                       }
                     ],
                     "functionName": {
                       "name": "mstore",
                       "nodeType": "YulIdentifier",
-                      "src": "168:6:33"
+                      "src": "168:6:35"
                     },
                     "nodeType": "YulFunctionCall",
-                    "src": "168:25:33"
+                    "src": "168:25:35"
                   },
                   "nodeType": "YulExpressionStatement",
-                  "src": "168:25:33"
+                  "src": "168:25:35"
                 }
               ]
             },
@@ -103,13 +103,13 @@
               {
                 "name": "headStart",
                 "nodeType": "YulTypedName",
-                "src": "92:9:33",
+                "src": "92:9:35",
                 "type": ""
               },
               {
                 "name": "value0",
                 "nodeType": "YulTypedName",
-                "src": "103:6:33",
+                "src": "103:6:35",
                 "type": ""
               }
             ],
@@ -117,37 +117,37 @@
               {
                 "name": "tail",
                 "nodeType": "YulTypedName",
-                "src": "114:4:33",
+                "src": "114:4:35",
                 "type": ""
               }
             ],
-            "src": "14:185:33"
+            "src": "14:185:35"
           }
         ]
       },
       "contents": "{\n    { }\n    function abi_encode_tuple_t_bytes32__to_t_bytes32__fromStack_library_reversed(headStart, value0) -> tail\n    {\n        tail := add(headStart, 32)\n        mstore(headStart, value0)\n    }\n}",
-      "id": 33,
+      "id": 35,
       "language": "Yul",
       "name": "#utility.yul"
     }
   ],
-  "sourceMap": "57:333:28:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "57:333:28:-:0;;;;;;;;;;;;;;;;;;;;;;;;80:83;;116:47;80:83;;;;;168:25:33;;;156:2;141:18;80:83:28;;;;;;",
+  "sourceMap": "57:333:30:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "57:333:30:-:0;;;;;;;;;;;;;;;;;;;;;;;;80:83;;116:47;80:83;;;;;168:25:35;;;156:2;141:18;80:83:30;;;;;;",
   "source": "// SPDX-License-Identifier: MIT \npragma solidity ^0.8.0;\nlibrary LibPart { \n    bytes32 public constant TYPE_HASH = keccak256(\"Part(address account,uint96 value)\");\n    struct Part { address payable account;\n        uint96 value; \n    }\n    function hash(Part memory part) internal pure returns (bytes32){ \n        return keccak256(abi.encode(TYPE_HASH, part.account,  part.value));\n    }\n}",
-  "sourcePath": "/home/javi/ChainsOfGlory/contracts/rarible/royalties/contracts/LibPart.sol",
+  "sourcePath": "/Users/n65598/Development/Blockchain/ChainsOfGlory/contracts/rarible/royalties/contracts/LibPart.sol",
   "ast": {
     "absolutePath": "project:/contracts/rarible/royalties/contracts/LibPart.sol",
     "exportedSymbols": {
       "LibPart": [
-        6467
+        7419
       ]
     },
-    "id": 6468,
+    "id": 7420,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6436,
+        "id": 7388,
         "literals": [
           "solidity",
           "^",
@@ -155,7 +155,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:28"
+        "src": "33:23:30"
       },
       {
         "abstract": false,
@@ -163,24 +163,24 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 6467,
+        "id": 7419,
         "linearizedBaseContracts": [
-          6467
+          7419
         ],
         "name": "LibPart",
-        "nameLocation": "65:7:28",
+        "nameLocation": "65:7:30",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": true,
             "functionSelector": "64d4c819",
-            "id": 6441,
+            "id": 7393,
             "mutability": "constant",
             "name": "TYPE_HASH",
-            "nameLocation": "104:9:28",
+            "nameLocation": "104:9:30",
             "nodeType": "VariableDeclaration",
-            "scope": 6467,
-            "src": "80:83:28",
+            "scope": 7419,
+            "src": "80:83:30",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -188,10 +188,10 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 6437,
+              "id": 7389,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
-              "src": "80:7:28",
+              "src": "80:7:30",
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes32",
                 "typeString": "bytes32"
@@ -201,14 +201,14 @@
               "arguments": [
                 {
                   "hexValue": "506172742861646472657373206163636f756e742c75696e7439362076616c756529",
-                  "id": 6439,
+                  "id": 7391,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
                   "kind": "string",
                   "lValueRequested": false,
                   "nodeType": "Literal",
-                  "src": "126:36:28",
+                  "src": "126:36:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_stringliteral_397e04204c1e1a60ee8724b71f8244e10ab5f2e9009854d80f602bda21b59ebb",
                     "typeString": "literal_string \"Part(address account,uint96 value)\""
@@ -223,18 +223,18 @@
                     "typeString": "literal_string \"Part(address account,uint96 value)\""
                   }
                 ],
-                "id": 6438,
+                "id": 7390,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
                 "referencedDeclaration": 4294967288,
-                "src": "116:9:28",
+                "src": "116:9:30",
                 "typeDescriptions": {
                   "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 6440,
+              "id": 7392,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -242,7 +242,7 @@
               "lValueRequested": false,
               "names": [],
               "nodeType": "FunctionCall",
-              "src": "116:47:28",
+              "src": "116:47:30",
               "tryCall": false,
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes32",
@@ -253,17 +253,17 @@
           },
           {
             "canonicalName": "LibPart.Part",
-            "id": 6446,
+            "id": 7398,
             "members": [
               {
                 "constant": false,
-                "id": 6443,
+                "id": 7395,
                 "mutability": "mutable",
                 "name": "account",
-                "nameLocation": "199:7:28",
+                "nameLocation": "199:7:30",
                 "nodeType": "VariableDeclaration",
-                "scope": 6446,
-                "src": "183:23:28",
+                "scope": 7398,
+                "src": "183:23:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -271,10 +271,10 @@
                   "typeString": "address payable"
                 },
                 "typeName": {
-                  "id": 6442,
+                  "id": 7394,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "183:15:28",
+                  "src": "183:15:30",
                   "stateMutability": "payable",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address_payable",
@@ -285,13 +285,13 @@
               },
               {
                 "constant": false,
-                "id": 6445,
+                "id": 7397,
                 "mutability": "mutable",
                 "name": "value",
-                "nameLocation": "223:5:28",
+                "nameLocation": "223:5:30",
                 "nodeType": "VariableDeclaration",
-                "scope": 6446,
-                "src": "216:12:28",
+                "scope": 7398,
+                "src": "216:12:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -299,10 +299,10 @@
                   "typeString": "uint96"
                 },
                 "typeName": {
-                  "id": 6444,
+                  "id": 7396,
                   "name": "uint96",
                   "nodeType": "ElementaryTypeName",
-                  "src": "216:6:28",
+                  "src": "216:6:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint96",
                     "typeString": "uint96"
@@ -312,17 +312,17 @@
               }
             ],
             "name": "Part",
-            "nameLocation": "176:4:28",
+            "nameLocation": "176:4:30",
             "nodeType": "StructDefinition",
-            "scope": 6467,
-            "src": "169:67:28",
+            "scope": 7419,
+            "src": "169:67:30",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6465,
+              "id": 7417,
               "nodeType": "Block",
-              "src": "304:84:28",
+              "src": "304:84:30",
               "statements": [
                 {
                   "expression": {
@@ -330,12 +330,12 @@
                       {
                         "arguments": [
                           {
-                            "id": 6457,
+                            "id": 7409,
                             "name": "TYPE_HASH",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6441,
-                            "src": "343:9:28",
+                            "referencedDeclaration": 7393,
+                            "src": "343:9:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -343,26 +343,26 @@
                           },
                           {
                             "expression": {
-                              "id": 6458,
+                              "id": 7410,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6449,
-                              "src": "354:4:28",
+                              "referencedDeclaration": 7401,
+                              "src": "354:4:30",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$7398_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6459,
+                            "id": 7411,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "account",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6443,
-                            "src": "354:12:28",
+                            "referencedDeclaration": 7395,
+                            "src": "354:12:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -370,26 +370,26 @@
                           },
                           {
                             "expression": {
-                              "id": 6460,
+                              "id": 7412,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6449,
-                              "src": "369:4:28",
+                              "referencedDeclaration": 7401,
+                              "src": "369:4:30",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$7398_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6461,
+                            "id": 7413,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "value",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6445,
-                            "src": "369:10:28",
+                            "referencedDeclaration": 7397,
+                            "src": "369:10:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint96",
                               "typeString": "uint96"
@@ -412,31 +412,31 @@
                             }
                           ],
                           "expression": {
-                            "id": 6455,
+                            "id": 7407,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4294967295,
-                            "src": "332:3:28",
+                            "src": "332:3:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_abi",
                               "typeString": "abi"
                             }
                           },
-                          "id": 6456,
+                          "id": 7408,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
                           "lValueRequested": false,
                           "memberName": "encode",
                           "nodeType": "MemberAccess",
-                          "src": "332:10:28",
+                          "src": "332:10:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_abiencode_pure$__$returns$_t_bytes_memory_ptr_$",
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 6462,
+                        "id": 7414,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -444,7 +444,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "332:48:28",
+                        "src": "332:48:30",
                         "tryCall": false,
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
@@ -459,18 +459,18 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 6454,
+                      "id": 7406,
                       "name": "keccak256",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 4294967288,
-                      "src": "322:9:28",
+                      "src": "322:9:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
                         "typeString": "function (bytes memory) pure returns (bytes32)"
                       }
                     },
-                    "id": 6463,
+                    "id": 7415,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -478,81 +478,81 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "322:59:28",
+                    "src": "322:59:30",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "functionReturnParameters": 6453,
-                  "id": 6464,
+                  "functionReturnParameters": 7405,
+                  "id": 7416,
                   "nodeType": "Return",
-                  "src": "315:66:28"
+                  "src": "315:66:30"
                 }
               ]
             },
-            "id": 6466,
+            "id": 7418,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "hash",
-            "nameLocation": "250:4:28",
+            "nameLocation": "250:4:30",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6450,
+              "id": 7402,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6449,
+                  "id": 7401,
                   "mutability": "mutable",
                   "name": "part",
-                  "nameLocation": "267:4:28",
+                  "nameLocation": "267:4:30",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6466,
-                  "src": "255:16:28",
+                  "scope": 7418,
+                  "src": "255:16:30",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
+                    "typeIdentifier": "t_struct$_Part_$7398_memory_ptr",
                     "typeString": "struct LibPart.Part"
                   },
                   "typeName": {
-                    "id": 6448,
+                    "id": 7400,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 6447,
+                      "id": 7399,
                       "name": "Part",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 6446,
-                      "src": "255:4:28"
+                      "referencedDeclaration": 7398,
+                      "src": "255:4:30"
                     },
-                    "referencedDeclaration": 6446,
-                    "src": "255:4:28",
+                    "referencedDeclaration": 7398,
+                    "src": "255:4:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Part_$6446_storage_ptr",
+                      "typeIdentifier": "t_struct$_Part_$7398_storage_ptr",
                       "typeString": "struct LibPart.Part"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "254:18:28"
+              "src": "254:18:30"
             },
             "returnParameters": {
-              "id": 6453,
+              "id": 7405,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6452,
+                  "id": 7404,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6466,
-                  "src": "296:7:28",
+                  "scope": 7418,
+                  "src": "296:7:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -560,10 +560,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 6451,
+                    "id": 7403,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "296:7:28",
+                    "src": "296:7:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -572,35 +572,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "295:9:28"
+              "src": "295:9:30"
             },
-            "scope": 6467,
-            "src": "241:147:28",
+            "scope": 7419,
+            "src": "241:147:30",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "internal"
           }
         ],
-        "scope": 6468,
-        "src": "57:333:28",
+        "scope": 7420,
+        "src": "57:333:30",
         "usedErrors": []
       }
     ],
-    "src": "33:357:28"
+    "src": "33:357:30"
   },
   "legacyAST": {
     "absolutePath": "project:/contracts/rarible/royalties/contracts/LibPart.sol",
     "exportedSymbols": {
       "LibPart": [
-        6467
+        7419
       ]
     },
-    "id": 6468,
+    "id": 7420,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6436,
+        "id": 7388,
         "literals": [
           "solidity",
           "^",
@@ -608,7 +608,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:28"
+        "src": "33:23:30"
       },
       {
         "abstract": false,
@@ -616,24 +616,24 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 6467,
+        "id": 7419,
         "linearizedBaseContracts": [
-          6467
+          7419
         ],
         "name": "LibPart",
-        "nameLocation": "65:7:28",
+        "nameLocation": "65:7:30",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": true,
             "functionSelector": "64d4c819",
-            "id": 6441,
+            "id": 7393,
             "mutability": "constant",
             "name": "TYPE_HASH",
-            "nameLocation": "104:9:28",
+            "nameLocation": "104:9:30",
             "nodeType": "VariableDeclaration",
-            "scope": 6467,
-            "src": "80:83:28",
+            "scope": 7419,
+            "src": "80:83:30",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -641,10 +641,10 @@
               "typeString": "bytes32"
             },
             "typeName": {
-              "id": 6437,
+              "id": 7389,
               "name": "bytes32",
               "nodeType": "ElementaryTypeName",
-              "src": "80:7:28",
+              "src": "80:7:30",
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes32",
                 "typeString": "bytes32"
@@ -654,14 +654,14 @@
               "arguments": [
                 {
                   "hexValue": "506172742861646472657373206163636f756e742c75696e7439362076616c756529",
-                  "id": 6439,
+                  "id": 7391,
                   "isConstant": false,
                   "isLValue": false,
                   "isPure": true,
                   "kind": "string",
                   "lValueRequested": false,
                   "nodeType": "Literal",
-                  "src": "126:36:28",
+                  "src": "126:36:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_stringliteral_397e04204c1e1a60ee8724b71f8244e10ab5f2e9009854d80f602bda21b59ebb",
                     "typeString": "literal_string \"Part(address account,uint96 value)\""
@@ -676,18 +676,18 @@
                     "typeString": "literal_string \"Part(address account,uint96 value)\""
                   }
                 ],
-                "id": 6438,
+                "id": 7390,
                 "name": "keccak256",
                 "nodeType": "Identifier",
                 "overloadedDeclarations": [],
                 "referencedDeclaration": 4294967288,
-                "src": "116:9:28",
+                "src": "116:9:30",
                 "typeDescriptions": {
                   "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
                   "typeString": "function (bytes memory) pure returns (bytes32)"
                 }
               },
-              "id": 6440,
+              "id": 7392,
               "isConstant": false,
               "isLValue": false,
               "isPure": true,
@@ -695,7 +695,7 @@
               "lValueRequested": false,
               "names": [],
               "nodeType": "FunctionCall",
-              "src": "116:47:28",
+              "src": "116:47:30",
               "tryCall": false,
               "typeDescriptions": {
                 "typeIdentifier": "t_bytes32",
@@ -706,17 +706,17 @@
           },
           {
             "canonicalName": "LibPart.Part",
-            "id": 6446,
+            "id": 7398,
             "members": [
               {
                 "constant": false,
-                "id": 6443,
+                "id": 7395,
                 "mutability": "mutable",
                 "name": "account",
-                "nameLocation": "199:7:28",
+                "nameLocation": "199:7:30",
                 "nodeType": "VariableDeclaration",
-                "scope": 6446,
-                "src": "183:23:28",
+                "scope": 7398,
+                "src": "183:23:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -724,10 +724,10 @@
                   "typeString": "address payable"
                 },
                 "typeName": {
-                  "id": 6442,
+                  "id": 7394,
                   "name": "address",
                   "nodeType": "ElementaryTypeName",
-                  "src": "183:15:28",
+                  "src": "183:15:30",
                   "stateMutability": "payable",
                   "typeDescriptions": {
                     "typeIdentifier": "t_address_payable",
@@ -738,13 +738,13 @@
               },
               {
                 "constant": false,
-                "id": 6445,
+                "id": 7397,
                 "mutability": "mutable",
                 "name": "value",
-                "nameLocation": "223:5:28",
+                "nameLocation": "223:5:30",
                 "nodeType": "VariableDeclaration",
-                "scope": 6446,
-                "src": "216:12:28",
+                "scope": 7398,
+                "src": "216:12:30",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -752,10 +752,10 @@
                   "typeString": "uint96"
                 },
                 "typeName": {
-                  "id": 6444,
+                  "id": 7396,
                   "name": "uint96",
                   "nodeType": "ElementaryTypeName",
-                  "src": "216:6:28",
+                  "src": "216:6:30",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint96",
                     "typeString": "uint96"
@@ -765,17 +765,17 @@
               }
             ],
             "name": "Part",
-            "nameLocation": "176:4:28",
+            "nameLocation": "176:4:30",
             "nodeType": "StructDefinition",
-            "scope": 6467,
-            "src": "169:67:28",
+            "scope": 7419,
+            "src": "169:67:30",
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6465,
+              "id": 7417,
               "nodeType": "Block",
-              "src": "304:84:28",
+              "src": "304:84:30",
               "statements": [
                 {
                   "expression": {
@@ -783,12 +783,12 @@
                       {
                         "arguments": [
                           {
-                            "id": 6457,
+                            "id": 7409,
                             "name": "TYPE_HASH",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 6441,
-                            "src": "343:9:28",
+                            "referencedDeclaration": 7393,
+                            "src": "343:9:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_bytes32",
                               "typeString": "bytes32"
@@ -796,26 +796,26 @@
                           },
                           {
                             "expression": {
-                              "id": 6458,
+                              "id": 7410,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6449,
-                              "src": "354:4:28",
+                              "referencedDeclaration": 7401,
+                              "src": "354:4:30",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$7398_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6459,
+                            "id": 7411,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "account",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6443,
-                            "src": "354:12:28",
+                            "referencedDeclaration": 7395,
+                            "src": "354:12:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_address_payable",
                               "typeString": "address payable"
@@ -823,26 +823,26 @@
                           },
                           {
                             "expression": {
-                              "id": 6460,
+                              "id": 7412,
                               "name": "part",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 6449,
-                              "src": "369:4:28",
+                              "referencedDeclaration": 7401,
+                              "src": "369:4:30",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
+                                "typeIdentifier": "t_struct$_Part_$7398_memory_ptr",
                                 "typeString": "struct LibPart.Part memory"
                               }
                             },
-                            "id": 6461,
+                            "id": 7413,
                             "isConstant": false,
                             "isLValue": true,
                             "isPure": false,
                             "lValueRequested": false,
                             "memberName": "value",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 6445,
-                            "src": "369:10:28",
+                            "referencedDeclaration": 7397,
+                            "src": "369:10:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_uint96",
                               "typeString": "uint96"
@@ -865,31 +865,31 @@
                             }
                           ],
                           "expression": {
-                            "id": 6455,
+                            "id": 7407,
                             "name": "abi",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
                             "referencedDeclaration": 4294967295,
-                            "src": "332:3:28",
+                            "src": "332:3:30",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_abi",
                               "typeString": "abi"
                             }
                           },
-                          "id": 6456,
+                          "id": 7408,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": true,
                           "lValueRequested": false,
                           "memberName": "encode",
                           "nodeType": "MemberAccess",
-                          "src": "332:10:28",
+                          "src": "332:10:30",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_abiencode_pure$__$returns$_t_bytes_memory_ptr_$",
                             "typeString": "function () pure returns (bytes memory)"
                           }
                         },
-                        "id": 6462,
+                        "id": 7414,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
@@ -897,7 +897,7 @@
                         "lValueRequested": false,
                         "names": [],
                         "nodeType": "FunctionCall",
-                        "src": "332:48:28",
+                        "src": "332:48:30",
                         "tryCall": false,
                         "typeDescriptions": {
                           "typeIdentifier": "t_bytes_memory_ptr",
@@ -912,18 +912,18 @@
                           "typeString": "bytes memory"
                         }
                       ],
-                      "id": 6454,
+                      "id": 7406,
                       "name": "keccak256",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 4294967288,
-                      "src": "322:9:28",
+                      "src": "322:9:30",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_keccak256_pure$_t_bytes_memory_ptr_$returns$_t_bytes32_$",
                         "typeString": "function (bytes memory) pure returns (bytes32)"
                       }
                     },
-                    "id": 6463,
+                    "id": 7415,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -931,81 +931,81 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "322:59:28",
+                    "src": "322:59:30",
                     "tryCall": false,
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
                     }
                   },
-                  "functionReturnParameters": 6453,
-                  "id": 6464,
+                  "functionReturnParameters": 7405,
+                  "id": 7416,
                   "nodeType": "Return",
-                  "src": "315:66:28"
+                  "src": "315:66:30"
                 }
               ]
             },
-            "id": 6466,
+            "id": 7418,
             "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "hash",
-            "nameLocation": "250:4:28",
+            "nameLocation": "250:4:30",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6450,
+              "id": 7402,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6449,
+                  "id": 7401,
                   "mutability": "mutable",
                   "name": "part",
-                  "nameLocation": "267:4:28",
+                  "nameLocation": "267:4:30",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6466,
-                  "src": "255:16:28",
+                  "scope": 7418,
+                  "src": "255:16:30",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Part_$6446_memory_ptr",
+                    "typeIdentifier": "t_struct$_Part_$7398_memory_ptr",
                     "typeString": "struct LibPart.Part"
                   },
                   "typeName": {
-                    "id": 6448,
+                    "id": 7400,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 6447,
+                      "id": 7399,
                       "name": "Part",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 6446,
-                      "src": "255:4:28"
+                      "referencedDeclaration": 7398,
+                      "src": "255:4:30"
                     },
-                    "referencedDeclaration": 6446,
-                    "src": "255:4:28",
+                    "referencedDeclaration": 7398,
+                    "src": "255:4:30",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Part_$6446_storage_ptr",
+                      "typeIdentifier": "t_struct$_Part_$7398_storage_ptr",
                       "typeString": "struct LibPart.Part"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "254:18:28"
+              "src": "254:18:30"
             },
             "returnParameters": {
-              "id": 6453,
+              "id": 7405,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6452,
+                  "id": 7404,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6466,
-                  "src": "296:7:28",
+                  "scope": 7418,
+                  "src": "296:7:30",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1013,10 +1013,10 @@
                     "typeString": "bytes32"
                   },
                   "typeName": {
-                    "id": 6451,
+                    "id": 7403,
                     "name": "bytes32",
                     "nodeType": "ElementaryTypeName",
-                    "src": "296:7:28",
+                    "src": "296:7:30",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes32",
                       "typeString": "bytes32"
@@ -1025,21 +1025,21 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "295:9:28"
+              "src": "295:9:30"
             },
-            "scope": 6467,
-            "src": "241:147:28",
+            "scope": 7419,
+            "src": "241:147:30",
             "stateMutability": "pure",
             "virtual": false,
             "visibility": "internal"
           }
         ],
-        "scope": 6468,
-        "src": "57:333:28",
+        "scope": 7420,
+        "src": "57:333:30",
         "usedErrors": []
       }
     ],
-    "src": "33:357:28"
+    "src": "33:357:30"
   },
   "compiler": {
     "name": "solc",
@@ -1047,7 +1047,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-22T19:49:38.267Z",
+  "updatedAt": "2021-11-25T09:11:15.144Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
