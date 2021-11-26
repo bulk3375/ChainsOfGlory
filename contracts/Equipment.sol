@@ -22,7 +22,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
 
     //Royaties address and amntou
     address payable private _royaltiesAddress;
-    uint96 _royaltiesBasicPoints;
+    uint96 private _royaltiesBasicPoints;
 
     //Stats of players and enemies
     struct gearStats {
@@ -33,7 +33,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved 
                                 //NOTE: We use last two for the store, PRICE IN TOKENS AT POS 9!!
-        //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100
+        //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100z
     }
 
     //maximum level a gear can go. 

@@ -126,7 +126,7 @@ contract GameCoin is AccessControlEnumerable, Ownable, ERC20 {
                 gear.stats[8]==storeGear[i].stats[8] &&
                 gear.stats[9]==storeGear[i].stats[9]
                 )
-                    return true;
+                return true;
         }
         return false;
     }
