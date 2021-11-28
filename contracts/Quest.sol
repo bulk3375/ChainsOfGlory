@@ -26,7 +26,8 @@ contract Quest is AccessControlEnumerable, Ownable {
     }
 
     uint256 public combatLoops=10; //Number of loop on a combat
-    uint256 randomSpread=50;    //Random variation of attacks from 0 to 100
+    uint256 randomSpread=50;    //Random variation of attacks from 0 to 100. 
+                                //A spread of 30 means that random moves from 70 to 130
 
     //Quests to be played
     //Administrators may update, delete or modify the content
@@ -178,14 +179,18 @@ contract Quest is AccessControlEnumerable, Ownable {
         //adds the mision attack points to all the enemies Health and apply Vitality
         uint256 missionDefense=allQuests[idQuest].defense+allQuests[idQuest].calculatedStats[StatsAndSlots.Defense];
 
+        //Defense is like a shield, to simplify we add defense to health
+        missionHealth += missionDefense;
+        
         //Apply questLevel
         missionTime+=(missionTime*upgradeMatrix[questLevel])/100;
         missionHealth+=(missionHealth*upgradeMatrix[questLevel])/100;
         missionAttack+=(missionAttack*upgradeMatrix[questLevel])/100;
-        missionDefense+=(missionDefense*upgradeMatrix[questLevel])/100;
+        //missionDefense+=(missionDefense*upgradeMatrix[questLevel])/100;
 
         //calculates player Health and apply Vitality and faith
-        uint256 playerHealth=playerData.stats[StatsAndSlots.Health];
+        //Defense is like a shield, to simplify we add defense to health
+        uint256 playerHealth=playerData.stats[StatsAndSlots.Health]+playerData.stats[StatsAndSlots.Defense];
         playerHealth += (playerData.stats[StatsAndSlots.Health] * playerData.stats[StatsAndSlots.Vitality])/100;
         playerHealth += (playerData.stats[StatsAndSlots.Health] * playerData.stats[StatsAndSlots.Faith])/300;
 
@@ -194,8 +199,8 @@ contract Quest is AccessControlEnumerable, Ownable {
         playerAttack += (playerData.stats[StatsAndSlots.Attack] * playerData.stats[StatsAndSlots.Faith])/300;
 
         //calculates player defense and apply faith
-        uint256 playerDefense=playerData.stats[StatsAndSlots.Defense];
-        playerDefense += (playerData.stats[StatsAndSlots.Defense] * playerData.stats[StatsAndSlots.Faith])/300;
+        //uint256 playerDefense=playerData.stats[StatsAndSlots.Defense];
+        //playerDefense += (playerData.stats[StatsAndSlots.Defense] * playerData.stats[StatsAndSlots.Faith])/300;
 
         uint startMissionValue=missionHealth;
         uint startPlayerValue=playerHealth;
@@ -204,14 +209,20 @@ contract Quest is AccessControlEnumerable, Ownable {
         //I hope we didn't run out of gas... big calculations so far!
         //
         //We must start with a random seed
-        //and then iterate 10 rounds (or until one dies)
+        //and then iterate 'combatLoops' rounds (or until one dies)
         //applying the basic formula in ten rounds
-        //Player hits : missionHealth -= playerAttack * random(0.5, 1)
-        //Mision hits : playerHealth -= missionAttack  * random(0.5, 1)
+        //Player hits : missionHealth -= playerAttack * random(interval)
+        //Mision hits : playerHealth -= missionAttack  * random(interval)
         //
+        //NOTE: There is no enemy casualties along the combat
+        //missionAttack is the same from start to end...
+        //Could be interesting to allow player choose an strategy?
+        //I mean: kill weakest first or kill strongest first... or kill randomly
+        //May be for second version...
+
         for(uint i=0; i<combatLoops; i++) {
-            //calculates player attack
-            uint attack=(playerAttack * (randMod(100-randomSpread)+randomSpread))/100;
+            //calculates player attack            
+            uint attack=(playerAttack * (100-randMod(2*randomSpread)+randomSpread))/100;
             if(missionHealth <=attack) {
                 //Player wins!
                 missionHealth=0;
@@ -219,18 +230,25 @@ contract Quest is AccessControlEnumerable, Ownable {
             }
             missionHealth-=attack;
 
+            attack=(missionAttack * (100-randMod(2*randomSpread)+randomSpread))/100;
             if(playerHealth <=attack) {
                 //Player loses!
                 playerHealth=0;
                 break;
-            }
-
-            attack=(playerAttack * (randMod(100-randomSpread)+randomSpread))/100;
+            }            
             playerHealth -= attack;
         }
         
         //calculate % completed
-        //startMissionValue - missionHealth
+        uint256 completed = ((startMissionValue - missionHealth) * 100) / startMissionValue;
+
+        //TODO TODO TODO
+        //Calculate token drop and send
+        //Calculate NFT probability
+        //Choose NFT minted (in needed) and send to player
+        //
+        //OPTIONALLY
+        //Create a combat history and returns to front
         
     }
 
