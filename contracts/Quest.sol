@@ -75,8 +75,7 @@ contract Quest is AccessControlEnumerable, Ownable {
     }
 
     //Set the max level of the quest
-    function setMaxLevel(uint lvl, uint256[] memory matrixValues) public {
-        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+    function setMaxLevel(uint lvl, uint256[] memory matrixValues) public onlyOwner{
         require(lvl == matrixValues.length, "Exception: must provide a matrix of values of the same lenght than level");
 
         maxLevel=lvl;
@@ -101,7 +100,7 @@ contract Quest is AccessControlEnumerable, Ownable {
     //
     //This function MUST be called for each quest whenever you updates 
     //an existing progress matrix of gear and or characters
-    function forceRecalculateStats(uint256 idQuest) public {
+    function forceRecalculateStats(uint256 idQuest) public onlyOwner {
         require(idQuest < allQuests.length, "Index out of bounds");
         allQuests[idQuest].calculatedStats = questEnemiesStats(allQuests[idQuest]);
     }
@@ -145,6 +144,9 @@ contract Quest is AccessControlEnumerable, Ownable {
     }
 
     function addCraracterStats(Characters.charData memory ca , Characters.charData memory cb) internal pure returns(Characters.charData memory) {
+        
+        //WARNING WARNING WARNING
+        //It is supposed that vitality should be already applied. A percentual stat cannot be added!!
         for(uint i=0; i< ca.stats.length; i++)
             ca.stats[i]+=cb.stats[i];
         return ca;
@@ -153,6 +155,8 @@ contract Quest is AccessControlEnumerable, Ownable {
     function questEnemiesStats(questData memory qData) public view returns (uint256[10] memory) {
         Characters.charData memory cData;
 
+        //WARNING WARNING WARNING!!
+        //It is supposed that vitality should be already applied. A percentual stat cannot be added!!
         for(uint i=0; i < qData.enemy.length; i++) 
             cData=addCraracterStats(cData, _charNFT.calculatedStats(qData.enemy[i]));
         
@@ -160,7 +164,8 @@ contract Quest is AccessControlEnumerable, Ownable {
     }
 
     function playQuest(uint idQuest, uint idPlayer, uint questLevel) public {
-        require(questLevel < upgradeMatrix.length, "Exception: quest level out of bounds");
+        require(msg.sender == _charNFT.ownerOf(idPlayer), "CAller is not the owner of the player");
+        require(questLevel < maxLevel, "Exception: quest level out of bounds");
         require(idQuest < allQuests.length, "Index out of bounds");
 
         Characters.charData memory playerData = _charNFT.calculatedStats(idPlayer);
@@ -171,6 +176,8 @@ contract Quest is AccessControlEnumerable, Ownable {
 
         //adds the mision health points to all the enemies Health and apply Vitality
         uint256 missionHealth=allQuests[idQuest].health+allQuests[idQuest].calculatedStats[StatsAndSlots.Health];
+        //WARNING WARNING WARNING
+        //It is supposed that vitality should be already applied. A percentual stat cannot be added!!
         missionHealth += (allQuests[idQuest].calculatedStats[StatsAndSlots.Health] * allQuests[idQuest].calculatedStats[StatsAndSlots.Vitality])/100;
 
         //adds the mision attack points to all the enemies Health and apply Vitality
