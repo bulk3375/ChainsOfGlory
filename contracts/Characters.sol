@@ -14,7 +14,7 @@ import "./Equipment.sol";
     //***********************************
     // SETUP AFTER DEPLOY
     //***********************************
-    //SET EQUIPMENT ADDRESS
+    // SET EQUIPMENT ADDRESS
     //***********************************
 
 /*
@@ -38,7 +38,8 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
     //Roles of monter and burner
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE");
+    bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE"); //May upgrade player level
+    bytes32 public constant QUEST_ROLE = keccak256("QUEST_ROLE");       //May set timeLocks
 
     //Royaties address and amntou
     address payable private _royaltiesAddress;
@@ -61,6 +62,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
                                 //NOTE: slot #0 in the Equipment SC means wildcard
                                 //That means that what is in gear[n] matches slot n+1 in Equipment struct
                                 //NOTE: Value 0 in any position means empty.
+        uint timeLock;          //Timestamp until the player is locked (mission time)
     }
 
     //Used by _beforeTokenTransfer to catch the after minting
@@ -91,6 +93,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(POLYMATH_ROLE, _msgSender());
+        _setupRole(QUEST_ROLE, _msgSender());
     }
 
     //Creation of a player or enemy
@@ -118,6 +121,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     }
 
 
+    function setTimeLock(uint256 playerId, uint timestamp) public {
+        require(hasRole(QUEST_ROLE, _msgSender()), "Exception: must have QUEST role to mint");
+        values[playerId].timeLock=timestamp;
+    }
+
     //Equipment Token Address
     function setEquipmentAddress(address equipment) public onlyOwner {
         _gearNFT=Equipment(equipment);
@@ -137,6 +145,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Only Polymath role can do it. 
     //To recalculate stats function uses the upgrade matrix. See above...
     function updateLevel(uint256 player) public {
+        require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
         require(hasRole(POLYMATH_ROLE, _msgSender()), "Exception: only the Polymath can call this function");
         require((values[player].level + 1) < maxLevel, "Exception: player is already at max level");
         
@@ -168,6 +177,8 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         require(values[player].class == 0, "Exception: Cannot equip an enemy!");
         require(ownerOf(player) == _msgSender(), "Exception: must be owner of the player to equip");
         require(gearExists(gear), "Exception: some gear used does not exists in equip");
+        require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+        require(!gearLocked(gear), "Exception: some gear is locked");
         require(ownAllGear(ownerOf(player), gear), "Exception: player does not own all gear in equip");
         require(gearSlotOk(gear), "Exception: some gear is not in the apropriate slot in equip");
         require(!alreadyEquipedInOtherPlayer(player, gear), "Exception: some gear is already equiped in other player in equip");
@@ -186,6 +197,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     ) public virtual override {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
         require(!hasEquipment(tokenId), "Exception: cannot transfer a player wearing any equipment");
+        require(values[tokenId].timeLock  < block.timestamp, "Exception: player is locked");
 
         super.transferFrom(from, to, tokenId);
     }
@@ -201,6 +213,8 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         //Vefiory unequip a player test that sender is owner
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
         require(values[tokenId].class == 0, "Exception: Cannot unequip an enemy!");
+        require(values[tokenId].timeLock  < block.timestamp, "Exception: player is locked");
+        require(!gearLocked(values[tokenId].gear), "Exception: some gear is locked");
         /*
         charData memory data=values[tokenId];
         for(uint j=0; j<data.gear.length; j++) {
@@ -336,6 +350,15 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
                 return false;
         }
         return true;
+    }
+
+    //Test that all gear is not locked 
+    function gearLocked(uint256[11] memory gear) public view returns (bool) {
+        for(uint i=0; i<gear.length; i++) {            
+            if(_gearNFT.singleStats(gear[i]).timeLock < block.timestamp)
+                return true;
+        }
+        return false;
     }
 
     //Test that all gear passed in the data is owned by _to     

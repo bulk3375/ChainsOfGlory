@@ -18,7 +18,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
 
     //Roles of monter and burner
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE");
+    bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE"); //May upgrade player level
+    bytes32 public constant QUEST_ROLE = keccak256("QUEST_ROLE");       //May set timeLocks
 
     //Royaties address and amntou
     address payable private _royaltiesAddress;
@@ -34,6 +35,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved 
                                 //NOTE: We use last two for the store, PRICE IN TOKENS AT POS 9!!
         //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100z
+
+        uint timeLock;          //Timestamp until the player is locked (mission time)
     }
 
     //maximum level a gear can go. 
@@ -73,6 +76,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
 
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(POLYMATH_ROLE, _msgSender());
+        _setupRole(QUEST_ROLE, _msgSender());
 
         //Royaties address and amntou
         _royaltiesAddress=payable(address(this)); //Contract creator by default
@@ -91,6 +95,11 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         super._mint(_to, _tokenIdTracker.current()); 
     }
 
+    function setTimeLock(uint256 gearId, uint timestamp) public {
+        require(hasRole(QUEST_ROLE, _msgSender()), "Exception: must have QUEST role to mint");
+        values[gearId].timeLock=timestamp;
+    }
+
     //GameToken Token Address
     function setRoyaltiesAddress(address payable rAddress) public onlyOwner {
         _royaltiesAddress=rAddress;
@@ -105,6 +114,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //Only Polymath role can do it. 
     //To recalculate stats function uses the upgrade matrix. See above...
     function updateLevel(uint256 gear) public {
+        require(values[gear].timeLock  < block.timestamp, "Exception: equipment is locked");
         require(hasRole(POLYMATH_ROLE, _msgSender()), "Exception: only the Polymath can call this function");
         require((values[gear].level + 1) < maxLevel, "Exception: equipment is already at max level");
         
@@ -125,6 +135,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
+        require(values[tokenId].timeLock  < block.timestamp, "Exception: equipment is locked");
         if(from==address(0)) {
             //Minting ok, creates struct of stats
             values[_tokenIdTracker.current()] = gearToMint;
