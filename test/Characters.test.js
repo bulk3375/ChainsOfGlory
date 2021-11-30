@@ -3,6 +3,10 @@ const Equipment = artifacts.require("Equipment");   //SC equipment
 
 const BN = web3.utils.BN;
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 //For each function we will test all the requires both in happy and unhappy path
 contract("Character test", accounts => {
     const[deployerAddress, tokenAddr1, tokenAddr2] = accounts;
@@ -162,13 +166,14 @@ contract("Character test", accounts => {
     it("Test that getCharacters works", async () => {
         let token = await Characters.deployed();
         await token.mint(tokenAddr1, [0,0,[3,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0],0]);
-        await token.mint(tokenAddr1, [0,0,[4,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0],0]);
+        await token.mint(tokenAddr2, [0,0,[4,3,2,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0],0]);
         let characters = await token.getCharacters(tokenAddr1);        
-        assert.equal(characters.length, 5);
+        assert.equal(characters.length, 4);
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //TRansfer player equiped fails
     it("Cannot transfer a player wearing any equipment", async () => {
@@ -182,8 +187,9 @@ contract("Character test", accounts => {
         }
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //Unequip and transfer
     it("test that unequipAndTransferFrom really unequip and transfer", async () => {
@@ -199,11 +205,11 @@ contract("Character test", accounts => {
         //Transfer PJ 0 fro add1 to addr2
         await token.unequipAndTransferFrom(tokenAddr1, tokenAddr2, 1, {from: accounts[1]});      
         let characters1 = await token.getCharacters(tokenAddr1);
-        assert.equal(characters1.length, 4);
+        assert.equal(characters1.length, 3);
         assert.notEqual(characters1[1].toNumber(), 1);
         let characters2 = await token.getCharacters(tokenAddr2);
-        assert.equal(characters2.length, 1);
-        assert.equal(characters2[0].toNumber(), 1);
+        assert.equal(characters2.length, 2);
+        assert.equal(characters2[1].toNumber(), 1);
         
         //After equipment still has 1 gear
         equipment = await gear.getEquipment(tokenAddr1);
@@ -212,16 +218,17 @@ contract("Character test", accounts => {
         //Leave balances as it was and test again balances
         await token.transferFrom(tokenAddr2, tokenAddr1, 1, {from: accounts[2]});      
         characters1 = await token.getCharacters(tokenAddr1);
-        assert.equal(characters1.length, 5);
+        assert.equal(characters1.length, 4);
         characters2 = await token.getCharacters(tokenAddr2);
-        assert.equal(characters2.length, 0);
+        assert.equal(characters2.length, 1);
 
         //Equip again gear 1
         await token.equip(1, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
 
     //Transfer player and test reverse mapping _tokensByOwner working
@@ -230,22 +237,23 @@ contract("Character test", accounts => {
         //Transfer PJ 0 fro add1 to addr2
         await token.transferFrom(tokenAddr1, tokenAddr2, 0, {from: accounts[1]});      
         let characters1 = await token.getCharacters(tokenAddr1);
-        assert.equal(characters1.length, 4);
+        assert.equal(characters1.length, 3);
         assert.notEqual(characters1[0].toNumber(), 0);
         let characters2 = await token.getCharacters(tokenAddr2);
-        assert.equal(characters2.length, 1);
-        assert.equal(characters2[0].toNumber(), 0);        
+        assert.equal(characters2.length, 2);
+        assert.equal(characters2[1].toNumber(), 0);        
         
         //Leave balances as it was and test again balances
         await token.transferFrom(tokenAddr2, tokenAddr1, 0, {from: accounts[2]});      
         characters1 = await token.getCharacters(tokenAddr1);
-        assert.equal(characters1.length, 5);
+        assert.equal(characters1.length, 4);
         characters2 = await token.getCharacters(tokenAddr2);
-        assert.equal(characters2.length, 0);
+        assert.equal(characters2.length, 1);
     });
-    //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+   //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //Only Owner of an NFT can transfer it
     it("Only Owner of an NFT can transfer it", async () => {
@@ -259,8 +267,9 @@ contract("Character test", accounts => {
         }
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //Test that singleStats works
     it("Test that singleStats works", async () => {
@@ -277,8 +286,9 @@ contract("Character test", accounts => {
         assert.equal(stats[2][1], 3);
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //Test that calculatedStats works
     it("Test that calculatedStats works", async () => {
@@ -298,9 +308,9 @@ contract("Character test", accounts => {
         assert.equal(stats[2][9], 13); //3+10
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns player NFT 0, 1, 2, 3
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
-
+    //tokenAddr2 owns player NFT 4
 
 
     /*
@@ -330,10 +340,10 @@ contract("Character test", accounts => {
             await token.mint(deployerAddress, [1,0,[6,3,2,1,8,7,6,9,2,3],[2,3,0,0,0,0,0,0,0,0,0],0]); //M int enemy NFT id=5
 
             //Leave balances as it was and test again balances
-            await token.transferFrom(deployerAddress, tokenAddr1, 6); 
+            await token.transferFrom(deployerAddress, tokenAddr1, 5); 
 
             //Try to equip enemy
-            await token.equip(6, [1,2,3,0,0,0,0,0,0,0,0], {from: accounts[1]});
+            await token.equip(5, [1,2,3,0,0,0,0,0,0,0,0], {from: accounts[1]});
 
             assert.fail("The transaction should have thrown an error");
         }
@@ -342,10 +352,13 @@ contract("Character test", accounts => {
         }                
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4, 5
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //cannot equip a player that I do not own
+    //require(ownerOf(player) == _msgSender(), "Exception: must be owner of the player to equip");
     it("Test that cannot equip a player that I do not own", async () => {
         let token = await Characters.deployed();
         try{
@@ -357,10 +370,13 @@ contract("Character test", accounts => {
         }
     });
     //After test:
-    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //cannot equip gear that does not exists
+    //require(gearExists(gear), "Exception: some gear used does not exists in equip");
     it("Test that cannot equip gear that does not exists", async () => {
         let token = await Characters.deployed();
         try{
@@ -371,46 +387,156 @@ contract("Character test", accounts => {
             assert.include(err.message, "some gear used does not exists in equip", "Error is not what is expected");
         }                
     });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
+    //Test that timelocks works in players
+    //require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+    it("Test that cannot equip gear in a timelocked player", async () => {
+        let token = await Characters.deployed();
+        await token.setTimeLock(1, 5);
+        try{
+            await token.equip(1, [0,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "player is locked", "Error is not what is expected");
+        }                
+    });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
+
+    //Test that timelocks works in players
+    //require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+    it("Test that timelock finish and player may be equiped then", async () => {
+        let token = await Characters.deployed();
+        
+        await sleep(6000);        
+        await token.equip(1, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+    });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
+    
+    //Test that timelocks works in gear
+    //require(!gearLocked(gear), "Exception: some gear is locked");
+    it("Test that cannot equip gear in a timelocked player", async () => {
+        let token = await Characters.deployed();
+        let gear = await Equipment.deployed();
+        await gear.setTimeLock(1, 5);
+        try{
+            await token.equip(1, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "some gear is locked", "Error is not what is expected");
+        }                
+    });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
+
+    //Test that timelocks works in gear
+    //require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+    it("Test that timelock finish and gear may be equiped then", async () => {
+        let token = await Characters.deployed();
+        
+        await sleep(6000);        
+        await token.equip(1, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+    });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
+
+    //Equip player - player does not own all gear to equip
+    //require(ownAllGear(ownerOf(player), gear), "Exception: player does not own all gear in equip");
+    it("Cannot equip using gear that do not own", async () => {
+        let token = await Characters.deployed();
+        try{
+            await token.equip(4, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[2]});
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "player does not own all gear in equip", "Error is not what is expected");
+        }
+    });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
+
+    //cannot equip gear in wrong slot
+    //require(gearSlotOk(gear), "Exception: some gear is not in the apropriate slot in equip");
     it("Test that cannot equip gear in the wrong slot", async () => {
         let token = await Characters.deployed();
         try{
-            await token.equip(0, [0,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
-            await token.equip(0, [0,1,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+            await token.equip(1, [0,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+            await token.equip(1, [0,1,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
             assert.fail("The transaction should have thrown an error");
         }
         catch (err) {
             assert.include(err.message, "some gear is not in the apropriate slot in equip", "Error is not what is expected");
         }                
     });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 unequipend (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
+    
 
+    //cannot equip gear already equiped in other player
+    //require(!alreadyEquipedInOtherPlayer(player, gear), "Exception: some gear is already equiped in other player in equip");
     it("Test that cannot equip gear already equiped", async () => {
         let token = await Characters.deployed();
         try{
-            await token.equip(0, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
             await token.equip(1, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
+            await token.equip(2, [1,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
             assert.fail("The transaction should have thrown an error");
         }
         catch (err) {
             assert.include(err.message, "some gear is already equiped in other player in equip", "Error is not what is expected");
         }                
     });
+    //After test:
+    //deployerAddress owns gear NFT 2, 3
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1 equiped in player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //Create several gear, equip and unequip gear and calculate stats
     it("Test fully gear creation, equipment and stats", async () => {
         
         let gear = await Equipment.deployed();
+
+        let equipment = await gear.getEquipment(tokenAddr1);
+
         //Mint a gear for slot 1, 2, 3, 4, 5, 6, 7, 8, 9 and 10. Remember that there is already 1 for slot 0
-        await gear.mint(tokenAddr1, [0,1,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=1 level=0
-        await gear.mint(tokenAddr1, [0,2,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=2 level=0
-        await gear.mint(tokenAddr1, [0,3,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=3 level=0
-        await gear.mint(tokenAddr1, [0,4,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=4 level=0
-        await gear.mint(tokenAddr1, [0,5,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=5 level=0
-        await gear.mint(tokenAddr1, [0,6,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=6 level=0
-        await gear.mint(tokenAddr1, [0,7,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=7 level=0
-        await gear.mint(tokenAddr1, [0,8,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=8 level=0
-        await gear.mint(tokenAddr1, [0,9,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=9 level=0
-        await gear.mint(tokenAddr1, [0,10,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=10 level=0
+        await gear.mint(tokenAddr1, [0,1,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=1 level=0 id=4
+        await gear.mint(tokenAddr1, [0,2,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=2 level=0 id=5
+        await gear.mint(tokenAddr1, [0,3,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=3 level=0 id=6
+        await gear.mint(tokenAddr1, [0,4,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=4 level=0 id=7
+        await gear.mint(tokenAddr1, [0,5,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=5 level=0 id=8
+        await gear.mint(tokenAddr1, [0,6,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=6 level=0 id=9
+        await gear.mint(tokenAddr1, [0,7,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=7 level=0 id=10
+        await gear.mint(tokenAddr1, [0,8,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=8 level=0 id=11
+        await gear.mint(tokenAddr1, [0,9,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=9 level= id=12
+        await gear.mint(tokenAddr1, [0,10,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=10 level=0 id=13
+
+        equipment = await gear.getEquipment(tokenAddr1);
 
         //So far there are 11 gear NFT, named from 1 to 11 (remember gearNFT 0 is created by SC)
         //slots 0 to 10, al owned by addr1
@@ -418,13 +544,13 @@ contract("Character test", accounts => {
 
         let token = await Characters.deployed();
         //Equip all gear in PJ 0 (except the gear 1 that is already equiped in PJ 1)
-        await token.equip(0, [0,2,3,4,5,6,7,8,9,10,11], {from: accounts[1]});
-
+        await token.equip(0, [0,4,5,6,7,8,9,10,11,12,13], {from: accounts[1]});
+        
         //unequip all
         await token.equip(0, [0,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
 
         //Full equip PJ 1
-        await token.equip(1, [1,2,3,4,5,6,7,8,9,10,11], {from: accounts[1]});
+        await token.equip(1, [1,4,5,6,7,8,9,10,11,12,13], {from: accounts[1]});
         
         //Get stats of NFT 1
         let stats = await token.singleStats(1);                
@@ -439,30 +565,24 @@ contract("Character test", accounts => {
         assert.equal(stats[2][1], 25); //3+(2*11)
         assert.equal(stats[2][9], 113); //3+(10*11)
     });
+    //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1,4,5,6,7,8,9,10,11,12,13 equipend in player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
 
     //Create wildcard gear and equip in different slots
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1,2,3,4,5,6,7,8,9,10,11)
-    Equiped G(1,2,3,4,5,6,7,8,9,10,11) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
     it("Test wildcard gear creation and equipment in any slots", async () => {
         
         let gear = await Equipment.deployed();
         //Mint a gear for slot 1, 2, 3, 4, 5, 6, 7, 8, 9 and 10. Remember that there is already 1 for slot 0
-        await gear.mint(tokenAddr1, [0,100,0,[10,10,10,10,10,0,0,0,0,0],0]); //class=0 slot=100 (wildcard) level=0
-        await gear.mint(tokenAddr1, [0,100,0,[0,0,0,0,0,20,20,20,20,20],0]); //class=0 slot=100 (wildcard) level=0
+        await gear.mint(tokenAddr1, [0,100,0,[10,10,10,10,10,0,0,0,0,0],0]); //class=0 slot=100 (wildcard) level=0 id=14
+        await gear.mint(tokenAddr1, [0,100,0,[0,0,0,0,0,20,20,20,20,20],0]); //class=0 slot=100 (wildcard) level=0 id=15
 
         
         let token = await Characters.deployed();
         
         //equip only wildcards in slots
-        await token.equip(1, [0,0,0,0,0,12,0,0,0,13,0], {from: accounts[1]});
+        await token.equip(1, [0,0,0,0,0,14,0,0,0,15,0], {from: accounts[1]});
         
         //Get stats of NFT 1
         let stats = await token.singleStats(1);                
@@ -479,9 +599,12 @@ contract("Character test", accounts => {
         assert.equal(stats[2][9], 23); //3+20
 
         //Equip all gear in PJ 0 (except the wildcards). All gear should be free now
-        await token.equip(0, [1,2,3,4,5,6,7,8,9,10,11], {from: accounts[1]});
+        await token.equip(0, [1,4,5,6,7,8,9,10,11,12,13], {from: accounts[1]});
     });
-
+    //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 5
+    //tokenAddr1 owns gear NFT 1,4,5,6,7,8,9,10,11,12,13 equipend in player 1 (remember NFT 0 is created on SC deployment)
+    //tokenAddr2 owns player NFT 4
     
     
 

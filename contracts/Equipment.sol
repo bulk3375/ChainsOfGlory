@@ -97,7 +97,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
 
     function setTimeLock(uint256 gearId, uint timestamp) public {
         require(hasRole(QUEST_ROLE, _msgSender()), "Exception: must have QUEST role to mint");
-        values[gearId].timeLock=timestamp;
+        values[gearId].timeLock=block.timestamp+timestamp;
     }
 
     //GameToken Token Address
@@ -184,7 +184,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return "https://exampledomain/metadata/";
+        return "https://www.chainsofglory.com/metadata/";
     }
 
     function setRoyalties(uint256 _tokenId, address payable _royaltiesReceipientAddress, uint96 _percentageBasisPoints) public {

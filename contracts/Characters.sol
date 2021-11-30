@@ -123,7 +123,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
 
     function setTimeLock(uint256 playerId, uint timestamp) public {
         require(hasRole(QUEST_ROLE, _msgSender()), "Exception: must have QUEST role to mint");
-        values[playerId].timeLock=timestamp;
+        values[playerId].timeLock=block.timestamp+timestamp;
+    }
+
+    function getTimestamp() public view returns (uint) {
+        return block.timestamp;
     }
 
     //Equipment Token Address
@@ -292,7 +296,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     }
 
     function _baseURI() internal view virtual override returns (string memory) {
-        return "https://exampledomain/metadata/";
+        return "https://www.chainsofglory.com/metadata/";
     }
 
     function setRoyalties(uint256 _tokenId, address payable _royaltiesReceipientAddress, uint96 _percentageBasisPoints) public {

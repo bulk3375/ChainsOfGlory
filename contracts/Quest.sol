@@ -317,10 +317,10 @@ contract Quest is AccessControlEnumerable, Ownable {
         //
 
         //Set timeLock for player and all his gear
-        _charNFT.setTimeLock(idPlayer, block.timestamp+block.timestamp);
+        _charNFT.setTimeLock(idPlayer, block.timestamp);
         for(uint i=0; i<_charNFT.baseStats(idPlayer).gear.length; i++)
             if(_charNFT.baseStats(idPlayer).gear[i]!=0)
-                _gearNFT.setTimeLock(_charNFT.baseStats(idPlayer).gear[i], block.timestamp+qData.duration);
+                _gearNFT.setTimeLock(_charNFT.baseStats(idPlayer).gear[i], qData.duration);
         
         //Calculate tokens to mint applying quest level and completion percentage
         uint256 tokensToMint= allQuests[idQuest].loot+ ((allQuests[idQuest].loot * upgradeMatrix[questLevel]) / 100);
