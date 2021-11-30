@@ -31,7 +31,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         uint slot;		        //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
                                 //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount 100-Wildcard
         uint level;     	    //By default is 0. Evolvable NFTs may upgrade this level
-        uint256[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
+        uint[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
                                 //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved 
                                 //NOTE: We use last two for the store, PRICE IN TOKENS AT POS 9!!
         //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100z

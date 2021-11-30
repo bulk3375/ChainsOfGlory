@@ -355,7 +355,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Test that all gear is not locked 
     function gearLocked(uint256[11] memory gear) public view returns (bool) {
         for(uint i=0; i<gear.length; i++) {            
-            if(_gearNFT.singleStats(gear[i]).timeLock < block.timestamp)
+            if(_gearNFT.singleStats(gear[i]).timeLock > block.timestamp)
                 return true;
         }
         return false;

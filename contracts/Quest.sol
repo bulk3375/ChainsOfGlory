@@ -77,7 +77,7 @@ contract Quest is AccessControlEnumerable, Ownable {
     //TODO TODO TODO
     //We must define the probability granularity of the drops
     //that is, the keys of the mapping
-    mapping (uint256 => Equipment.gearStats[]) private dropsNFT; 
+    //mapping (uint256 => Equipment.gearStats[]) private dropsNFT; 
 
     //Set combat loop
     function setCombatLoops(uint256 newLoops) public onlyOwner {
@@ -95,14 +95,14 @@ contract Quest is AccessControlEnumerable, Ownable {
     }
 
     //Returns the drop array for an especific probability
-    function getDropEquipment(uint prob) public view returns (Equipment.gearStats[] memory){
-        return dropsNFT[prob];
-    }
+    //function getDropEquipment(uint prob) public view returns (Equipment.gearStats[] memory){
+    //    return dropsNFT[prob];
+    //}
 
     //Set the array of gear for an especific probability
-    function setDropEquipment(uint prob, Equipment.gearStats[] memory gear) public onlyOwner{
-         dropsNFT[prob]=gear;
-    }
+    //function setDropEquipment(uint prob, Equipment.gearStats[] memory gear) public onlyOwner{
+    //     dropsNFT[prob]=gear;
+    //}
 
     //To remove a drop do the following
     //Get the array for especific probability
@@ -112,7 +112,7 @@ contract Quest is AccessControlEnumerable, Ownable {
 
     //Adds a single geat to the especific probability array
     function addDropToEquipment(uint prob, Equipment.gearStats memory gear) public onlyOwner{
-         dropsNFT[prob].push(gear);
+         //dropsNFT[prob].push(gear);
     }
 
     //Set the charcaters sc address
@@ -206,7 +206,7 @@ contract Quest is AccessControlEnumerable, Ownable {
     function questEnemiesStats(questData memory qData) public view returns (uint256[10] memory) {
         Characters.charData memory cData;
 
-        //WARNING WARNING WARNING!!
+        //WARNING WARNING WARNING!! CHANGE CHANGE CHANGE!!
         //It is supposed that vitality should be already applied. A percentual stat cannot be added!!
         for(uint i=0; i < qData.enemy.length; i++) 
             cData=addCraracterStats(cData, _charNFT.calculatedStats(qData.enemy[i]));
@@ -222,29 +222,33 @@ contract Quest is AccessControlEnumerable, Ownable {
 
         Characters.charData memory playerData = _charNFT.calculatedStats(idPlayer);
 
+        //We will use a struct to store all data to avoid the fkng
+        // 'Stack too deep, try removing local variables' error 
+        questData memory qData;
+
         //Quest total time calculation
-        uint missionTime=((allQuests[idQuest].duration *100) /  (1+playerData.stats[StatsAndSlots.Mastery]))/100;
-        missionTime += ((allQuests[idQuest].range *200) /  (1+playerData.stats[StatsAndSlots.Speed]))/100;
+        qData.duration=((allQuests[idQuest].duration *100) /  (1+playerData.stats[StatsAndSlots.Mastery]))/100;
+        qData.duration += ((allQuests[idQuest].range *200) /  (1+playerData.stats[StatsAndSlots.Speed]))/100;
 
         //adds the mision health points to all the enemies Health and apply Vitality
-        uint256 missionHealth=allQuests[idQuest].health+allQuests[idQuest].calculatedStats[StatsAndSlots.Health];
+        qData.health=allQuests[idQuest].health+allQuests[idQuest].calculatedStats[StatsAndSlots.Health];
         //WARNING WARNING WARNING
         //It is supposed that vitality should be already applied. A percentual stat cannot be added!!
-        missionHealth += (allQuests[idQuest].calculatedStats[StatsAndSlots.Health] * allQuests[idQuest].calculatedStats[StatsAndSlots.Vitality])/100;
+        qData.health += (allQuests[idQuest].calculatedStats[StatsAndSlots.Health] * allQuests[idQuest].calculatedStats[StatsAndSlots.Vitality])/100;
 
         //adds the mision attack points to all the enemies Health and apply Vitality
-        uint256 missionAttack=allQuests[idQuest].attack+allQuests[idQuest].calculatedStats[StatsAndSlots.Attack];
+        qData.attack=allQuests[idQuest].attack+allQuests[idQuest].calculatedStats[StatsAndSlots.Attack];
 
         //adds the mision attack points to all the enemies Health and apply Vitality
-        uint256 missionDefense=allQuests[idQuest].defense+allQuests[idQuest].calculatedStats[StatsAndSlots.Defense];
+        qData.defense=allQuests[idQuest].defense+allQuests[idQuest].calculatedStats[StatsAndSlots.Defense];
 
         //Defense is like a shield, to simplify we add defense to health
-        missionHealth += missionDefense;
+        qData.health += qData.defense;
         
         //Apply questLevel
-        missionTime+=(missionTime*upgradeMatrix[questLevel])/100;
-        missionHealth+=(missionHealth*upgradeMatrix[questLevel])/100;
-        missionAttack+=(missionAttack*upgradeMatrix[questLevel])/100;
+        qData.duration+=(qData.duration*upgradeMatrix[questLevel])/100;
+        qData.health+=(qData.health*upgradeMatrix[questLevel])/100;
+        qData.attack+=(qData.attack*upgradeMatrix[questLevel])/100;
         //missionDefense+=(missionDefense*upgradeMatrix[questLevel])/100;
 
 
@@ -263,7 +267,7 @@ contract Quest is AccessControlEnumerable, Ownable {
         //uint256 playerDefense=playerData.stats[StatsAndSlots.Defense];
         //playerDefense += (playerData.stats[StatsAndSlots.Defense] * playerData.stats[StatsAndSlots.Faith])/300;
 
-        uint startMissionValue=missionHealth;
+        uint startMissionValue=qData.attack;
         uint startPlayerValue=playerHealth;
 
         //Well... lets go for the quest calculation
@@ -284,14 +288,14 @@ contract Quest is AccessControlEnumerable, Ownable {
         for(uint i=0; i<combatLoops; i++) {
             //calculates player attack            
             uint attack=(playerAttack * (100-randMod(2*randomSpread)+randomSpread))/100;
-            if(missionHealth <=attack) {
+            if(qData.health <=attack) {
                 //Player wins!
-                missionHealth=0;
+                qData.health=0;
                 break;
             }
-            missionHealth-=attack;
+            qData.health-=attack;
 
-            attack=(missionAttack * (100-randMod(2*randomSpread)+randomSpread))/100;
+            attack=(qData.attack * (100-randMod(2*randomSpread)+randomSpread))/100;
             if(playerHealth <=attack) {
                 //Player loses!
                 playerHealth=0;
@@ -301,7 +305,7 @@ contract Quest is AccessControlEnumerable, Ownable {
         }
         
         //calculate % completed
-        uint256 completed = ((startMissionValue - missionHealth) * 100) / startMissionValue;
+        uint256 completed = ((startMissionValue - qData.health) * 100) / startMissionValue;
 
         //TODO TODO TODO
         //Calculate token drop and send
@@ -316,7 +320,7 @@ contract Quest is AccessControlEnumerable, Ownable {
         _charNFT.setTimeLock(idPlayer, block.timestamp+block.timestamp);
         for(uint i=0; i<_charNFT.baseStats(idPlayer).gear.length; i++)
             if(_charNFT.baseStats(idPlayer).gear[i]!=0)
-                _gearNFT.setTimeLock(_charNFT.baseStats(idPlayer).gear[i], block.timestamp+missionTime);
+                _gearNFT.setTimeLock(_charNFT.baseStats(idPlayer).gear[i], block.timestamp+qData.duration);
         
         //Calculate tokens to mint applying quest level and completion percentage
         uint256 tokensToMint= allQuests[idQuest].loot+ ((allQuests[idQuest].loot * upgradeMatrix[questLevel]) / 100);

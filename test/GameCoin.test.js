@@ -3,7 +3,7 @@ const Equipment = artifacts.require("Equipment");   //SC equipment
 
 const BN = web3.utils.BN;
 
-contract("Character test", accounts => {
+contract("GameCoin test", accounts => {
     const[deployerAddress, tokenAddr1, tokenAddr2] = accounts;    
         
      /*
@@ -55,17 +55,17 @@ contract("Character test", accounts => {
     //Now acc 1 has 1900 tokens
     it("Contract Owner may add gear to the store", async () => {
         let token = await GameCoin.deployed();
-        await token.addGearToStore([0,0,0,[1000,800,0,0,0,0,0,0,0,50]]);
-        await token.addGearToStore([0,1,0,[0,0,1200,900,0,0,0,0,0,150]]);
-        await token.addGearToStore([0,2,0,[0,0,1200,900,0,0,0,0,0,150]]);
-        await token.addGearToStore([0,3,0,[0,0,1200,900,0,0,0,0,0,500]]);
-        await token.addGearToStore([0,4,0,[0,0,1200,900,0,0,0,0,0,5000]]);
+        await token.addGearToStore([0,0,0,[1000,800,0,0,0,0,0,0,0,50],0]);
+        await token.addGearToStore([0,1,0,[0,0,1200,900,0,0,0,0,0,150],0]);
+        await token.addGearToStore([0,2,0,[0,0,1200,900,0,0,0,0,0,150],0]);
+        await token.addGearToStore([0,3,0,[0,0,1200,900,0,0,0,0,0,500],0]);
+        await token.addGearToStore([0,4,0,[0,0,1200,900,0,0,0,0,0,5000],0]);
     });
 
     it("Only Owner can add gear to the store", async () => {
         let token = await GameCoin.deployed();
         try{
-            await token.addGearToStore([0,0,0,[1000,800,0,0,0,0,0,0,0,50]], {from: accounts[1]});
+            await token.addGearToStore([0,0,0,[1000,800,0,0,0,0,0,0,0,50],0], {from: accounts[1]});
             assert.fail("The transaction should have thrown an error");
         }
         catch (err) {

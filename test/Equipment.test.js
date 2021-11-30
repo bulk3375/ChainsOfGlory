@@ -14,7 +14,7 @@ contract("Equipment test", accounts => {
         //Set the gear adress into Character SC    
         await charac.setEquipmentAddress(Equipment.address);
 
-        await token.mint(tokenAddr1, [0,0,0,[1000,800,0,0,0,0,0,0,0,0]]);
+        await token.mint(tokenAddr1, [0,0,0,[1000,800,0,0,0,0,0,0,0,0],0]);
     });
 
     it("is possible to set royalties", async() => {
@@ -36,7 +36,7 @@ contract("Equipment test", accounts => {
     it("Only MINTER_ROLE can mint NFT", async () => {
         let token = await Equipment.deployed();
         try{
-            await token.mint(tokenAddr1, [0,0,0,[0,0,1200,1100,0,0,0,0,0,0]], {from: accounts[1]});
+            await token.mint(tokenAddr1, [0,0,0,[0,0,1200,1100,0,0,0,0,0,0],0], {from: accounts[1]});
             assert.fail("The transaction should have thrown an error");
         }
         catch (err) {
@@ -48,7 +48,7 @@ contract("Equipment test", accounts => {
         const MINTER_ROLE = web3.utils.soliditySha3('MINTER_ROLE');
         let token = await Equipment.deployed();
         await token.grantRole(MINTER_ROLE, accounts[1]);
-        await token.mint(tokenAddr1, [0,0,0,[0,0,1200,1100,0,0,0,0,0,0]], {from: accounts[1]});
+        await token.mint(tokenAddr1, [0,0,0,[0,0,1200,1100,0,0,0,0,0,0],0], {from: accounts[1]});
     });
 
     it("Contract Owner may set level and progress matrix", async () => {
