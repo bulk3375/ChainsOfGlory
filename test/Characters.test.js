@@ -262,16 +262,7 @@ contract("Character test", accounts => {
     //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
     //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
 
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
+    //Test that singleStats works
     it("Test that singleStats works", async () => {
         let token = await Characters.deployed();
  
@@ -285,17 +276,11 @@ contract("Character test", accounts => {
         assert.equal(stats[2][0], 1);
         assert.equal(stats[2][1], 3);
     });
+    //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
 
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
+    //Test that calculatedStats works
     it("Test that calculatedStats works", async () => {
         let token = await Characters.deployed();
         
@@ -312,17 +297,55 @@ contract("Character test", accounts => {
         assert.equal(stats[2][1], 5); //3+2
         assert.equal(stats[2][9], 13); //3+10
     });
+    //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+
+
 
     /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
+    function equip(uint256 player, uint256[11] memory gear) public {
+        require(values[player].class == 0, "Exception: Cannot equip an enemy!");
+        require(ownerOf(player) == _msgSender(), "Exception: must be owner of the player to equip");
+        require(gearExists(gear), "Exception: some gear used does not exists in equip");
+        require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+        require(!gearLocked(gear), "Exception: some gear is locked");
+        require(ownAllGear(ownerOf(player), gear), "Exception: player does not own all gear in equip");
+        require(gearSlotOk(gear), "Exception: some gear is not in the apropriate slot in equip");
+        require(!alreadyEquipedInOtherPlayer(player, gear), "Exception: some gear is already equiped in other player in equip");
     */
+
+    //Mint an enemy, transfer to addr 1 and try to equip it
+    //require(values[player].class == 0, "Exception: Cannot equip an enemy!");
+    it("Test that cannot equip an enemy", async () => {
+        let token = await Characters.deployed();
+        try{
+            let gear = await Equipment.deployed();
+
+            //Creates some gear on SC owner to equipo the enemy
+            await gear.mint(deployerAddress, [0,0,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=1 level=0 id 2
+            await gear.mint(deployerAddress, [0,1,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=2 level=0 id 3
+
+            //enemies may be only equiped at mint time (minted to SC owner) PJ=6
+            await token.mint(deployerAddress, [1,0,[6,3,2,1,8,7,6,9,2,3],[2,3,0,0,0,0,0,0,0,0,0],0]); //M int enemy NFT id=5
+
+            //Leave balances as it was and test again balances
+            await token.transferFrom(deployerAddress, tokenAddr1, 6); 
+
+            //Try to equip enemy
+            await token.equip(6, [1,2,3,0,0,0,0,0,0,0,0], {from: accounts[1]});
+
+            assert.fail("The transaction should have thrown an error");
+        }
+        catch (err) {
+            assert.include(err.message, "Cannot equip an enemy!", "Error is not what is expected");
+        }                
+    });
+    //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4, 5
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
+
+    //cannot equip a player that I do not own
     it("Test that cannot equip a player that I do not own", async () => {
         let token = await Characters.deployed();
         try{
@@ -333,17 +356,11 @@ contract("Character test", accounts => {
             assert.include(err.message, "must be owner of the player to equip", "Error is not what is expected");
         }
     });
+    //After test:
+    //tokenAddr1 owns player NFT 0, 1, 2, 3, 4
+    //tokenAddr1 owns gear NFT 1 equipend id Player 1 (remember NFT 0 is created on SC deployment)
 
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
+    //cannot equip gear that does not exists
     it("Test that cannot equip gear that does not exists", async () => {
         let token = await Characters.deployed();
         try{
@@ -355,16 +372,6 @@ contract("Character test", accounts => {
         }                
     });
 
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
     it("Test that cannot equip gear in the wrong slot", async () => {
         let token = await Characters.deployed();
         try{
@@ -377,16 +384,6 @@ contract("Character test", accounts => {
         }                
     });
 
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
     it("Test that cannot equip gear already equiped", async () => {
         let token = await Characters.deployed();
         try{
@@ -400,16 +397,6 @@ contract("Character test", accounts => {
     });
 
     //Create several gear, equip and unequip gear and calculate stats
-    /*
-    addr1 => PJ NFT(0)
-    addr1 => GEAR NFT(1)
-    Equiped G(1) on PJ(1)
-
-    addr1 => PJ NFT(1)
-    addr1 => PJ NFT(2)
-    addr1 => PJ NFT(3)
-    addr1 => PJ NFT(4)
-    */
     it("Test fully gear creation, equipment and stats", async () => {
         
         let gear = await Equipment.deployed();
@@ -495,34 +482,7 @@ contract("Character test", accounts => {
         await token.equip(0, [1,2,3,4,5,6,7,8,9,10,11], {from: accounts[1]});
     });
 
-    //Mint an enemy, transfer to addr 1 and try to equip it
-    it("Test that cannot equip an enemy", async () => {
-        let token = await Characters.deployed();
-        try{
-            //Unequip all gear in PJ 0
-            await token.equip(0, [0,0,0,0,0,0,0,0,0,0,0], {from: accounts[1]});
-
-            let gear = await Equipment.deployed();
-
-            //Creates some gear on SC owner to equipo the enemy
-            await gear.mint(deployerAddress, [0,0,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=1 level=0 id 14
-            await gear.mint(deployerAddress, [0,1,0,[1,2,3,4,5,6,7,8,9,10],0]); //class=0 slot=2 level=0 id 15
-
-            //enemies may be only equiped at mint time (minted to SC owner) PJ=6
-            await token.mint(deployerAddress, [1,0,[6,3,2,1,8,7,6,9,2,3],[14,15,0,0,0,0,0,0,0,0,0],0]);
-
-            //Leave balances as it was and test again balances
-            await token.transferFrom(deployerAddress, tokenAddr1, 6); 
-
-            //Try to equip enemy
-            await token.equip(6, [1,2,3,0,0,0,0,0,0,0,0], {from: accounts[1]});
-
-            assert.fail("The transaction should have thrown an error");
-        }
-        catch (err) {
-            assert.include(err.message, "Cannot equip an enemy!", "Error is not what is expected");
-        }                
-    });
+    
     
 
 
