@@ -32,7 +32,7 @@ contract Quest is AccessControlEnumerable, Ownable {
         uint health;    	//Basic health of the mission
         uint attack;    	//Basic health of the mission
         uint defense;    	//Basic health of the mission
-        uint[] enemy;	    //Enemy list  
+        uint[5] enemy;	    //Enemy list  
 
         uint256[10] calculatedStats;    //Only in runtime: to lower the gas
     }
@@ -141,6 +141,8 @@ contract Quest is AccessControlEnumerable, Ownable {
     //Add a quest and recalculate stats
     function addQuest(questData memory qData) public onlyOwner {
         require(!questExists(qData), "Quest already exists");
+        //TODO TODO TODO
+        //Test that enemies exists
         qData.calculatedStats=questEnemiesStats(qData);
         allQuests.push(qData);
     }

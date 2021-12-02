@@ -1,5 +1,6 @@
 const GameCoin = artifacts.require("GameCoin"); //SC characters 
 const Equipment = artifacts.require("Equipment");   //SC equipment
+const Characters = artifacts.require("Characters");   //SC equipment
 
 const BN = web3.utils.BN;
 
@@ -98,12 +99,29 @@ contract("GameCoin test", accounts => {
         let token = await GameCoin.deployed();
         let equipment = await Equipment.deployed();
         
-        await token.purchase(2, {from: accounts[1]});
+        await token.purchase(2, {from: accounts[1]}); //[0,0,1200,900,0,0,0,0,0,150]
         let balance = await equipment.balanceOf(accounts[1]);
         
         assert.strictEqual(balance.toNumber(), 1)
 
         balance = await token.balanceOf(accounts[1])
+    });
+
+    it("Player may equip putchased item", async () => {
+        let token = await GameCoin.deployed();
+        let character = await Characters.deployed();
+
+        //Set the gear adress into Character SC    
+        await character.setEquipmentAddress(Equipment.address);
+
+        await character.mint(tokenAddr1, [0,0,[100,1000,800,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0],0]);
+        await character.equip(0, [0,0,1,0,0,0,0,0,0,0,0], {from: accounts[1]});
+        
+        //[100,1000,800,1,8,7,6,9,2,3]
+        //[0,0,1200,900,0,0,0,0,0,150]
+        let cData = await character.calculatedStats(0);
+        assert.equal(cData[2][2], 2000);
+        assert.equal(cData[2][3], 901);
     });
 
     it("Player can not putchase an item more expensive than his funds", async () => {

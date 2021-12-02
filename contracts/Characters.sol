@@ -94,6 +94,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(POLYMATH_ROLE, _msgSender());
         _setupRole(QUEST_ROLE, _msgSender());
+
+        charData memory fakeEnemy;
+        fakeEnemy.class=1; //1 represent no enemy
+        //Creates the 0 NFT which is special. Means 'empty slot' for the characters
+        mint(_msgSender(), fakeEnemy);
     }
 
     //Creation of a player or enemy
