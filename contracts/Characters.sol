@@ -111,9 +111,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Can only equip gear not used in another players
     function mint(address _to, charData memory data) public {
         require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
-        require(gearExists(data.gear), "Exception: some gear used does not exists in mint");
-        require(ownAllGear(_to, data.gear), "Exception: player does not own all gear in mint");
-        require(gearSlotOk(data.gear), "Exception: some gear is not in the apropriate slot in mint");
+        require(validGear(_to, data.gear), "Exception: some gear is not valid");
         require(!alreadyEquiped(_to, data.gear), "Exception: some gear is already equiped in other player in mint");
         
         //Royaties address and amntou
@@ -154,6 +152,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Only Polymath role can do it. 
     //To recalculate stats function uses the upgrade matrix. See above...
     function updateLevel(uint256 player) public {
+        require(ownerOf(player) == _msgSender(), "Exception: must be owner of the player to update");
         require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
         require(hasRole(POLYMATH_ROLE, _msgSender()), "Exception: only the Polymath can call this function");
         require((values[player].level + 1) < maxLevel, "Exception: player is already at max level");
@@ -174,7 +173,7 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         return upgradeMatrix;
     }
 
-    //Equip al gear pased in the arrat
+    //Equip al gear pased in the array
     //The previous gear is replaced by the new one
     //Cannot equip enemies
     //Can only equip a player owned
@@ -183,13 +182,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
     //Verifies that gear is in the apropriate slot
     //Can only equip gear not used in another players
     function equip(uint256 player, uint256[11] memory gear) public {
-        require(values[player].class == 0, "Exception: Cannot equip an enemy!");
         require(ownerOf(player) == _msgSender(), "Exception: must be owner of the player to equip");
-        require(gearExists(gear), "Exception: some gear used does not exists in equip");
+        require(values[player].class == 0, "Exception: Cannot equip an enemy!");
         require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+        require(validGear(ownerOf(player), gear), "Exception: some gear is not valid");        
         require(!gearLocked(gear), "Exception: some gear is locked");
-        require(ownAllGear(ownerOf(player), gear), "Exception: player does not own all gear in equip");
-        require(gearSlotOk(gear), "Exception: some gear is not in the apropriate slot in equip");
         require(!alreadyEquipedInOtherPlayer(player, gear), "Exception: some gear is already equiped in other player in equip");
         
         //Stores the struct to assign when mint os ok
@@ -352,11 +349,44 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         }
     }
 
-    //Test that all gear passed exists 
-    function gearExists(uint256[11] memory gear) internal view returns (bool) {
+
+    /*
+        require(gearExists(data.gear), "Exception: some gear used does not exists in mint");
+        require(ownAllGear(_to, data.gear), "Exception: player does not own all gear in mint");
+        require(gearSlotOk(data.gear), "Exception: some gear is not in the apropriate slot in mint");
+        require(!alreadyEquiped(_to, data.gear), "Exception: some gear is already equiped in other player in mint");
+
+        require(gearExists(gear), "Exception: some gear used does not exists in equip");
+        require(values[player].timeLock  < block.timestamp, "Exception: player is locked");
+        require(!gearLocked(gear), "Exception: some gear is locked");
+        require(ownAllGear(ownerOf(player), gear), "Exception: player does not own all gear in equip");
+        require(gearSlotOk(gear), "Exception: some gear is not in the apropriate slot in equip");
+        require(!alreadyEquipedInOtherPlayer(player, gear), "Exception: some gear is already equiped in other player in equip");
+    */
+    //Lets create a function that test that:
+    // - gear exists
+    // - player own all gear
+    // - gear are in apropriate slots
+    // - gear is not already equipped
+    //
+    // Lets call this function 'validGear'
+    function validGear(address powner, uint256[11] memory gear) internal view returns (bool) {
         for(uint i=0; i<gear.length; i++) {            
-            if(!_gearNFT.exists(gear[i]))
-                return false;
+            if(gear[i]!=0) {
+                
+                //Gear exists?
+                if(!_gearNFT.exists(gear[i]))
+                        return false;
+                    
+                //player own all gear?
+                if(_gearNFT.ownerOf(gear[i])!=powner)
+                    return false;
+
+                //gear are in apropriate slots?
+                Equipment.gearStats memory gearNFT= _gearNFT.singleStats(gear[i]);
+                if(gearNFT.slot!=100 && gearNFT.slot!=i) // slot 100 is for wildcards
+                    return false;
+            }
         }
         return true;
     }
@@ -368,36 +398,6 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
                 return true;
         }
         return false;
-    }
-
-    //Test that all gear passed in the data is owned by _to     
-    function ownAllGear(address powner, uint256[11] memory gear) internal view returns (bool) {
-        for(uint i=0; i<gear.length; i++) {
-            
-            if(!_gearNFT.exists(gear[i]))
-                return false;
-
-            if(gear[i]!=0) { //gear=0 means empty
-                //Test that _to is the owner
-                if(_gearNFT.ownerOf(gear[i])!=powner) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    //Test that every gear is on the apropriate slot
-    function gearSlotOk(uint256[11] memory gear) internal view returns (bool) {
-        for(uint i=0; i<gear.length; i++) {
-            if(gear[i]!=0) { //gear=0 means empty
-                //Test that equipment is on the right slot (or is a wildcard)
-                Equipment.gearStats memory gearNFT= _gearNFT.singleStats(gear[i]);
-                if(gearNFT.slot!=100 && gearNFT.slot!=i) // slot 100 is for wildcards
-                    return false;
-            }
-        }
-        return true;
     }
 
     //Test that all gear passed in the data is already equiped    
@@ -414,9 +414,9 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
             }
         }
         return false;
-    }
+    }    
 
-    //Test that all gear passed in the data is already equiped    
+    //Test that all gear passed in the data is already equiped in other player that the current   
     function alreadyEquipedInOtherPlayer(uint256 player, uint256[11] memory gear) internal view returns (bool) {
         address powner=ownerOf(player);
         //For all PJs in the owner (except the one to equip)
@@ -434,8 +434,6 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         }
         return false;
     }
-
-    
 
     //Test if the PJ has some gear equiped. Remember that cannot transfer a PJ with gear equiped
     function hasEquipment(uint256 player) internal view returns (bool){
