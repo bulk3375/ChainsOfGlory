@@ -669,7 +669,7 @@ contract("Character test", accounts => {
     it("Only polymath may upgrade player", async () => {
         let token = await Characters.deployed();
         try{
-            await token.updateLevel(0, {from: accounts[1]});
+            await token.updateLevel(1, {from: accounts[1]});
             assert.fail("The transaction should have thrown an error");
         }
         catch (err) {
@@ -690,7 +690,7 @@ contract("Character test", accounts => {
         
         assert.equal(stats1[2][1], 1000);
         assert.equal(stats1[2][2], 800);
-        await token.updateLevel(0, {from: accounts[1]});
+        await token.updateLevel(1, {from: accounts[1]});
         let stats2=await token.singleStats(1, {from: accounts[1]});
         
         assert.equal(stats2[2][1], 1050);

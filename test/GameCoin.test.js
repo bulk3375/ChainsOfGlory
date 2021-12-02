@@ -115,11 +115,11 @@ contract("GameCoin test", accounts => {
         await character.setEquipmentAddress(Equipment.address);
 
         await character.mint(tokenAddr1, [0,0,[100,1000,800,1,8,7,6,9,2,3],[0,0,0,0,0,0,0,0,0,0,0],0]);
-        await character.equip(0, [0,0,1,0,0,0,0,0,0,0,0], {from: accounts[1]});
+        await character.equip(1, [0,0,1,0,0,0,0,0,0,0,0], {from: accounts[1]});
         
         //[100,1000,800,1,8,7,6,9,2,3]
         //[0,0,1200,900,0,0,0,0,0,150]
-        let cData = await character.calculatedStats(0);
+        let cData = await character.calculatedStats(1);
         assert.equal(cData[2][2], 2000);
         assert.equal(cData[2][3], 901);
     });

@@ -38,7 +38,7 @@ contract Quest is AccessControlEnumerable, Ownable {
     }
 
     uint256 public combatLoops=10; //Number of loop on a combat
-    uint256 randomSpread=50;    //Random variation of attacks from 0 to 100. 
+    uint256 randomSpread=20;    //Random variation of attacks from 0 to 100. 
                                 //A spread of 30 means that random moves from 70 to 130
 
     //Quests to be played
@@ -141,6 +141,7 @@ contract Quest is AccessControlEnumerable, Ownable {
     //Add a quest and recalculate stats
     function addQuest(questData memory qData) public onlyOwner {
         require(!questExists(qData), "Quest already exists");
+        require(allEnemiesExists(qData), "Enemy does not exists");
         //TODO TODO TODO
         //Test that enemies exists
         qData.calculatedStats=questEnemiesStats(qData);
@@ -210,17 +211,29 @@ contract Quest is AccessControlEnumerable, Ownable {
 
         //WARNING WARNING WARNING!! CHANGE CHANGE CHANGE!!
         //It is supposed that vitality should be already applied. A percentual stat cannot be added!!
-        for(uint i=0; i < qData.enemy.length; i++) 
+        for(uint i=0; i < qData.enemy.length; i++)
             cData=addCraracterStats(cData, _charNFT.calculatedStats(qData.enemy[i]));
         
         return cData.stats;
     }
 
-    function playQuest(uint idQuest, uint idPlayer, uint questLevel) public {
+    struct combat {
+        uint quest;
+        uint level;
+        Characters.charData playerFinalStats;
+        questData questFinalStats;
+        uint playerHealth;
+        uint questHealth;
+        uint[20] hits;
+    }
+
+    function playQuest(uint idQuest, uint idPlayer, uint questLevel) public returns (combat memory) {
         require(msg.sender == _charNFT.ownerOf(idPlayer), "Caller is not the owner of the player");
         require(questLevel < maxLevel, "Exception: quest level out of bounds");
         require(idQuest < allQuests.length, "Index out of bounds");
         require(_charNFT.baseStats(idPlayer).timeLock  < block.timestamp, "Exception: player is locked");
+
+        combat memory combarData;
 
         Characters.charData memory playerData = _charNFT.calculatedStats(idPlayer);
 
@@ -339,6 +352,8 @@ contract Quest is AccessControlEnumerable, Ownable {
             //Mint NFT to player
 
         }
+
+        return combarData;
     }
 
     //Pseudo random. I think is enough for the game
@@ -351,5 +366,15 @@ contract Quest is AccessControlEnumerable, Ownable {
     function randMod(uint _modulus, uint256 salt) internal returns(uint) {
         randomNonce++; 
         return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce, salt))) % _modulus;
+    }
+
+    function allEnemiesExists(questData memory qData) internal returns(bool) {
+        for(uint i=0; i< qData.enemy.length; i++) {
+            if(!_charNFT.exists(qData.enemy[i]))
+                return false;
+            if(_charNFT.baseStats(qData.enemy[i]).class==0)
+                return false;
+        }
+        return true;
     }
 }

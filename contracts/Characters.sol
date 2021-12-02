@@ -232,6 +232,11 @@ contract Characters is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl
         transferFrom(from, to, tokenId);
     }
 
+    //Public wrapper of _exists
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
+    }
+
     //Override of the function
     //Test what actions has been performed and then asign stats and update the _tokensByOwner 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
