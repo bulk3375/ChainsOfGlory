@@ -9,7 +9,24 @@ import "./rarible/royalties/contracts/impl/RoyaltiesV2Impl.sol";
 import "./rarible/royalties/contracts/LibPart.sol";
 import "./rarible/royalties/contracts/LibRoyaltiesV2.sol";
 
+import "./GameStats.sol";
+import "./Characters.sol";
+
 contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl {
+
+    /**********************************************
+     **********************************************
+                    VARIABLES
+    **********************************************                    
+    **********************************************/
+
+    //GameStats smart contract
+    GameStats internal _gameStats;
+
+    //Characters smart contract
+    Characters internal _characters;
+
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdTracker;
     
@@ -20,24 +37,29 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant POLYMATH_ROLE = keccak256("POLYMATH_ROLE"); //May upgrade player level
     bytes32 public constant QUEST_ROLE = keccak256("QUEST_ROLE");       //May set timeLocks
+    bytes32 public constant CHARATCRER_ROLE = keccak256("CHARATCRER_ROLE"); //May set equipedIn
 
     //Royaties address and amntou
     address payable private _royaltiesAddress;
     uint96 private _royaltiesBasicPoints;
 
     //Stats of players and enemies
-    struct gearStats {
-        uint class;	            //Index on the NFT for client use
-        uint slot;		        //0-Head 1-Neck 2-Chest 3-Belt 4-Legs 5-Feet 6-Arms 
-                                //7-RHand (weapon) 8-LHand(complement) 9-Finger 10-Mount 100-Wildcard
-        uint level;     	    //By default is 0. Evolvable NFTs may upgrade this level
-        uint[10] stats;      //0-Health 1-Vitality 2-Attack 3-Defense 4-Mastery 
-                                //5-Speed 6-Luck 7-Faith 8-reserved 9-reserved 
-                                //NOTE: We use last two for the store, PRICE IN TOKENS AT POS 9!!
-        //NOTE: DO NOT USE DECIMALS, INSTEAD MULTIPLY BY 100z
+    struct gearData {
+        uint256  class;	        //Type of NFT
+        uint16  level;     	    //By default is 0. Evolvable NFTs may upgrade this level
+        uint256 timeLock;       //Timestamp until the player is locked (mission time)
 
-        uint timeLock;          //Timestamp until the player is locked (mission time)
+        uint256 equipedIn;      //Character index where the gear is equipped
+
+        uint256     lastCache;  //Last timestamp the calcucaltedStats has been calculated
+        GameStats.BaseStats   cachedStats;
+        //Change gear and/or update level will trigger a cache reload
+        //if globalCacheTimestamp is greater than lastCache it will also trigger a reload
     }
+
+    //When a nerfing is done admin must set globalCacheTimestamp to 'now'
+    //to force the refresh of all cachedStats
+    uint256 private globalCacheTimestamp;
 
     //maximum level a gear can go. 
     //This value may be updated based on the current tier
@@ -50,27 +72,24 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
     //For example, in tier 1 maxLevel=10
     //upgradeMatrix=[0, 5, 10, 14, 18, 21, 24, 26, 28, 30]
     //Each level means the percentage of upgrade for the level regarding the basic stats    
-    uint256[] upgradeMatrix;
-
-    //Gear offered in the stores
-    //Administrators may update, delete or modify the content
-    //The store should read this array and populate the store acording to it
-    gearStats[] public storeGear;
-
+    uint16[] upgradeMatrix;
 
     //Used by _beforeTokenTransfer to catch the after minting
-    gearStats private gearToMint;
+    gearData private gearToMint;
 
 
     //Mapping from NFT to struct
-    mapping(uint256 => gearStats) private values;
+    mapping(uint256 => gearData) private values;
 
     // Mapping from owner address to token ID. It is used to quickly get all NFTs on an address
     mapping(address => uint256[]) private _tokensByOwner;
 
-    //Generic random counter, used to add a bit more of entropy
-    uint randomNonce=0;
 
+    /**********************************************
+     **********************************************
+                    CONSTRUCTOR
+    **********************************************                    
+    **********************************************/
     constructor() ERC721("Chains of Glory Equipment", "CGE") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
 
@@ -82,32 +101,138 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         _royaltiesAddress=payable(address(this)); //Contract creator by default
         _royaltiesBasicPoints=1500; //15% default
 
-        gearStats memory gear;
-        //Creates the 0 NFT which is special. Means 'empty slot' for the characters
-        mint(_msgSender(), gear);
+        gearData memory gear;
+
+        //Creates the 0 NFT which is special. Means 'empty slot'
+        gearToMint=gear;
+        super._mint(_msgSender(), _tokenIdTracker.current());
     }
 
-    function mint(address _to, gearStats memory data) public {
+    /**********************************************
+     **********************************************
+                    MINTER
+              SETTERS AND GETTERS
+    **********************************************                    
+    **********************************************/
+
+    //Minter
+    function mint(address _to, gearData memory data) public {
         require(hasRole(MINTER_ROLE, _msgSender()), "Exception: must have minter role to mint");
-        
+        require(data.class<_gameStats.numEquipment(), "Exception: equipment index out of bounds");
         //Stores the struct to assign when mint os ok
         gearToMint=data;
-        super._mint(_to, _tokenIdTracker.current()); 
+        super._mint(_to, _tokenIdTracker.current());
     }
 
-    function setTimeLock(uint256 gearId, uint timestamp) public {
-        require(hasRole(QUEST_ROLE, _msgSender()), "Exception: must have QUEST role to mint");
-        values[gearId].timeLock=block.timestamp+timestamp;
-    }
+    //Set functions
 
     //GameToken Token Address
+    function setGameStatsAddress(address gameStats) public onlyOwner {
+        _gameStats=GameStats(gameStats);
+    }
+
+    function setCharactersAddress(address characters) public onlyOwner {
+        _characters=Characters(characters);
+        _setupRole(CHARATCRER_ROLE, characters);
+    }
+
+    
     function setRoyaltiesAddress(address payable rAddress) public onlyOwner {
         _royaltiesAddress=rAddress;
     }
 
-    //GameToken Token Address
     function setRoyaltiesBasicPoints(uint96 rBasicPoints) public onlyOwner {
         _royaltiesBasicPoints=rBasicPoints;
+    }
+
+    //Set timelock
+    function setTimeLock(uint256 gearId, uint timestamp) public {
+        require(hasRole(QUEST_ROLE, _msgSender()), "Exception: must have QUEST role to set timelocks");
+        require(exists(gearId),"Exception: Gear does not existst");
+        values[gearId].timeLock=block.timestamp+timestamp;
+    }
+
+    //Set the max level of the gears
+    function setMaxLevel(uint lvl, uint16[] memory matrixValues) public onlyOwner {
+        require(lvl == matrixValues.length, "Exception: must provide a matrix of values of the same lenght than level");
+
+        maxLevel=lvl;
+        upgradeMatrix=matrixValues;
+
+        //Set cache timnestamp to current
+        //This will force updateCache to call recalculateStats
+        //The problem is... who will trigger the call and pay the fees?!?!?
+        globalCacheTimestamp=block.timestamp;
+    }
+
+    function getMatrix() public view returns (uint16[] memory){
+        return upgradeMatrix;
+    }
+
+    //Returns the base gearStats of the NFT 
+    function getGearData(uint256 idGear) public view returns(gearData memory) {
+        return values[idGear];
+    }
+
+    //Returns the gearStats of the NFT aplying the level modifier
+    function getGearStats(uint256 idGear) public view returns(GameStats.EquipmentItem memory) {        
+        return _gameStats.equipmentAt(values[idGear].class);
+    }
+
+    function getCachedStats(uint256 idGear) public view returns(GameStats.BaseStats memory) {
+        return values[idGear].cachedStats;
+    }
+
+    //Returns the array of NFTs owned by an address
+    function getEquipment(address powner) public view returns (uint256[] memory) {
+        return _tokensByOwner[powner];
+    }
+
+    //GameToken Token Address
+    function getSlot(uint256 gear) public view returns (uint8 slot)  {
+        GameStats.EquipmentItem memory item = _gameStats.equipmentAt(values[gear].class);
+        return item.slot;
+    }
+
+    function getCharacter(uint256 gear) public view returns (uint256){
+        return values[gear].equipedIn;
+    }
+
+    function setCharacter(uint256 gear, uint256 character) public  {
+        require(hasRole(CHARATCRER_ROLE, _msgSender()), "Exception: only CHARATCRER_ROLE can call this function");
+        if(gear!=0)
+            values[gear].equipedIn=character;
+    }
+
+    /**********************************************
+     **********************************************
+                   UTILITY FUNCTIONS
+    **********************************************                    
+    **********************************************/
+
+    function isValidGearSet(address player, uint256[11] memory gear) public view returns (bool) {
+        for(uint i=0; i<gear.length; i++) {
+            
+            if(gear[i]==0)
+                continue;
+
+            //Gear timelocked
+            if(values[gear[i]].timeLock  >= block.timestamp)
+                return false;
+
+            //Gear NFT exists?
+            if(!_exists(gear[i]))
+                return false;
+
+            //player own all gear?
+            if(ownerOf(gear[i])!=player)
+                return false;    
+            
+            //gear are in apropriate slots?
+            if(getSlot(gear[i])!=100 && getSlot(gear[i])!=i) // slot 100 is for wildcards
+                return false;
+        }
+        return true;
     }
 
     //Update the level of the gear and recalculates all stats
@@ -119,19 +244,56 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         require((values[gear].level + 1) < maxLevel, "Exception: equipment is already at max level");
         
         values[gear].level++;
+        recalculateStats(gear);
     }
 
-    //Set the max level of the gears
-    function setMaxLevel(uint lvl, uint256[] memory matrixValues) public {
-        require(owner() == _msgSender(), "Ownable: caller is not the owner");
-        require(lvl == matrixValues.length, "Exception: must provide a matrix of values of the same lenght than level");
-
-        maxLevel=lvl;
-        upgradeMatrix=matrixValues;
+    //Public wrapper of _exists
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
     }
 
-    function getMatrix() public view returns (uint256[] memory){
-        return upgradeMatrix;
+    function updateCache(uint256 idGear) public onlyOwner {
+        if(values[idGear].lastCache < globalCacheTimestamp) {
+            values[idGear].lastCache=globalCacheTimestamp;
+            recalculateStats(idGear);
+        }
+    }
+
+    //Returns the actual stats of the player calculating all the equiped gear and leveling
+    function recalculateStats(uint256 idGear) internal { 
+        //No calculations for 'empty' equipment
+        if(idGear==0)
+            return;
+
+        GameStats.EquipmentItem memory eqGear = _gameStats.equipmentAt(values[idGear].class);
+        
+        for(uint i=0; i<eqGear.stats.values.length; i++)
+            values[idGear].cachedStats.values[i]=eqGear.stats.values[i] + ((eqGear.stats.values[i] * upgradeMatrix[values[idGear].level]) / 100);
+
+        values[idGear].lastCache=block.timestamp;
+
+        if(values[idGear].equipedIn!=0)
+            _characters.recalculateStats(values[idGear].equipedIn);
+
+    }
+
+    /**********************************************
+     **********************************************
+                   ERC721 FUNCTIONS
+    **********************************************                    
+    **********************************************/
+
+    //Override of the transfer function
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual override {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(values[tokenId].timeLock  < block.timestamp, "Exception: equipment is locked");
+        require(values[tokenId].equipedIn  == 0, "Exception: cannot transfer an equipped item");
+
+        super.transferFrom(from, to, tokenId);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
@@ -146,6 +308,8 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
 
             //Updates the _tokensByOwner mapping            
             _tokensByOwner[to].push(tokenId);
+
+            recalculateStats(tokenId);
         } else if(to==address(0)) {
             //Burning
 
@@ -159,30 +323,7 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
             deleteTokenId(from, tokenId);
         }
     }
-
-    //Returns the base gearStats of the NFT 
-    function baseStats(uint256 idGear) public view returns(gearStats memory) {
-        return values[idGear];
-    }
-
-    //Returns the gearStats of the NFT aplying the level modifier
-    function singleStats(uint256 idGear) public view returns(gearStats memory) {
-        gearStats memory baseGear;
-        baseGear=values[idGear];
-        if(baseGear.level!=0) {
-            uint256 multiplier=upgradeMatrix[baseGear.level];        
-            for(uint i=0; i< baseGear.stats.length; i++) { //Remkember that last 2 are reserved!!
-                baseGear.stats[i]+=(baseGear.stats[i]*multiplier)/100;
-            }
-        }
-        return baseGear;
-    }
-
-    //Returns the array of NFTs owned by an address
-    function getEquipment(address powner) public view returns (uint256[] memory) {
-        return _tokensByOwner[powner];
-    }
-
+    
     function _baseURI() internal view virtual override returns (string memory) {
         return "https://www.chainsofglory.com/metadata/";
     }
@@ -215,20 +356,14 @@ contract Equipment is ERC721, AccessControlEnumerable, Ownable, RoyaltiesV2Impl 
         return super.supportsInterface(interfaceId);
     }
 
-    //Public wrapper of _exists
-    function exists(uint256 tokenId) public view returns (bool) {
-        return _exists(tokenId);
-    }
+    
 
-    //Pseudo random. I think is enough for the game
-    function randMod(uint _modulus) internal returns(uint) {
-        randomNonce++; 
-        return uint(keccak256(abi.encodePacked(block.timestamp, msg.sender, randomNonce))) % _modulus;
-    }
+    /**********************************************
+     **********************************************
+                REVERSE ARRAY FUNCTIONS
+    **********************************************                    
+    **********************************************/
 
-    //************************************************************
-    // ARRAY functions 
-    //************************************************************
     function positionOf(address powner, uint256 tokenId) public view returns (uint) {
         for(uint i=0; i<_tokensByOwner[powner].length; i++) {
             if(_tokensByOwner[powner][i]==tokenId)

@@ -7,32 +7,32 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
+import "./Characters.sol";
 import "./Equipment.sol";
-
-    //***********************************
-    // SETUP AFTER DEPLOY
-    //***********************************
-    //SET EQUIPMENT ADDRESS
-    //SET MINTER_ROLE FOR EQUIPMENT
-    //***********************************
-    //
-    // This SC also holds the functionality 
-    // of the STORE
-    //
-    //***********************************
+import "./GameStats.sol";
 
 contract GameCoin is AccessControlEnumerable, Ownable, ERC20 {
+
+    //Equipment SC
+    Equipment private _equipment;
+    //Equipment SC
+    Characters private _character;
+    //Game Stats SC
+    GameStats private _gameStats;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    //Equipment Address
-    Equipment private _equipment;
-
     //Gear offered in the stores
     //Administrators may update, delete or modify the content
     //The store should read this array and populate the store acording to it
-    Equipment.gearStats[] public storeGear;
+    //Elements are indexes of the equipment array of GameStats
+    struct StoreItem {
+        uint16 itemIndex;  //Index of the item, either equipment or race
+        uint256 price;      //Price in tokens or matic
+    }
+    StoreItem[] public storeGear;   //Equipment to sell
+    StoreItem[] public storeRaces;  //Races to sell
 
     constructor(uint256 initialSupply) ERC20( "Chains of Glory Token", "CGT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -62,9 +62,22 @@ contract GameCoin is AccessControlEnumerable, Ownable, ERC20 {
         _burn(from, amount);
     }
 
+    receive() external payable {}
+
+    function withdraw(uint amount) external onlyOwner {
+        payable(msg.sender).transfer(amount);
+    }
+
     //GameToken Token Address
+    function setCharacterAddress(address characterAddress) public onlyOwner {
+        _character=Characters(characterAddress);
+    }
     function setEquipmentAddress(address equipmentAddress) public onlyOwner {
         _equipment=Equipment(equipmentAddress);
+    }
+
+    function setGameStatsAddress(address gameStatsAddress) public onlyOwner {
+        _gameStats=GameStats(gameStatsAddress);
     }
 
     //STORE FUNCTIONALITY
@@ -72,62 +85,83 @@ contract GameCoin is AccessControlEnumerable, Ownable, ERC20 {
     //Store is where the user pay in-game tokens for equipment
 
     //Add an element to the store array
-    function addGearToStore(Equipment.gearStats memory gear) public onlyOwner {
-        require(!gearExistsInStore(gear), "Element exists in the array");
-        storeGear.push(gear);
+    function addItemToStore(StoreItem memory item, uint8 class) public onlyOwner {
+        require(!itemExistsInStore(item.itemIndex, class), "Element exists in the array"); //Index of the item
+        require(class==0 || item.itemIndex<_gameStats.numEquipment(), "Gear does not exists");  //Index of the item
+        require(class==1 || item.itemIndex<_gameStats.numRaces(), "Race does not exists");
+        if(class==0)
+            storeRaces.push(item);
+        else
+            storeGear.push(item);
     }
 
-
     //Remove an element from the store array
-    function removeGearFromStore(uint256 index) public onlyOwner {
-        require(index < storeGear.length, "Index out of bounds");
+    function removeItemFromStore(uint256 index, uint8 class) public onlyOwner {
+        require(class==0 || index < storeGear.length, "Index out of equipment bounds");
+        require(class==1 || index < storeRaces.length, "Index out of races bounds");
 
-        storeGear[index]= storeGear[ storeGear.length-1];
-        storeGear.pop();
+        if(class==0) {
+            storeRaces[index]= storeRaces[ storeRaces.length-1];
+            storeRaces.pop();
+        }            
+        else {            
+            storeGear[index]= storeGear[ storeGear.length-1];
+            storeGear.pop();
+        }            
     }
 
     //Returns especific item
-    function getEquipmentLength() public view returns(uint256) {
+    function getItemLength(uint8 class) public view returns(uint256) {
+        if(class==0)
+            return storeRaces.length;
+
         return storeGear.length;
     }
 
     //Returns especific item
-    function getEquipmentData(uint256 index) public view returns(Equipment.gearStats memory) {
-        return storeGear[index];
+    function getEquipmentData(uint256 index) public view returns(GameStats.EquipmentItem memory equipment, uint256 price) {
+        require(index < storeGear.length, "Index out of equipment bounds");
+        return (_gameStats.equipmentAt(storeGear[index].itemIndex), storeGear[index].price);    //Index of the item
     }
 
-    //Returns especific item
-    function getEquipmentPrice(uint256 index) public view returns(uint256) {
-        return storeGear[index].stats[9];
+    function getRaceData(uint256 index) public view returns(GameStats.RaceItem memory race, uint256 price) {
+        require(index < storeRaces.length, "Index out of races bounds");
+        return (_gameStats.raceAt(storeRaces[index].itemIndex), storeRaces[index].price);    //Index of the item
     }
 
     //Manages the purchase
-    function purchase(uint256 index) public {
-        require(index < storeGear.length, "Index out of bounds");        
-        require(transfer(address(this), storeGear[index].stats[9]), "Transfer fail");
+    function purchaseEquipment(uint256 index) public {
+        require(index < storeGear.length, "Index out of equipment bounds");        
+        require(transfer(address(this), storeGear[index].price), "Transfer fail");
+
+        Equipment.gearData memory gearData;
+        gearData.class=storeGear[index].itemIndex;  //Index of the item
+        gearData.level=0;
 
         //Mint the gear to the payer
-        _equipment.mint(msg.sender, storeGear[index]);
+        _equipment.mint(msg.sender, gearData);
     }
 
-    function gearExistsInStore(Equipment.gearStats memory gear) internal view returns (bool) {
-        for(uint i=0; i<storeGear.length; i++) {
-            if( gear.class==storeGear[i].class &&
-                gear.slot==storeGear[i].slot &&
-                gear.level==storeGear[i].level &&
-                gear.stats[0]==storeGear[i].stats[0] &&
-                gear.stats[1]==storeGear[i].stats[1] &&
-                gear.stats[2]==storeGear[i].stats[2] &&
-                gear.stats[3]==storeGear[i].stats[3] &&
-                gear.stats[4]==storeGear[i].stats[4] &&
-                gear.stats[5]==storeGear[i].stats[5] &&
-                gear.stats[6]==storeGear[i].stats[6] &&
-                gear.stats[7]==storeGear[i].stats[7] &&
-                gear.stats[8]==storeGear[i].stats[8] &&
-                gear.stats[9]==storeGear[i].stats[9]
-                )
-                return true;
+    function purchaseRace(string memory charName, uint256 index) external payable {
+        require(index < storeRaces.length, "Index out of races bounds");
+        require(msg.value>=storeRaces[index].price, "Not enough funds sent!");
+
+        //Mint the race to the payer
+        _character.mint(msg.sender, charName, storeRaces[index].itemIndex);
+    }
+
+    function itemExistsInStore(uint256 item, uint8 class) internal view returns (bool) {
+        if(class==0) {
+            for(uint256 i=0; i<storeRaces.length; i++)
+                if(storeRaces[i].itemIndex==item)
+                    return true;
+            return false;
         }
+
+        for(uint256 i=0; i<storeGear.length; i++)
+            if(storeGear[i].itemIndex==item)    //Index of the item
+                return true;
         return false;
     }
+
 }

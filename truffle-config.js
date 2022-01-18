@@ -5,7 +5,7 @@ const path = require("path");
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
-  contracts_build_directory: path.join(__dirname, "client/src/contracts"),
+  contracts_build_directory: "./public/contracts",
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
@@ -28,9 +28,9 @@ module.exports = {
   },
   
   networks: {
-    mumbai: {
-      
-      provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://polygon-mumbai.infura.io/v3/158eedf735e84ba49990485a44c4a541'),
+    mumbai: {      
+      provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://matic-mumbai.chainstacklabs.com'),
+      //provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://polygon-mumbai.infura.io/v3/158eedf735e84ba49990485a44c4a541'),      
       //provider: () => new HDWalletProvider(process.env.MNEMONIC, 'https://rpc-mumbai.matic.today'),
       network_id: 80001,
       confirmations: 2,
@@ -39,8 +39,10 @@ module.exports = {
       gas: 6000000,
       gasPrice: 10000000000,
     },
-    develop: {
-      port: 8545
+    development: {
+      host: "localhost",
+      port: 9545,
+      network_id: "*"
     }
   }
 };
