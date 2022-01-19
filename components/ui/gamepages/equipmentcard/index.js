@@ -20,6 +20,7 @@ export default function EquipmentCard({NFT, contract, account, network }) {
             console.log({data, price})
             setItemStats(data)
             setItemPrice(price)
+            console.log(data[1])
         } else {
             setItemStats(null)
             setItemPrice(0)
@@ -34,7 +35,21 @@ export default function EquipmentCard({NFT, contract, account, network }) {
         <div className="bg-white rounded-xl shadow-md overflow-hidden max-w-md">
             <div className="flex h-full">
             <div className="flex h-full">
-                {itemStats}
+                {itemStats!=null? (
+                    <>
+                Health: +{itemStats[1][0][0]} <br />
+                Vitality: +{itemStats[1][0][1]}<br />
+                Attack: +{itemStats[1][0][2]}<br />
+                Defense: +{itemStats[1][0][3]}<br />
+                Mastery: +{itemStats[1][0][4]}<br />
+                Speed: +{itemStats[1][0][5]}<br />
+                Luck: +{itemStats[1][0][6]}<br />
+                Faith: +{itemStats[1][0][7]}<br />
+                </>
+                )
+                : 
+                <></>
+                }
             </div>
             <div className="p-8">
                 <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
