@@ -37,14 +37,14 @@ export default function EquipmentCard({NFT, contract, account, network }) {
             <div className="flex h-full">
                 {itemStats!=null? (
                     <>
-                Health: +{itemStats[1][0][0]} <br />
-                Vitality: +{itemStats[1][0][1]}<br />
-                Attack: +{itemStats[1][0][2]}<br />
-                Defense: +{itemStats[1][0][3]}<br />
-                Mastery: +{itemStats[1][0][4]}<br />
-                Speed: +{itemStats[1][0][5]}<br />
-                Luck: +{itemStats[1][0][6]}<br />
-                Faith: +{itemStats[1][0][7]}<br />
+                {itemStats[1][0][0]!=0 && <>Health: +{itemStats[1][0][0]} <br /></>}
+                {itemStats[1][0][1]!=0 && <>Vitality: +{itemStats[1][0][1]}<br /></>}
+                {itemStats[1][0][2]!=0 && <>Attack: +{itemStats[1][0][2]}<br /></>}
+                {itemStats[1][0][3]!=0 && <>Defense: +{itemStats[1][0][3]}<br /></>}
+                {itemStats[1][0][4]!=0 && <>Mastery: +{itemStats[1][0][4]}<br /></>}
+                {itemStats[1][0][5]!=0 && <>Speed: +{itemStats[1][0][5]}<br /></>}
+                {itemStats[1][0][6]!=0 && <>Luck: +{itemStats[1][0][6]}<br /></>}
+                {itemStats[1][0][7]!=0 && <>Faith: +{itemStats[1][0][7]}<br /></>}
                 </>
                 )
                 : 
