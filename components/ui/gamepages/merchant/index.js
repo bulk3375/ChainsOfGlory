@@ -2,6 +2,7 @@ import { useWeb3 } from "@components/providers";
 import { useAccount, useNetwork } from "@components/hooks/web3";
 import { useState, useEffect } from "react";
 import { EquipmentCard, EquipmentList } from "..";
+import { OrderModal } from "@components/ui/order";
 
 export default function Merchant() {
   const { contract } = useWeb3();
@@ -38,12 +39,24 @@ export default function Merchant() {
     setRefresh(!refresh);
   }
 
+  function showOrderModal(value) {
+    setDoPurchase(value)
+  }
+
+  const [doPurchase, setDoPurchase] = useState(null)
+
   return (
     <>
       <div className="mt-8"></div>
       <EquipmentList ListValues={availableItems}>
-        {(NFTv) => <EquipmentCard key={NFTv} NFT={NFTv} contract={contract} account={account} network={network}/>}
+        {(NFTv) => <EquipmentCard key={NFTv} NFT={NFTv} contract={contract} account={account} network={network} setDoPurchase={showOrderModal}/>}
       </EquipmentList>
+      {
+          doPurchase &&
+          <OrderModal
+              purchase={doPurchase}
+          />
+      }
     </>
   );
 }
