@@ -23,10 +23,11 @@ export default function Inventory() {
 
   useEffect(async () => {
     if (account.data && network.isSupported) {
-      const nItems = await contract.equipment.contract.methods
+      const nItems = await contract.equipment.contract.methods      
         .getEquipment(account.data)
         .call();
-      setAvailableItems(nItems)
+
+      setAvailableItems(nItems.filter((item) => item !== "0"))
       
     } else setAvailableItems([]);
   }, [account.data, network.isSupported, refresh]);

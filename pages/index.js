@@ -65,8 +65,9 @@ export default function Home() {
             data: network.data,
             targetNetwork: network.target,
             isSupported: network.isSupported,
-            hasInitialResponse: network.hasInitialResponse,
+            hasInitialResponse: network.hasInitialResponse
           }}
+          gameZone={gameZone}
         />
         {gameZone == 0 ? (
           <Default clickFunction={clickFunction} />

@@ -22,18 +22,18 @@ export default function Merchant() {
   const [availableItems, setAvailableItems] = useState(null);
   const [refresh, setRefresh] = useState(false);
 
+  //Get available items
   useEffect(async () => {
     if (account.data && network.isSupported) {
       const nItems = await contract.gameCoin.contract.methods
         .getItemLength(1)
-        .call();
-
+        .call()
 
       setAvailableItems(
         Array.apply(null, { length: nItems }).map(Number.call, Number)
       );
-    } else setAvailableItems([]);
-  }, [account.data, network.isSupported, refresh]);
+    } else setAvailableItems([])
+  }, [account.data, network.isSupported, refresh])
 
   function switchRefresh() {
     setRefresh(!refresh);

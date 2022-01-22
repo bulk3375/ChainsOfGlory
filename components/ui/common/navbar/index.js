@@ -111,7 +111,7 @@ export default function Navbar({ clickFunction = null }) {
                     />
 
                     <span className="font-medium mr-8 text-gray-200 ">
-                      Balance: {ownedTokens} UNC
+                      Balance: {ownedTokens} COG
                     </span>
                   </>
                 )}

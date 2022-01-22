@@ -1,6 +1,6 @@
 import { ImageButton } from "..";
 
-export default function ImageButtonBar({ clickFunction, network }) {  
+export default function ImageButtonBar({ clickFunction, network, gameZone }) {  
 
   return (
     <div className="flex justify-between items-center mt-4">
@@ -13,6 +13,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
             alt="Ejemplo de imagen"
             buttonId="3"
             clickFunction={clickFunction}
+            gameZone={gameZone}
           />
 
           <ImageButton
@@ -22,6 +23,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
             alt="Ejemplo de imagen"
             buttonId="1"
             clickFunction={clickFunction}
+            gameZone={gameZone}
           />
 
           <ImageButton
@@ -31,6 +33,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
             alt="Ejemplo de imagen"
             buttonId="2"
             clickFunction={clickFunction}
+            gameZone={gameZone}
           />
 
           <ImageButton
@@ -40,6 +43,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
             alt="Ejemplo de imagen"
             buttonId="4"
             clickFunction={clickFunction}
+            gameZone={gameZone}
           />
           <ImageButton
             image="/images/icons/auction.png"
@@ -48,6 +52,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
             alt="Ejemplo de imagen"
             buttonId="6"
             clickFunction={clickFunction}
+            gameZone={gameZone}
           />
         </>
       ) : (
@@ -67,6 +72,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
         alt="Ejemplo de imagen"
         buttonId="5"
         clickFunction={clickFunction}
+        gameZone={gameZone}
       />
 
       <ImageButton
@@ -76,6 +82,7 @@ export default function ImageButtonBar({ clickFunction, network }) {
         alt="Ejemplo de imagen"
         buttonId="0"
         clickFunction={clickFunction}
+        gameZone={gameZone}
       />
     </div>
   );

@@ -10,7 +10,8 @@ export default function ImageButton({
   imageClick,
   alt = "",
   buttonId,
-  clickFunction
+  clickFunction,
+  gameZone,
 }) {
   const [play] = useSound(hOver);
   const [click] = useSound(mClick);
@@ -19,25 +20,33 @@ export default function ImageButton({
 
   return (
     <div className="relative">
-      <img src={image} alt={alt} width={120} height={141} />
-      <img
-        className="absolute opacity-10 top-0 left-0 transition hover:opacity-100 transition-opacity duration-200 ease-out"
-        src={imgBtn}
-        alt={alt}
-        width={150}
-        height={176}
-        onMouseEnter={() => {
-          play();
-          setImgBtn(imageHover);
-        }}
-        onMouseLeave={() => setImgBtn(image)}
-        onMouseDown={() => setImgBtn(imageClick)}
-        onMouseUp={() => setImgBtn(imageHover)}
-        onClick={() => {
-          click();
-          clickFunction(buttonId);
-        }}
-      />
+      {gameZone == buttonId ? (
+        <>
+        <img className="animate-pulse" src={image} alt={alt} width={120} height={141} />
+        </>
+      ) : (
+        <>
+          <img src={image} alt={alt} width={120} height={141} />
+          <img
+            className="absolute opacity-10 top-0 left-0 transition hover:opacity-100 transition-opacity duration-200 ease-out"
+            src={imgBtn}
+            alt={alt}
+            width={150}
+            height={176}
+            onMouseEnter={() => {
+              play();
+              setImgBtn(imageHover);
+            }}
+            onMouseLeave={() => setImgBtn(image)}
+            onMouseDown={() => setImgBtn(imageClick)}
+            onMouseUp={() => setImgBtn(imageHover)}
+            onClick={() => {
+              click();
+              clickFunction(buttonId);
+            }}
+          />
+        </>
+      )}
     </div>
   );
 }

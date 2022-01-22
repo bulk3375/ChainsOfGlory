@@ -16,10 +16,10 @@ contract GameStats is AccessControlEnumerable, Ownable {
     //Stats shared by Characters and Equipment
     struct BaseStats {
         uint16[8] values;
-        // 0 - Health   Base life of character
-        // 1 - Vitality Increase Health in Vitality * 3
-        // 2 - Attack   Hit points
-        // 3 - Defense  Reduce each enemy hit in 'defense' points
+        // 0 - Health   Base life of character        
+        // 1 - Attack   Hit points
+        // 2 - Defense  Reduce each enemy hit in 'defense' points
+        // 3 - Dodge    Probability of enemy failing attack
         // 4 - Mastery  % Reduce mission time (50 reduces to half)
         // 5 - Speed    % Reduce travel time (50 reduces to half)
         // 6 - Luck     % drop chance
